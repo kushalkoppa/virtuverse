@@ -22,9 +22,21 @@ jobs:
       - name: Check for project directories
         id: filter
         run: |
-          echo "backend=${{ hashFiles('backend/**', 'server/**', 'api/**') != '' }}" >> $GITHUB_OUTPUT
-          echo "frontend=${{ hashFiles('frontend/**', 'client/**') != '' }}" >> $GITHUB_OUTPUT
-          echo "ui=${{ hashFiles('ui/**') != '' }}" >> $GITHUB_OUTPUT
+          if [ -d "backend" ] || [ -d "server" ] || [ -d "api" ]; then
+            echo "backend=true" >> $GITHUB_OUTPUT
+          else
+            echo "backend=false" >> $GITHUB_OUTPUT
+          fi
+          if [ -d "frontend" ] || [ -d "client" ]; then
+            echo "frontend=true" >> $GITHUB_OUTPUT
+          else
+            echo "frontend=false" >> $GITHUB_OUTPUT
+          fi
+          if [ -d "ui" ]; then
+            echo "ui=true" >> $GITHUB_OUTPUT
+          else
+            echo "ui=false" >> $GITHUB_OUTPUT
+          fi
 
   build-backend:
     name: Build Backend
@@ -128,7 +140,11 @@ jobs:
             if [ -d "$dir" ] && [ -f "$dir/requirements.txt" ]; then
               echo "Testing $dir"
               cd $dir
-              python -m pytest --if-present || echo "No pytest found"
+              if command -v pytest &> /dev/null; then
+                python -m pytest || echo "Tests failed"
+              else
+                echo "pytest not installed, skipping tests"
+              fi
               cd ..
             fi
           done
