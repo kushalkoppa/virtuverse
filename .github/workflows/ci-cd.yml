@@ -140,7 +140,7 @@ jobs:
               echo "Testing $dir"
               cd $dir
               # Run pytest if it's installed (typically via requirements.txt)
-              python -m pytest 2>/dev/null || echo "No pytest or tests to run"
+              python -m pytest 2>/dev/null || echo "Pytest not available or no tests found for $dir"
               cd ..
             fi
           done
