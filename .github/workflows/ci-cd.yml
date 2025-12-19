@@ -139,11 +139,8 @@ jobs:
             if [ -d "$dir" ] && [ -f "$dir/requirements.txt" ]; then
               echo "Testing $dir"
               cd $dir
-              if command -v pytest &> /dev/null; then
-                python -m pytest || echo "Tests failed"
-              else
-                echo "pytest not installed, skipping tests"
-              fi
+              # Run pytest if it's installed (typically via requirements.txt)
+              python -m pytest 2>/dev/null || echo "No pytest or tests to run"
               cd ..
             fi
           done

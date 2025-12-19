@@ -2,7 +2,7 @@
 
 ![CI/CD Pipeline](https://github.com/kushalkoppa/virtuverse/workflows/CI%2FCD%20Pipeline/badge.svg)
 
-VirtuVerse an E2E Virtualization &amp; Simulation universe in SDV, is a collaborator platform.
+VirtuVerse is an E2E Virtualization &amp; Simulation universe in SDV, a collaborator platform.
 
 ## 🚀 Automated CI/CD Pipeline
 
