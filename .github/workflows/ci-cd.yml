@@ -7,10 +7,16 @@ on:
     branches: [ "main", "master", "develop" ]
   workflow_dispatch:
 
+# Minimal permissions for security
+permissions:
+  contents: read
+
 jobs:
   detect-changes:
     name: Detect Changes
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       backend: ${{ steps.filter.outputs.backend }}
       frontend: ${{ steps.filter.outputs.frontend }}
@@ -43,6 +49,8 @@ jobs:
     needs: detect-changes
     if: needs.detect-changes.outputs.backend == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       matrix:
         node-version: [18.x, 20.x]
@@ -151,6 +159,8 @@ jobs:
     needs: detect-changes
     if: needs.detect-changes.outputs.frontend == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       matrix:
         node-version: [18.x, 20.x]
@@ -229,6 +239,8 @@ jobs:
     needs: detect-changes
     if: needs.detect-changes.outputs.ui == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       matrix:
         node-version: [18.x, 20.x]
@@ -297,6 +309,8 @@ jobs:
     needs: [build-backend, build-frontend, build-ui]
     if: always()
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Check build status
         run: |
