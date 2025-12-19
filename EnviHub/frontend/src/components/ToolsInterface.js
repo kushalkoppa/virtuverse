@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../config';
 
 function ToolsInterface() {
   const [tools, setTools] = useState([]);
@@ -11,7 +12,7 @@ function ToolsInterface() {
 
   const fetchTools = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/tools');
+      const response = await axios.get(`${API_BASE_URL}/tools`);
       setTools(response.data);
       setLoading(false);
     } catch (error) {
@@ -55,7 +56,7 @@ function ToolsInterface() {
 
   const handleConnect = async (toolId) => {
     try {
-      await axios.post(`http://localhost:3001/api/tools/${toolId}/connect`);
+      await axios.post(`${API_BASE_URL}/tools/${toolId}/connect`);
       fetchTools();
     } catch (error) {
       console.error('Error connecting to tool:', error);
@@ -64,7 +65,7 @@ function ToolsInterface() {
 
   const handleDisconnect = async (toolId) => {
     try {
-      await axios.post(`http://localhost:3001/api/tools/${toolId}/disconnect`);
+      await axios.post(`${API_BASE_URL}/tools/${toolId}/disconnect`);
       fetchTools();
     } catch (error) {
       console.error('Error disconnecting from tool:', error);

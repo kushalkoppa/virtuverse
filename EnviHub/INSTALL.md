@@ -10,12 +10,22 @@ Before installing EnviHub, ensure you have:
 
 ## Installation Steps
 
-### 1. Clone the Repository
+### 1. Access the Repository
+
+If you've cloned the virtuverse repository, navigate to it:
 
 ```bash
-git clone https://github.com/kushalkoppa/virtuverse.git
 cd virtuverse
 ```
+
+Or clone it first:
+
+```bash
+git clone <repository-url>
+cd virtuverse
+```
+
+Note: Replace `<repository-url>` with the actual repository URL provided by your administrator.
 
 ### 2. Navigate to EnviHub Directory
 

@@ -41,14 +41,22 @@ let internalAccess = [
   }
 ];
 
-// GET all sharing records
+// GET all sharing records (exclude revoked by default)
 router.get('/', (req, res) => {
-  res.json(sharingRecords);
+  const includeRevoked = req.query.includeRevoked === 'true';
+  const records = includeRevoked 
+    ? sharingRecords 
+    : sharingRecords.filter(s => s.status !== 'revoked');
+  res.json(records);
 });
 
-// GET sharing records for a specific model
+// GET sharing records for a specific model (exclude revoked by default)
 router.get('/model/:modelId', (req, res) => {
-  const records = sharingRecords.filter(s => s.modelId === req.params.modelId);
+  const includeRevoked = req.query.includeRevoked === 'true';
+  const records = sharingRecords.filter(s => 
+    s.modelId === req.params.modelId && 
+    (includeRevoked || s.status !== 'revoked')
+  );
   res.json(records);
 });
 
@@ -64,11 +72,12 @@ router.post('/', (req, res) => {
   res.status(201).json(newShare);
 });
 
-// DELETE - Revoke sharing
+// DELETE - Revoke sharing (soft delete by marking as revoked)
 router.delete('/:id', (req, res) => {
   const index = sharingRecords.findIndex(s => s.id === req.params.id);
   if (index !== -1) {
     sharingRecords[index].status = 'revoked';
+    sharingRecords[index].revokedDate = new Date().toISOString().split('T')[0];
     res.json({ message: 'Sharing revoked', record: sharingRecords[index] });
   } else {
     res.status(404).json({ error: 'Sharing record not found' });

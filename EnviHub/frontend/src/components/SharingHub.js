@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../config';
 
 function SharingHub() {
   const [sharingRecords, setSharingRecords] = useState([]);
@@ -21,8 +22,8 @@ function SharingHub() {
   const fetchSharingData = async () => {
     try {
       const [sharingRes, internalRes] = await Promise.all([
-        axios.get('http://localhost:3001/api/sharing'),
-        axios.get('http://localhost:3001/api/sharing/internal')
+        axios.get(`${API_BASE_URL}/sharing`),
+        axios.get(`${API_BASE_URL}/sharing/internal`)
       ]);
       setSharingRecords(sharingRes.data);
       setInternalAccess(internalRes.data);
@@ -72,7 +73,7 @@ function SharingHub() {
 
   const handleCreateShare = async () => {
     try {
-      await axios.post('http://localhost:3001/api/sharing', newShare);
+      await axios.post(`${API_BASE_URL}/sharing`, newShare);
       setShowNewShareForm(false);
       fetchSharingData();
       alert('Sharing created successfully!');
@@ -83,7 +84,7 @@ function SharingHub() {
 
   const handleRevokeShare = async (shareId) => {
     try {
-      await axios.delete(`http://localhost:3001/api/sharing/${shareId}`);
+      await axios.delete(`${API_BASE_URL}/sharing/${shareId}`);
       fetchSharingData();
     } catch (error) {
       console.error('Error revoking share:', error);

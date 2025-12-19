@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../config';
 
 function ModelLibrary() {
   const [models, setModels] = useState([]);
@@ -16,7 +17,7 @@ function ModelLibrary() {
       if (filter.tool) params.append('tool', filter.tool);
       if (filter.type) params.append('type', filter.type);
       
-      const response = await axios.get(`http://localhost:3001/api/models?${params}`);
+      const response = await axios.get(`${API_BASE_URL}/models?${params}`);
       setModels(response.data);
       setLoading(false);
     } catch (error) {
