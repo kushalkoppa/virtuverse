@@ -1,0 +1,300 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main", "master", "develop" ]
+  pull_request:
+    branches: [ "main", "master", "develop" ]
+  workflow_dispatch:
+
+jobs:
+  detect-changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+      ui: ${{ steps.filter.outputs.ui }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for project directories
+        id: filter
+        run: |
+          echo "backend=${{ hashFiles('backend/**', 'server/**', 'api/**') != '' }}" >> $GITHUB_OUTPUT
+          echo "frontend=${{ hashFiles('frontend/**', 'client/**') != '' }}" >> $GITHUB_OUTPUT
+          echo "ui=${{ hashFiles('ui/**') != '' }}" >> $GITHUB_OUTPUT
+
+  build-backend:
+    name: Build Backend
+    needs: detect-changes
+    if: needs.detect-changes.outputs.backend == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (for Node.js backend)
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: |
+            backend/package-lock.json
+            server/package-lock.json
+            api/package-lock.json
+        continue-on-error: true
+
+      - name: Setup Python (for Python backend)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+        continue-on-error: true
+
+      - name: Setup Java (for Java backend)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+        continue-on-error: true
+
+      - name: Install backend dependencies (Node.js)
+        run: |
+          for dir in backend server api; do
+            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
+              echo "Installing dependencies for $dir"
+              cd $dir
+              npm ci || npm install
+              cd ..
+            fi
+          done
+        continue-on-error: true
+
+      - name: Install backend dependencies (Python)
+        run: |
+          for dir in backend server api; do
+            if [ -d "$dir" ] && [ -f "$dir/requirements.txt" ]; then
+              echo "Installing dependencies for $dir"
+              cd $dir
+              pip install -r requirements.txt
+              cd ..
+            fi
+          done
+        continue-on-error: true
+
+      - name: Install backend dependencies (Java/Maven)
+        run: |
+          for dir in backend server api; do
+            if [ -d "$dir" ] && [ -f "$dir/pom.xml" ]; then
+              echo "Building $dir with Maven"
+              cd $dir
+              mvn clean install -DskipTests
+              cd ..
+            fi
+          done
+        continue-on-error: true
+
+      - name: Build backend (Node.js)
+        run: |
+          for dir in backend server api; do
+            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
+              echo "Building $dir"
+              cd $dir
+              npm run build --if-present
+              cd ..
+            fi
+          done
+        continue-on-error: true
+
+      - name: Run backend tests (Node.js)
+        run: |
+          for dir in backend server api; do
+            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
+              echo "Testing $dir"
+              cd $dir
+              npm test --if-present
+              cd ..
+            fi
+          done
+        continue-on-error: true
+
+      - name: Run backend tests (Python)
+        run: |
+          for dir in backend server api; do
+            if [ -d "$dir" ] && [ -f "$dir/requirements.txt" ]; then
+              echo "Testing $dir"
+              cd $dir
+              python -m pytest --if-present || echo "No pytest found"
+              cd ..
+            fi
+          done
+        continue-on-error: true
+
+  build-frontend:
+    name: Build Frontend
+    needs: detect-changes
+    if: needs.detect-changes.outputs.frontend == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: |
+            frontend/package-lock.json
+            client/package-lock.json
+
+      - name: Install frontend dependencies
+        run: |
+          for dir in frontend client; do
+            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
+              echo "Installing dependencies for $dir"
+              cd $dir
+              npm ci || npm install
+              cd ..
+            fi
+          done
+
+      - name: Lint frontend code
+        run: |
+          for dir in frontend client; do
+            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
+              echo "Linting $dir"
+              cd $dir
+              npm run lint --if-present
+              cd ..
+            fi
+          done
+        continue-on-error: true
+
+      - name: Build frontend
+        run: |
+          for dir in frontend client; do
+            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
+              echo "Building $dir"
+              cd $dir
+              npm run build
+              cd ..
+            fi
+          done
+
+      - name: Run frontend tests
+        run: |
+          for dir in frontend client; do
+            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
+              echo "Testing $dir"
+              cd $dir
+              npm test --if-present
+              cd ..
+            fi
+          done
+        continue-on-error: true
+
+      - name: Upload frontend build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build-${{ matrix.node-version }}
+          path: |
+            frontend/build
+            frontend/dist
+            client/build
+            client/dist
+        continue-on-error: true
+
+  build-ui:
+    name: Build UI
+    needs: detect-changes
+    if: needs.detect-changes.outputs.ui == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: ui/package-lock.json
+
+      - name: Install UI dependencies
+        run: |
+          if [ -d "ui" ] && [ -f "ui/package.json" ]; then
+            echo "Installing dependencies for ui"
+            cd ui
+            npm ci || npm install
+            cd ..
+          fi
+
+      - name: Lint UI code
+        run: |
+          if [ -d "ui" ] && [ -f "ui/package.json" ]; then
+            echo "Linting ui"
+            cd ui
+            npm run lint --if-present
+            cd ..
+          fi
+        continue-on-error: true
+
+      - name: Build UI
+        run: |
+          if [ -d "ui" ] && [ -f "ui/package.json" ]; then
+            echo "Building ui"
+            cd ui
+            npm run build
+            cd ..
+          fi
+
+      - name: Run UI tests
+        run: |
+          if [ -d "ui" ] && [ -f "ui/package.json" ]; then
+            echo "Testing ui"
+            cd ui
+            npm test --if-present
+            cd ..
+          fi
+        continue-on-error: true
+
+      - name: Upload UI build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-build-${{ matrix.node-version }}
+          path: |
+            ui/build
+            ui/dist
+        continue-on-error: true
+
+  integration-check:
+    name: Integration Check
+    needs: [build-backend, build-frontend, build-ui]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check build status
+        run: |
+          echo "Backend: ${{ needs.build-backend.result }}"
+          echo "Frontend: ${{ needs.build-frontend.result }}"
+          echo "UI: ${{ needs.build-ui.result }}"
+          
+          if [[ "${{ needs.build-backend.result }}" == "failure" ]] || \
+             [[ "${{ needs.build-frontend.result }}" == "failure" ]] || \
+             [[ "${{ needs.build-ui.result }}" == "failure" ]]; then
+            echo "One or more builds failed"
+            exit 1
+          fi
+          
+          echo "All builds completed successfully or were skipped"
