@@ -57,68 +57,28 @@ VirtuVerse (Authentication & Entry Point)
 
 ## Quick Start Guide
 
+### Automated Setup (Recommended)
+
+```bash
+# 1. Clone and enter the repository
+git clone <repository-url>
+cd virtuverse
+
+# 2. Run the quick start script
+./start-all.sh
+```
+
+This will install dependencies, set up environment files, initialize the admin user, and start all backend services.
+
+### Manual Setup
+
+For detailed step-by-step instructions, see **[GETTING_STARTED.md](GETTING_STARTED.md)**
+
 ### Prerequisites
 - Node.js v14 or higher
 - npm or yarn
 - 4GB RAM minimum
 - 10GB disk space
-
-### Installation
-
-1. **Clone the repository**
-```bash
-git clone <repository-url>
-cd virtuverse
-```
-
-2. **Install all dependencies**
-```bash
-# VirtuVerse
-cd VirtuVerse && npm install && cd frontend && npm install && cd ../..
-
-# VirtuSpace
-cd VirtuSpace && npm install && cd frontend && npm install && cd ../..
-
-# EnviHub
-cd EnviHub && npm install && cd frontend && npm install && cd ../..
-
-# PlantHub
-cd PlantHub && npm install && cd frontend && npm install && cd ../..
-```
-
-3. **Set up environment variables**
-```bash
-# Copy example env files
-cp VirtuVerse/.env.example VirtuVerse/.env
-cp VirtuSpace/.env.example VirtuSpace/.env
-cp EnviHub/.env.example EnviHub/.env
-cp PlantHub/.env.example PlantHub/.env
-```
-
-4. **Initialize admin user**
-```bash
-cd VirtuVerse
-npm run init-admin
-cd ..
-```
-
-5. **Start all services** (in separate terminals)
-```bash
-# Terminal 1 - VirtuVerse Backend
-cd VirtuVerse && npm run dev:backend
-
-# Terminal 2 - VirtuVerse Frontend
-cd VirtuVerse && npm run dev:frontend
-
-# Terminal 3 - VirtuSpace
-cd VirtuSpace && npm run dev
-
-# Terminal 4 - EnviHub
-cd EnviHub && npm run dev
-
-# Terminal 5 - PlantHub
-cd PlantHub && npm run dev
-```
 
 ### Access the Applications
 
