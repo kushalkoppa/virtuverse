@@ -1,70 +1,229 @@
-# VirtuVerse
-VirtuVerse an E2E Virtualization &amp; Simulation universe in SDV, is a collaborator platform
+# VirtuVerse - EnviHub Platform
 
-## VirtuSpace Platforms
+VirtuVerse is an E2E Virtualization & Simulation universe in SDV, a collaborator platform that includes **EnviHub** - a comprehensive platform for simulation model management and tool integration.
 
-VirtuSpace includes multiple specialized platforms for different modeling domains:
+## 🚀 EnviHub Platform
 
-### EnviHub Platform
+EnviHub is a part of VirtuSpace that provides:
 
-EnviHub is a comprehensive platform within VirtuSpace that provides unified access to virtualization and simulation tools, focusing on environment models.
+- **Model Library Management** - Store, organize, and share simulation models
+- **Tool Integration** - Connect with tools like IPG CarMaker, MATLAB/Simulink, dSPACE VEOS
+- **Metadata Extraction** - Extract smart harness metadata for cosimulation integration
+- **Model Editor** - Edit and configure models across different tools
+- **Collaboration** - Share models with OEMs, suppliers, and internal Bosch teams
 
-#### Features
+## 🏗️ Architecture
 
-- **Tool Integration**: Interfaces to IPG CarMaker, MATLAB Simulink, PreScan, and other simulation tools
-- **Model Library**: Centralized storage and management of simulation models
-- **External Collaboration**: Share models with OEMs, suppliers, and tool vendors
-- **Internal Access**: Enable cross-domain collaboration within Bosch
-- **Model Editor**: Create, edit, and validate simulation models
+```
+virtuverse/
+├── frontend/          # React-based UI application
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── styles/
+│   │   └── App.jsx
+│   └── package.json
+├── backend/           # Node.js/Express API server
+│   ├── src/
+│   │   ├── routes/
+│   │   ├── config/
+│   │   └── server.js
+│   └── package.json
+└── README.md
+```
 
-#### Quick Start
+## 🛠️ Technology Stack
 
+### Frontend
+- **React** - UI framework
+- **React Router** - Navigation
+- **Lucide React** - Icons
+- **Axios** - HTTP client
+- **Vite** - Build tool
+
+### Backend
+- **Node.js** - Runtime
+- **Express** - Web framework
+- **SQLite** - Database
+- **Multer** - File upload handling
+- **Axios** - HTTP client for tool integration
+
+## 📦 Installation & Setup
+
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or yarn
+
+### Backend Setup
+
+1. Navigate to backend directory:
 ```bash
-# Navigate to EnviHub directory
-cd EnviHub
+cd backend
+```
 
-# Install backend dependencies
+2. Install dependencies:
+```bash
 npm install
+```
 
-# Install frontend dependencies
+3. Start the backend server:
+```bash
+npm start
+```
+
+The backend API will be available at `http://localhost:5000`
+
+### Frontend Setup
+
+1. Navigate to frontend directory:
+```bash
 cd frontend
-npm install
-cd ..
+```
 
-# Start the development server (runs both backend and frontend)
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start the development server:
+```bash
 npm run dev
 ```
 
-For detailed documentation, see [EnviHub/README.md](EnviHub/README.md)
+The frontend will be available at `http://localhost:5173`
 
-### PlantHub Platform
+## 🎯 Key Features
 
-PlantHub is a comprehensive platform within VirtuSpace that provides unified access to plant modeling tools, focusing on sensors, actuators, physical models, and mathematical models.
+### 1. Dashboard
+- Overview of all models and integrations
+- Recent activity tracking
+- Quick actions for common tasks
+- Statistics and metrics
 
-#### Features
+### 2. Model Library
+- Browse and search models
+- Filter by type and tags
+- Upload new models
+- Share models with teams
+- Download and edit capabilities
 
-- **Tool Integration**: Interfaces to MATLAB Simulink, Modelica, Simcenter Amesim, and other plant modeling tools
-- **Model Library**: Centralized storage and management of plant models (sensors, actuators, physical, mathematical)
-- **External Collaboration**: Share models with OEMs, suppliers, and tool vendors
-- **Internal Access**: Enable cross-domain collaboration within Bosch
-- **Model Editor**: Create, edit, and validate plant models
+### 3. Tool Integration
+- Connect to IPG CarMaker
+- Connect to MATLAB/Simulink
+- Connect to dSPACE VEOS
+- Test connections
+- Sync models between tools
+- Add custom tool integrations
 
-#### Quick Start
+### 4. Metadata Extractor
+- Upload simulation models
+- Extract metadata automatically
+- View interface definitions
+- Generate smart harness configuration
+- Export metadata as JSON
+- Integration-ready metadata for cosimulation
 
+### 5. Model Editor
+- Visual and code editing modes
+- Edit model parameters
+- Configure tool integrations
+- Set sharing permissions
+- Update model metadata
+
+## 🔌 API Endpoints
+
+### Models API
+- `GET /api/models` - List all models
+- `GET /api/models/:id` - Get specific model
+- `POST /api/models/upload` - Upload new model
+- `PUT /api/models/:id` - Update model
+- `DELETE /api/models/:id` - Delete model
+- `GET /api/models/stats/summary` - Get statistics
+
+### Tools API
+- `GET /api/tools` - List all integrations
+- `GET /api/tools/:id` - Get specific integration
+- `POST /api/tools` - Add new integration
+- `POST /api/tools/:id/test` - Test connection
+- `POST /api/tools/:id/sync` - Sync models
+- `PUT /api/tools/:id` - Update integration
+- `DELETE /api/tools/:id` - Delete integration
+
+### Metadata API
+- `POST /api/metadata/extract` - Extract metadata from file
+- `GET /api/metadata/model/:modelId` - Get model metadata
+- `POST /api/metadata/model/:modelId` - Save metadata
+- `GET /api/metadata/all` - List all models with metadata
+- `GET /api/metadata/model/:modelId/harness` - Generate smart harness config
+
+## 🎨 UI Screenshots
+
+The EnviHub platform features a modern, intuitive interface with:
+- Clean navigation bar
+- Interactive dashboard with statistics
+- Searchable model library
+- Tool integration management
+- Metadata extraction workflow
+- Visual and code-based model editing
+
+## 🔐 Security Features
+
+- Secure file upload handling
+- API endpoint validation
+- Database parameter sanitization
+- Error handling and logging
+
+## 🚀 Deployment
+
+### Frontend Deployment
 ```bash
-# Navigate to PlantHub directory
-cd PlantHub
-
-# Install backend dependencies
-npm install
-
-# Install frontend dependencies
 cd frontend
-npm install
-cd ..
-
-# Start the development server (runs both backend and frontend)
-npm run dev
+npm run build
+# Deploy the 'dist' folder to your hosting service
 ```
 
-For detailed documentation, see [PlantHub/README.md](PlantHub/README.md)
+### Backend Deployment
+```bash
+cd backend
+npm start
+# Deploy to your Node.js hosting service (e.g., Heroku, AWS, Azure)
+```
+
+## 🤝 Integration with IPG CarMaker
+
+The platform provides ready-to-use integration with IPG CarMaker:
+- Connect to CarMaker instances
+- Import and export models
+- Sync model changes
+- Extract metadata for cosimulation
+
+## 📊 Smart Harness
+
+The platform's unique **Smart Harness** feature:
+- Extracts interface definitions automatically
+- Identifies compatible tools
+- Generates integration metadata
+- Enables seamless cosimulation
+- Supports FMI/FMU export
+
+## 🌐 Sharing and Collaboration
+
+Models can be shared with:
+- External OEMs
+- Suppliers
+- Tool vendors
+- Internal Bosch teams
+- Other domains within the organization
+
+## 📝 License
+
+ISC
+
+## 👥 Contributing
+
+This is a proprietary platform for VirtuVerse. For contributions, please contact the development team.
+
+## 📞 Support
+
+For support and questions, please contact the VirtuVerse EnviHub team.
