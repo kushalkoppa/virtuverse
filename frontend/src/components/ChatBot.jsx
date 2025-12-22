@@ -187,10 +187,10 @@ function ChatBot({ isOpen, onClose }) {
               )}
               <div className="message-content">
                 <div className="message-bubble">
-                  {message.content.split('\n').map((line, idx) => (
+                  {message.content.split('\n').map((line, idx, arr) => (
                     <span key={idx}>
                       {line}
-                      {idx < message.content.split('\n').length - 1 && <br />}
+                      {idx < arr.length - 1 && <br />}
                     </span>
                   ))}
                 </div>
@@ -199,7 +199,7 @@ function ChatBot({ isOpen, onClose }) {
                 </span>
               </div>
               {message.type === 'user' && (
-                <div className="message-avatar message-avatar-user">
+                <div className="message-avatar message-avatar-user" role="img" aria-label="User avatar">
                   <span>You</span>
                 </div>
               )}
