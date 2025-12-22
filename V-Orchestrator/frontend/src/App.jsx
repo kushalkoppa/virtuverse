@@ -6,6 +6,7 @@ import CosimulationMiddleware from './components/CosimulationMiddleware';
 import InterfaceDetection from './components/InterfaceDetection';
 import TestCaseManager from './components/TestCaseManager';
 import ModelIntegration from './components/ModelIntegration';
+import ConfigManagement from './components/ConfigManagement';
 
 function App() {
   const [activePage, setActivePage] = useState('dashboard');
@@ -36,6 +37,9 @@ function App() {
           <Link to="/integration" className={activePage === 'integration' ? 'active' : ''} onClick={() => setActivePage('integration')}>
             Model Integration
           </Link>
+          <Link to="/config" className={activePage === 'config' ? 'active' : ''} onClick={() => setActivePage('config')}>
+            Config Management
+          </Link>
         </nav>
 
         <main className="app-main">
@@ -45,6 +49,7 @@ function App() {
             <Route path="/interfaces" element={<InterfaceDetection />} />
             <Route path="/testcases" element={<TestCaseManager />} />
             <Route path="/integration" element={<ModelIntegration />} />
+            <Route path="/config" element={<ConfigManagement />} />
           </Routes>
         </main>
 
