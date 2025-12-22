@@ -21,26 +21,32 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 const modelRoutes = require('./routes/models');
 const toolRoutes = require('./routes/tools');
 const metadataRoutes = require('./routes/metadata');
+const configRoutes = require('./routes/config');
+const aiAgentRoutes = require('./routes/aiagent');
 
 // Use routes
 app.use('/api/models', modelRoutes);
 app.use('/api/tools', toolRoutes);
 app.use('/api/metadata', metadataRoutes);
+app.use('/api/config', configRoutes);
+app.use('/api/aiagent', aiAgentRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'EnviHub API is running' });
+  res.json({ status: 'ok', message: 'VirtuSpace API is running' });
 });
 
 // Root endpoint
 app.get('/', (req, res) => {
   res.json({ 
-    message: 'EnviHub Backend API',
+    message: 'VirtuSpace Backend API',
     version: '1.0.0',
     endpoints: {
       models: '/api/models',
       tools: '/api/tools',
       metadata: '/api/metadata',
+      config: '/api/config',
+      aiagent: '/api/aiagent',
       health: '/api/health'
     }
   });
@@ -61,7 +67,7 @@ db.initialize();
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`EnviHub Backend Server running on port ${PORT}`);
+  console.log(`VirtuSpace Backend Server running on port ${PORT}`);
   console.log(`API available at http://localhost:${PORT}`);
 });
 

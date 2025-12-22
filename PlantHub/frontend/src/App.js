@@ -6,6 +6,7 @@ import ModelLibrary from './components/ModelLibrary';
 import ModelEditor from './components/ModelEditor';
 import SharingHub from './components/SharingHub';
 import Dashboard from './components/Dashboard';
+import ConfigManagement from './components/ConfigManagement';
 
 function App() {
   const [activePage, setActivePage] = useState('dashboard');
@@ -36,6 +37,9 @@ function App() {
           <Link to="/sharing" className={activePage === 'sharing' ? 'active' : ''} onClick={() => setActivePage('sharing')}>
             Sharing Hub
           </Link>
+          <Link to="/config" className={activePage === 'config' ? 'active' : ''} onClick={() => setActivePage('config')}>
+            Config Management
+          </Link>
         </nav>
 
         <main className="app-main">
@@ -45,6 +49,7 @@ function App() {
             <Route path="/models" element={<ModelLibrary />} />
             <Route path="/editor" element={<ModelEditor />} />
             <Route path="/sharing" element={<SharingHub />} />
+            <Route path="/config" element={<ConfigManagement />} />
           </Routes>
         </main>
 
