@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Bot, Send, X, Minimize2 } from 'lucide-react';
+import { Bot, Send, X } from 'lucide-react';
 import axios from 'axios';
 import '../styles/ChatBot.css';
 
@@ -14,8 +14,17 @@ function ChatBot({ isOpen, onClose }) {
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [messageIdCounter, setMessageIdCounter] = useState(2);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+
+  const getNextMessageId = () => {
+    const id = messageIdCounter;
+    setMessageIdCounter(prev => prev + 1);
+    return id;
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -35,7 +44,7 @@ function ChatBot({ isOpen, onClose }) {
     if (!inputValue.trim()) return;
 
     const userMessage = {
-      id: messages.length + 1,
+      id: getNextMessageId(),
       type: 'user',
       content: inputValue,
       timestamp: new Date()
@@ -46,7 +55,7 @@ function ChatBot({ isOpen, onClose }) {
     setIsTyping(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/aiagent/query', {
+      const response = await axios.post(`${API_BASE_URL}/api/aiagent/query`, {
         query: inputValue,
         context: {
           platform: 'virtuspace',
@@ -58,7 +67,7 @@ function ChatBot({ isOpen, onClose }) {
 
       if (response.data.success) {
         const botMessage = {
-          id: messages.length + 2,
+          id: getNextMessageId(),
           type: 'bot',
           content: formatBotResponse(response.data.response),
           timestamp: new Date()
@@ -68,7 +77,7 @@ function ChatBot({ isOpen, onClose }) {
     } catch {
       setIsTyping(false);
       const errorMessage = {
-        id: messages.length + 2,
+        id: getNextMessageId(),
         type: 'bot',
         content: "I apologize, but I'm having trouble connecting to the server. Please try again later.",
         timestamp: new Date()
