@@ -65,7 +65,7 @@ function ChatBot({ isOpen, onClose }) {
         };
         setMessages(prev => [...prev, botMessage]);
       }
-    } catch (error) {
+    } catch {
       setIsTyping(false);
       const errorMessage = {
         id: messages.length + 2,
