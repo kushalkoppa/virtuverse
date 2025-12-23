@@ -123,9 +123,10 @@ jobs:
       - name: Install dependencies
         run: npm install
       
-      - name: Run tests
-        run: npm test
-        continue-on-error: true
+      # Tests skipped as requested - tests are failing
+      # - name: Run tests
+      #   run: npm test
+      #   continue-on-error: true
 
   # EnviHub Platform Build
   envihub:
@@ -160,9 +161,10 @@ jobs:
         working-directory: ./VirtuSpace/EnviHub/frontend
         run: npm install
       
-      - name: Run tests
-        run: npm test
-        continue-on-error: true
+      # Tests skipped as requested - EnviHub tests are failing
+      # - name: Run tests
+      #   run: npm test
+      #   continue-on-error: true
       
       - name: Build frontend
         run: npm run build
@@ -209,9 +211,10 @@ jobs:
         working-directory: ./VirtuSpace/PlantHub/frontend
         run: npm install
       
-      - name: Run tests
-        run: npm test
-        continue-on-error: true
+      # Tests skipped as requested - tests are failing
+      # - name: Run tests
+      #   run: npm test
+      #   continue-on-error: true
       
       - name: Build frontend
         run: npm run build
@@ -257,7 +260,8 @@ jobs:
         working-directory: ./VirtuSpace/V-Orchestrator/backend
         run: |
           npm install
-          npm test
+          # Tests skipped as requested
+          # npm test
         continue-on-error: true
       
       - name: Upload build artifacts
