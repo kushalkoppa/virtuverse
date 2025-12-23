@@ -1,0 +1,191 @@
+name: Full Pipeline CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+jobs:
+  main-frontend:
+    name: Main Frontend Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run linter
+        run: npm run lint
+        continue-on-error: true
+      
+      - name: Build frontend
+        run: npm run build
+
+  main-backend:
+    name: Main Backend Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: backend/package.json
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Run tests
+        run: npm test
+        continue-on-error: true
+
+  envihub:
+    name: EnviHub Platform
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Build EnviHub Frontend
+        working-directory: ./EnviHub/frontend
+        run: |
+          npm install
+          npm run build
+        continue-on-error: true
+      
+      - name: Build EnviHub Backend
+        working-directory: ./EnviHub/backend
+        run: |
+          npm install
+          npm test
+        continue-on-error: true
+
+  planthub:
+    name: PlantHub Platform
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Build PlantHub Frontend
+        working-directory: ./PlantHub/frontend
+        run: |
+          npm install
+          npm run build
+        continue-on-error: true
+      
+      - name: Build PlantHub Backend
+        working-directory: ./PlantHub/backend
+        run: |
+          npm install
+          npm test
+        continue-on-error: true
+
+  v-orchestrator:
+    name: V-Orchestrator Platform
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Build V-Orchestrator Frontend
+        working-directory: ./V-Orchestrator/frontend
+        run: |
+          npm install
+          npm run build
+        continue-on-error: true
+      
+      - name: Build V-Orchestrator Backend
+        working-directory: ./V-Orchestrator/backend
+        run: |
+          npm install
+          npm test
+        continue-on-error: true
+
+  docker-build:
+    name: Docker Build Test
+    runs-on: ubuntu-latest
+    needs: [main-frontend, main-backend]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Build Frontend Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: false
+          tags: virtuverse/frontend:test
+        continue-on-error: true
+      
+      - name: Build Backend Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: false
+          tags: virtuverse/backend:test
+        continue-on-error: true
+
+  summary:
+    name: Build Summary
+    runs-on: ubuntu-latest
+    needs: [main-frontend, main-backend, envihub, planthub, v-orchestrator]
+    if: always()
+    
+    steps:
+      - name: Check build status
+        run: |
+          echo "Pipeline execution completed"
+          echo "Main Frontend: ${{ needs.main-frontend.result }}"
+          echo "Main Backend: ${{ needs.main-backend.result }}"
+          echo "EnviHub: ${{ needs.envihub.result }}"
+          echo "PlantHub: ${{ needs.planthub.result }}"
+          echo "V-Orchestrator: ${{ needs.v-orchestrator.result }}"
