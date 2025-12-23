@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [{include = "virtuverse"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 # Core dependencies
 pyyaml = "^6.0.1"
 requests = "^2.31.0"
@@ -52,7 +52,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 line-length = 100
-target-version = ['py38', 'py39', 'py310', 'py311']
+target-version = ['py39', 'py310', 'py311']
 include = '\.pyi?$'
 extend-exclude = '''
 /(
@@ -74,10 +74,10 @@ testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "-v --cov=virtuverse --cov-report=html --cov-report=term-missing"
+addopts = "-v"
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = false

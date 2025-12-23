@@ -1,11 +1,11 @@
 """
 Basic tests for VirtuVerse package initialization.
-"""
-import sys
-import os
 
-# Add parent directory to path for imports
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+Run with:
+    pytest tests/test_package.py
+    or
+    python -m pytest tests/test_package.py
+"""
 
 
 def test_package_import():
@@ -32,16 +32,3 @@ def test_package_metadata():
     assert virtuverse.__author__ == "Bosch"
     assert virtuverse.__license__ == "ISC"
 
-
-if __name__ == "__main__":
-    # Run tests manually if pytest is not available
-    test_package_import()
-    print("✓ test_package_import passed")
-    
-    test_package_version()
-    print("✓ test_package_version passed")
-    
-    test_package_metadata()
-    print("✓ test_package_metadata passed")
-    
-    print("\nAll tests passed!")
