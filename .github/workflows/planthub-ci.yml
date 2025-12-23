@@ -6,14 +6,14 @@ on:
       - main
       - develop
     paths:
-      - 'PlantHub/**'
+      - 'VirtuSpace/PlantHub/**'
       - '.github/workflows/planthub-ci.yml'
   pull_request:
     branches:
       - main
       - develop
     paths:
-      - 'PlantHub/**'
+      - 'VirtuSpace/PlantHub/**'
       - '.github/workflows/planthub-ci.yml'
 
 jobs:
@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./PlantHub
+        working-directory: ./VirtuSpace/PlantHub
     
     steps:
       - name: Checkout code
@@ -33,13 +33,13 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: PlantHub/package.json
+          cache-dependency-path: VirtuSpace/PlantHub/package.json
       
       - name: Install root dependencies
         run: npm install
       
       - name: Install frontend dependencies
-        working-directory: ./PlantHub/frontend
+        working-directory: ./VirtuSpace/PlantHub/frontend
         run: npm install
       
       - name: Run tests
@@ -60,5 +60,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: planthub-build
-          path: PlantHub/frontend/build/
+          path: VirtuSpace/PlantHub/frontend/build/
           retention-days: 7

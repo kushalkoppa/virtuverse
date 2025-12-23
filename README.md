@@ -1,283 +1,263 @@
-# VirtuVerse - E2E Virtualization & Simulation Universe
+# VirtuVerse Studio - E2E Virtualization & Simulation Universe
 
-![Main CI/CD](https://github.com/kushalkoppa/virtuverse/actions/workflows/main-ci.yml/badge.svg)
-![Full Pipeline](https://github.com/kushalkoppa/virtuverse/actions/workflows/full-pipeline.yml/badge.svg)
+VirtuVerse Studio is a complete end-to-end virtualization and simulation platform for Software Defined Vehicles (SDV). It provides a comprehensive ecosystem with three major platforms.
 
-VirtuVerse is an E2E Virtualization & Simulation universe in SDV (Software-Defined Vehicles), providing a comprehensive collaborative platform for simulation model management, tool integration, and cosimulation orchestration.
+## Architecture Overview
 
-## 🏗️ Repository Structure
+```
+VirtuVerse Studio (Authentication & Entry Point)
+    ├── VirtuSpace (Simulation & Virtualization)
+    │   ├── V-Orchestrator (Simulation Orchestration)
+    │   ├── EnviHub (Virtualization Tools)
+    │   └── PlantHub (Manufacturing Simulation)
+    ├── VirtuSphere (Analytics & Visualization)
+    │   └── V-Analyzer (Grafana-style Dashboards)
+    └── VirtuMind (AI & Intelligence - Coming Soon)
+```
+
+## Platforms
+
+### 1. VirtuVerse Studio (Main Application)
+- **Purpose**: Authentication and main entry point
+- **Features**:
+  - User registration and login
+  - Password recovery
+  - JWT-based authentication
+  - Admin user management
+  - SQLite database
+- **Ports**: Frontend (5000), Backend (5001)
+- **Documentation**: [VirtuVerse-Studio/README.md](VirtuVerse-Studio/README.md)
+
+### 2. VirtuSpace (Simulation Platform)
+- **Purpose**: Unified simulation and virtualization platform
+- **Sub-platforms**:
+  - **V-Orchestrator**: Simulation orchestration (Ports: 3011/3010)
+  - **EnviHub**: Virtualization tools (Ports: 3000/3001)
+  - **PlantHub**: Manufacturing simulation (Ports: 3004/3002)
+- **Ports**: Frontend (3005), Backend (3003)
+- **Documentation**: [VirtuSpace/README.md](VirtuSpace/README.md)
+
+### 3. VirtuSphere (Analytics Platform)
+- **Purpose**: Analytics and visualization
+- **Sub-platforms**:
+  - **V-Analyzer**: Grafana-style dashboards (Ports: 3021/3020)
+- **Documentation**: [VirtuSphere/README.md](VirtuSphere/README.md)
+
+### 4. VirtuMind (AI Platform - Coming Soon)
+- **Purpose**: AI and intelligence platform
+- **Features**: ML-powered optimization, predictive analytics
+- **Documentation**: [VirtuMind/README.md](VirtuMind/README.md)
+
+## Quick Start Guide
+
+### Automated Setup (Recommended)
+
+```bash
+# 1. Clone and enter the repository
+git clone <repository-url>
+cd virtuverse
+
+# 2. Run the quick start script
+./start-all.sh
+```
+
+This will install dependencies, set up environment files, initialize the admin user, and start all backend services.
+
+### Manual Setup
+
+For detailed step-by-step instructions, see **[GETTING_STARTED.md](GETTING_STARTED.md)**
+
+### Prerequisites
+- Node.js v14 or higher
+- npm or yarn
+- 4GB RAM minimum
+- 10GB disk space
+
+### Access the Applications
+
+- **VirtuVerse Studio** (Login): http://localhost:5000
+- **VirtuSpace**: http://localhost:3003 (accessible after login)
+  - V-Orchestrator: http://localhost:3011
+  - EnviHub: http://localhost:3000
+  - PlantHub: http://localhost:3004
+- **VirtuSphere**:
+  - V-Analyzer: http://localhost:3021
+
+### Default Admin Credentials
+
+```
+Email: admin@virtuverse.com
+Password: Admin@123
+```
+
+**⚠️ Important**: Change these credentials immediately after first login in production!
+
+## User Journey
+
+1. **Access VirtuVerse Studio** → User visits http://localhost:5000
+2. **Authentication** → Login with credentials or register new account
+3. **Choose Platform** → Select from three main platforms:
+   - **VirtuSpace** → Simulation and virtualization
+   - **VirtuSphere** → Analytics and dashboards
+   - **VirtuMind** → AI and intelligence (coming soon)
+4. **VirtuSpace Sub-platforms** → Access V-Orchestrator, EnviHub, or PlantHub
+5. **Use Tools** → Access simulation, orchestration, and modeling tools
+
+## Development
+
+### Running in Development Mode
+
+Each component can be run independently in development mode:
+
+```bash
+# VirtuVerse Studio
+cd VirtuVerse-Studio && npm run dev
+
+# VirtuSpace
+cd VirtuSpace && npm run dev
+
+# V-Orchestrator
+cd VirtuSpace/V-Orchestrator && npm run dev
+
+# EnviHub
+cd VirtuSpace/EnviHub && npm run dev
+
+# PlantHub
+cd VirtuSpace/PlantHub && npm run dev
+
+# V-Analyzer
+cd VirtuSphere/V-Analyzer && npm run dev
+```
+
+### Building for Production
+
+```bash
+# Build all frontend applications
+cd VirtuVerse-Studio/frontend && npm run build && cd ../..
+cd VirtuSpace/frontend && npm run build && cd ../..
+cd VirtuSpace/V-Orchestrator/frontend && npm run build && cd ../../..
+cd VirtuSpace/EnviHub/frontend && npm run build && cd ../../..
+cd VirtuSpace/PlantHub/frontend && npm run build && cd ../../..
+cd VirtuSphere/V-Analyzer/frontend && npm run build && cd ../../..
+```
+
+## Deployment
+
+For production deployment, see [DEPLOYMENT.md](DEPLOYMENT.md) for:
+- Docker Compose setup
+- Nginx configuration
+- SSL/TLS setup
+- Database migration
+- Security hardening
+- Monitoring and logging
+
+## Project Structure
 
 ```
 virtuverse/
-├── VirtuSpace/         # Unified parent platform with landing page, config management, AI agent
-│   ├── frontend/       # React-based UI
-│   ├── backend/        # Node.js/Express API
-│   ├── docker-compose.yml
-│   └── README.md
-├── EnviHub/           # Environment modeling platform
-│   ├── frontend/
-│   ├── backend/
-│   └── README.md
-├── PlantHub/          # Plant modeling platform
-│   ├── frontend/
-│   ├── backend/
-│   └── README.md
-├── V-Orchestrator/    # Cosimulation orchestration platform
-│   ├── frontend/
-│   ├── backend/
-│   └── README.md
-├── .github/workflows/ # CI/CD pipelines
-└── README.md         # This file
+├── VirtuVerse-Studio/      # Main authentication application
+│   ├── backend/            # Node.js/Express API with SQLite
+│   └── frontend/           # React application
+├── VirtuSpace/             # Simulation & Virtualization platform
+│   ├── V-Orchestrator/     # Simulation orchestration
+│   │   ├── backend/
+│   │   └── frontend/
+│   ├── EnviHub/            # Virtualization platform
+│   │   ├── backend/        # Node.js/Express API
+│   │   └── frontend/       # React application
+│   ├── PlantHub/           # Manufacturing platform
+│   │   ├── backend/        # Node.js/Express API
+│   │   └── frontend/       # React application
+│   ├── backend/            # VirtuSpace aggregation API
+│   └── frontend/           # VirtuSpace UI
+├── VirtuSphere/            # Analytics platform
+│   └── V-Analyzer/         # Dashboard platform
+│       ├── backend/
+│       └── frontend/
+├── VirtuMind/              # AI platform (coming soon)
+├── DEPLOYMENT.md           # Deployment guide
+└── README.md              # This file
 ```
 
-## 🚀 Platforms Overview
-
-### VirtuSpace
-The unified parent platform that brings together all sub-platforms:
-- **Landing Page** - Central entry point to the entire ecosystem
-- **Configuration Management** - Centralized connection to JFrog Artifactory and GitHub Enterprise Server
-- **AI Agent Assistant** - Intelligent guidance for model import and integration
-- **Shared Services** - Authentication, configuration, and common utilities
-
-**[Get Started with VirtuSpace →](./VirtuSpace/README.md)**
-
-### EnviHub
-Environment modeling platform for simulation model management:
-- **Model Library Management** - Store, organize, and share simulation models
-- **Tool Integration** - Connect with IPG CarMaker, MATLAB/Simulink, dSPACE VEOS
-- **Metadata Extraction** - Extract smart harness metadata for cosimulation
-- **Model Editor** - Edit and configure models across different tools
-- **Collaboration** - Share models with OEMs, suppliers, and internal teams
-
-**[Get Started with EnviHub →](./EnviHub/README.md)**
-
-### PlantHub
-Plant modeling platform for vehicle component models:
-- **Component Library** - Manage plant models (sensors, actuators, etc.)
-- **Tool Integration** - Connect with simulation tools
-- **Model Sharing** - Collaborate with teams and partners
-- **Version Control** - Track model history and changes
-
-**[Get Started with PlantHub →](./PlantHub/README.md)**
-
-### V-Orchestrator
-Cosimulation orchestration platform:
-- **Cosimulation Setup** - Configure and manage cosimulation scenarios
-- **Model Integration** - Integrate models from different tools
-- **Execution Control** - Run and monitor cosimulations
-- **Results Analysis** - Analyze simulation results
-
-**[Get Started with V-Orchestrator →](./V-Orchestrator/README.md)**
-
-## 📦 Quick Start
-
-### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn
-- Docker (optional, for containerized deployment)
-
-### Running VirtuSpace Platform
-
-```bash
-cd VirtuSpace
-docker-compose up
-```
-
-Or run manually:
-```bash
-# Backend
-cd VirtuSpace/backend
-npm install
-npm start
-
-# Frontend (in another terminal)
-cd VirtuSpace/frontend
-npm install
-npm run dev
-```
-
-Access VirtuSpace at: **http://localhost:5173**
-
-### Running Individual Platforms
-
-Each platform (EnviHub, PlantHub, V-Orchestrator) can be run independently. See their respective README files for detailed instructions.
-
-## 🛠️ Technology Stack
-
-All platforms are built with modern web technologies:
-
-### Frontend
-- **React** 19 - UI framework
-- **React Router** - Navigation
-- **Lucide React** - Icons
-- **Axios** - HTTP client
-- **Vite** - Build tool
-
-### Backend
-- **Node.js** - Runtime
-- **Express** 5 - Web framework
-- **SQLite** - Database
-- **Multer** - File upload handling
-- **Axios** - HTTP client for tool integration
-
-## 🎯 Key Features Across Platforms
-
-### Model Management
-- Centralized model library
-- Version control and history tracking
-- Model metadata and tagging
-- Search and filtering capabilities
-- Secure file upload handling
-
-### Tool Integration
-- IPG CarMaker integration
-- MATLAB/Simulink support
-- dSPACE VEOS connectivity
-- Extensible architecture for additional tools
-- Connection testing and monitoring
-
-### Collaboration
-- Share models with external OEMs and suppliers
-- Internal team collaboration
-- Role-based access control (planned)
-- Model permissions management
-
-### Configuration Management
-- Centralized JFrog Artifactory connection
-- GitHub Enterprise Server integration
-- Artifact synchronization
-- Repository cloning and management
-
-### AI Assistant
-- Intelligent model import guidance
-- Model compatibility checking
-- Integration strategy recommendations
-- Step-by-step setup instructions
-
-## 🔐 Security Features
-
-- Secure file upload handling
-- API endpoint validation
-- Database parameter sanitization
-- Error handling and logging
-- CORS configuration
-
-## 🚀 Deployment
-
-### Continuous Integration/Continuous Deployment (CI/CD)
-
-The repository includes automated GitHub Actions workflows:
-- **Main CI/CD Pipeline** - Builds and tests VirtuSpace platform
-- **Platform-Specific Pipelines** - Separate workflows for EnviHub, PlantHub, and V-Orchestrator
-- **Full Integration Tests** - Comprehensive pipeline testing on every push
-- **Docker Support** - Automated Docker image building for deployment
-
-For more details, see [.github/workflows/README.md](.github/workflows/README.md)
-
-### Docker Deployment
-
-Each platform includes Docker support:
-
-```bash
-# VirtuSpace
-cd VirtuSpace
-docker-compose up -d
-
-# Individual platforms
-cd EnviHub  # or PlantHub, V-Orchestrator
-# Follow platform-specific deployment instructions
-```
-
-### Manual Deployment
-
-See individual platform README files for detailed deployment instructions.
-
-## 📚 Documentation
-
-- **[VirtuSpace Platform](./VirtuSpace/README.md)** - Unified parent platform documentation
-- **[EnviHub Platform](./EnviHub/README.md)** - Environment modeling platform
-- **[PlantHub Platform](./PlantHub/README.md)** - Plant modeling platform
-- **[V-Orchestrator Platform](./V-Orchestrator/README.md)** - Cosimulation orchestration
-- **[CI/CD Workflows](./.github/workflows/README.md)** - Build and deployment pipelines
-- **[Workflows Summary](./WORKFLOWS_SUMMARY.md)** - Overview of all workflows
-
-## 🤝 Integration Capabilities
-
-### IPG CarMaker
-- Connect to CarMaker instances
-- Import and export models
-- Sync model changes
-- Extract metadata for cosimulation
-
-### MATLAB/Simulink
-- Model import and export
-- Interface with Simulink models
-- Parameter configuration
-
-### dSPACE VEOS
-- Virtual ECU integration
-- Real-time simulation support
-
-## 📊 Smart Harness Feature
-
-The platform's unique **Smart Harness** feature:
-- Extracts interface definitions automatically
-- Identifies compatible tools
-- Generates integration metadata
-- Enables seamless cosimulation
-- Supports FMI/FMU export
-
-## 🌐 Collaboration & Sharing
-
-Models can be shared with:
-- External OEMs
-- Suppliers
-- Tool vendors
-- Internal Bosch teams
-- Other domains within the organization
-
-## 🐛 Troubleshooting
-
-Common issues and solutions:
-
-### Port Conflicts
-- VirtuSpace: Backend (5000), Frontend (5173/3000)
-- Check platform-specific README files for port configurations
-
-### Module Installation
-```bash
-# Install dependencies for each platform
-cd VirtuSpace/backend && npm install
-cd VirtuSpace/frontend && npm install
-```
-
-### Database Issues
-```bash
-# Reset VirtuSpace database
-cd VirtuSpace/backend
-rm envihub.db
-npm start  # Database will be recreated
-```
-
-For platform-specific issues, see individual platform documentation.
-
-## 🔄 Migration from Previous Structure
-
-**Note:** The repository structure has been reorganized for better clarity and easier deployment. The previous root-level `backend/` and `frontend/` folders are now located in `VirtuSpace/backend/` and `VirtuSpace/frontend/`.
-
-If you have existing scripts or configurations that reference the old paths, update them as follows:
-- `backend/` → `VirtuSpace/backend/`
-- `frontend/` → `VirtuSpace/frontend/`
-- `docker-compose.yml` → `VirtuSpace/docker-compose.yml`
-
-## 📝 License
-
-ISC
-
-## 👥 Contributing
-
-This is a proprietary platform for VirtuVerse. For contributions, please contact the development team.
-
-## 📞 Support
-
-For support and questions, please contact the VirtuVerse EnviHub team.
+## Features
+
+### Authentication System (VirtuVerse Studio)
+- ✅ User registration
+- ✅ Secure login (JWT)
+- ✅ Password recovery
+- ✅ Admin user management
+- ✅ Role-based access control
+
+### Simulation Platform (VirtuSpace)
+- ✅ V-Orchestrator for simulation orchestration
+- ✅ EnviHub for virtualization tools
+- ✅ PlantHub for manufacturing simulation
+- ✅ Unified dashboard
+- ✅ Seamless navigation
+
+### Analytics Platform (VirtuSphere)
+- ✅ V-Analyzer with Grafana-style dashboards
+- ✅ Simulation results visualization
+- ✅ Platform usage metrics
+- ✅ Real-time monitoring
+
+### Virtualization Tools (EnviHub)
+- ✅ Tool interfaces (CarMaker, Simulink, etc.)
+- ✅ Model library
+- ✅ Model editor
+- ✅ Sharing hub
+- ✅ Collaboration features
+
+### Manufacturing Tools (PlantHub)
+- ✅ Plant simulation tools
+- ✅ Manufacturing models
+- ✅ Factory planning
+- ✅ Production optimization
+- ✅ Process simulator
+
+### Orchestration (V-Orchestrator)
+- ✅ Open-loop simulations
+- ✅ Closed-loop simulations
+- ✅ Workflow management
+- ✅ Results tracking
+
+### AI Platform (VirtuMind - Coming Soon)
+- 🔄 ML-powered optimization
+- 🔄 Predictive analytics
+- 🔄 Intelligent automation
+
+## Technology Stack
+
+- **Frontend**: React 18, React Router 6, Axios
+- **Backend**: Node.js, Express, JWT
+- **Database**: SQLite (development), PostgreSQL/MySQL (production)
+- **Authentication**: JWT with bcrypt
+- **Deployment**: Docker, PM2, Nginx
+
+## Contributing
+
+1. Create a feature branch
+2. Make your changes
+3. Test thoroughly
+4. Submit a pull request
+
+## License
+
+ISC License - © 2024 Bosch
+
+## Support
+
+For issues, questions, or contributions:
+- Review component-specific README files
+- Check [DEPLOYMENT.md](DEPLOYMENT.md) for deployment issues
+- Contact the development team
+
+## Roadmap
+
+- [ ] Email service integration for password reset
+- [ ] OAuth integration (Google, Microsoft)
+- [ ] Advanced user management dashboard
+- [ ] Activity logging and audit trail
+- [ ] Real-time collaboration features
+- [ ] Mobile application
+- [ ] Enhanced security features

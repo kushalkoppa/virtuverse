@@ -1,0 +1,138 @@
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header-content h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: 0.5rem 0 0 0;
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.app-main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.app-footer {
+  background: #6366f1;
+  color: white;
+  text-align: center;
+  padding: 1.5rem;
+  margin-top: auto;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.dashboard-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card h3 {
+  color: #6366f1;
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.metric-item {
+  padding: 1rem;
+  background: #f3f4f6;
+  border-radius: 8px;
+}
+
+.metric-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #6366f1;
+  margin: 0;
+}
+
+.metric-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0.25rem 0 0 0;
+}
+
+.dashboard-list {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.dashboard-list h2 {
+  color: #6366f1;
+  margin: 0 0 1.5rem 0;
+}
+
+.dashboard-item {
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dashboard-item:hover {
+  border-color: #6366f1;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+}
+
+.dashboard-item h3 {
+  margin: 0 0 0.5rem 0;
+  color: #1f2937;
+}
+
+.dashboard-item p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.dashboard-meta {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.chart-container {
+  height: 300px;
+  margin-top: 1rem;
+}
