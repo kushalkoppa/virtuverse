@@ -12,7 +12,7 @@ This directory contains GitHub Actions workflow files that automate the build, t
 - Runs on every push to ensure overall system integrity
 
 ### 2. Main CI/CD Pipeline (`main-ci.yml`)
-**Triggers:** Changes to `frontend/` or `backend/` directories
+**Triggers:** Changes to `VirtuSpace/frontend/` or `VirtuSpace/backend/` directories
 - **Frontend Job:**
   - Lints frontend code
   - Builds React/Vite application
