@@ -33,3 +33,23 @@ When released, SmartHarness in VirtuMind will provide:
 - **Intelligent Automation**: Automated model selection and configuration
 - **Continuous Learning**: Improve recommendations based on user interactions and outcomes
 - **Natural Language Interface**: Query and interact with SmartHarness using natural language
+
+## UI Screenshots
+
+### VirtuMind Dashboard Preview
+![VirtuMind Dashboard](docs/screenshots/virtumind-dashboard.png)
+*Preview of the AI-powered optimization dashboard (coming soon)*
+
+### SmartHarness Advanced Interface
+![SmartHarness Advanced](docs/screenshots/virtumind-smartharness-advanced.png)
+*Advanced SmartHarness capabilities with cross-platform intelligence*
+
+### Predictive Analytics View
+![Predictive Analytics](docs/screenshots/virtumind-predictive-analytics.png)
+*ML-powered predictive analytics for simulation optimization*
+
+### Natural Language Interface
+![NL Interface](docs/screenshots/virtumind-nl-interface.png)
+*Natural language query interface for SmartHarness interaction*
+
+> **Note**: VirtuMind is currently under development. Place actual screenshots in `VirtuMind/docs/screenshots/` directory once the platform is deployed.
