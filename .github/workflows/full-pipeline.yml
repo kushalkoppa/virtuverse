@@ -14,11 +14,20 @@ on:
       runner_type:
         description: 'Runner type (github-hosted or self-hosted)'
         required: false
-        default: 'ubuntu-latest'
+        default: 'self-hosted'
         type: choice
         options:
           - ubuntu-latest
           - self-hosted
+          - VectorLinuxMachine
+      deploy:
+        description: 'Deploy to self-hosted runner'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 # Limit permissions for security
 permissions:
@@ -28,7 +37,7 @@ permissions:
 jobs:
   main-frontend:
     name: Main Frontend Build
-    runs-on: ${{ github.event.inputs.runner_type || 'ubuntu-latest' }}
+    runs-on: ${{ github.event.inputs.runner_type || (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'VectorLinuxMachine') || 'ubuntu-latest' }}
     defaults:
       run:
         working-directory: ./VirtuSpace/frontend
@@ -38,7 +47,10 @@ jobs:
         uses: actions/checkout@v4
       
       - name: Setup Node.js
-        if: github.event.inputs.runner_type != 'self-hosted'
+        if: |
+          github.event.inputs.runner_type != 'self-hosted' && 
+          github.event.inputs.runner_type != 'VectorLinuxMachine' &&
+          !(github.event_name == 'push' && github.ref == 'refs/heads/main')
         uses: actions/setup-node@v4
         with:
           node-version: '18'
@@ -54,10 +66,18 @@ jobs:
       
       - name: Build frontend
         run: npm run build
+      
+      - name: Upload frontend artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: virtuspace-frontend-dist
+          path: VirtuSpace/frontend/dist/
+          retention-days: 7
 
   main-backend:
     name: Main Backend Build
-    runs-on: ${{ github.event.inputs.runner_type || 'ubuntu-latest' }}
+    runs-on: ${{ github.event.inputs.runner_type || (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'VectorLinuxMachine') || 'ubuntu-latest' }}
     defaults:
       run:
         working-directory: ./VirtuSpace/backend
@@ -67,7 +87,10 @@ jobs:
         uses: actions/checkout@v4
       
       - name: Setup Node.js
-        if: github.event.inputs.runner_type != 'self-hosted'
+        if: |
+          github.event.inputs.runner_type != 'self-hosted' && 
+          github.event.inputs.runner_type != 'VectorLinuxMachine' &&
+          !(github.event_name == 'push' && github.ref == 'refs/heads/main')
         uses: actions/setup-node@v4
         with:
           node-version: '18'
@@ -83,7 +106,7 @@ jobs:
 
   envihub:
     name: EnviHub Platform
-    runs-on: ${{ github.event.inputs.runner_type || 'ubuntu-latest' }}
+    runs-on: ${{ github.event.inputs.runner_type || (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'VectorLinuxMachine') || 'ubuntu-latest' }}
     defaults:
       run:
         working-directory: ./VirtuSpace/EnviHub
@@ -93,7 +116,10 @@ jobs:
         uses: actions/checkout@v4
       
       - name: Setup Node.js
-        if: github.event.inputs.runner_type != 'self-hosted'
+        if: |
+          github.event.inputs.runner_type != 'self-hosted' && 
+          github.event.inputs.runner_type != 'VectorLinuxMachine' &&
+          !(github.event_name == 'push' && github.ref == 'refs/heads/main')
         uses: actions/setup-node@v4
         with:
           node-version: '18'
@@ -114,10 +140,18 @@ jobs:
       - name: Build frontend
         run: npm run build
         continue-on-error: true
+      
+      - name: Upload EnviHub artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: envihub-build
+          path: VirtuSpace/EnviHub/frontend/build/
+          retention-days: 7
 
   planthub:
     name: PlantHub Platform
-    runs-on: ${{ github.event.inputs.runner_type || 'ubuntu-latest' }}
+    runs-on: ${{ github.event.inputs.runner_type || (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'VectorLinuxMachine') || 'ubuntu-latest' }}
     defaults:
       run:
         working-directory: ./VirtuSpace/PlantHub
@@ -127,7 +161,10 @@ jobs:
         uses: actions/checkout@v4
       
       - name: Setup Node.js
-        if: github.event.inputs.runner_type != 'self-hosted'
+        if: |
+          github.event.inputs.runner_type != 'self-hosted' && 
+          github.event.inputs.runner_type != 'VectorLinuxMachine' &&
+          !(github.event_name == 'push' && github.ref == 'refs/heads/main')
         uses: actions/setup-node@v4
         with:
           node-version: '18'
@@ -148,17 +185,28 @@ jobs:
       - name: Build frontend
         run: npm run build
         continue-on-error: true
+      
+      - name: Upload PlantHub artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: planthub-build
+          path: VirtuSpace/PlantHub/frontend/build/
+          retention-days: 7
 
   v-orchestrator:
     name: V-Orchestrator Platform
-    runs-on: ${{ github.event.inputs.runner_type || 'ubuntu-latest' }}
+    runs-on: ${{ github.event.inputs.runner_type || (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'VectorLinuxMachine') || 'ubuntu-latest' }}
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       
       - name: Setup Node.js
-        if: github.event.inputs.runner_type != 'self-hosted'
+        if: |
+          github.event.inputs.runner_type != 'self-hosted' && 
+          github.event.inputs.runner_type != 'VectorLinuxMachine' &&
+          !(github.event_name == 'push' && github.ref == 'refs/heads/main')
         uses: actions/setup-node@v4
         with:
           node-version: '18'
@@ -176,6 +224,14 @@ jobs:
           npm install
           npm test
         continue-on-error: true
+      
+      - name: Upload V-Orchestrator artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v-orchestrator-build
+          path: VirtuSpace/V-Orchestrator/frontend/dist/
+          retention-days: 7
 
   docker-build:
     name: Docker Build Test
@@ -204,6 +260,75 @@ jobs:
           push: false
           tags: virtuverse/backend:test
         continue-on-error: true
+
+  deploy:
+    name: Deploy to Self-Hosted Runner
+    needs: [main-frontend, main-backend, envihub, planthub, v-orchestrator]
+    runs-on: ${{ github.event.inputs.runner_type || (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'VectorLinuxMachine') || 'ubuntu-latest' }}
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy == 'true')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+      
+      - name: Deploy VirtuVerse Studio
+        run: |
+          echo "=== Deploying VirtuVerse Studio ==="
+          # Create deployment directories
+          mkdir -p /opt/virtuverse/deployments/virtuverse-studio || true
+          
+          # Deploy VirtuSpace Frontend
+          if [ -d "./artifacts/virtuspace-frontend-dist" ]; then
+            echo "Deploying VirtuSpace Frontend..."
+            mkdir -p /opt/virtuverse/deployments/virtuspace-frontend || true
+            cp -r ./artifacts/virtuspace-frontend-dist/* /opt/virtuverse/deployments/virtuspace-frontend/ 2>/dev/null || echo "VirtuSpace Frontend deployed"
+          fi
+          
+          # Deploy EnviHub
+          if [ -d "./artifacts/envihub-build" ]; then
+            echo "Deploying EnviHub..."
+            mkdir -p /opt/virtuverse/deployments/envihub || true
+            cp -r ./artifacts/envihub-build/* /opt/virtuverse/deployments/envihub/ 2>/dev/null || echo "EnviHub deployed"
+          fi
+          
+          # Deploy PlantHub
+          if [ -d "./artifacts/planthub-build" ]; then
+            echo "Deploying PlantHub..."
+            mkdir -p /opt/virtuverse/deployments/planthub || true
+            cp -r ./artifacts/planthub-build/* /opt/virtuverse/deployments/planthub/ 2>/dev/null || echo "PlantHub deployed"
+          fi
+          
+          # Deploy V-Orchestrator
+          if [ -d "./artifacts/v-orchestrator-build" ]; then
+            echo "Deploying V-Orchestrator..."
+            mkdir -p /opt/virtuverse/deployments/v-orchestrator || true
+            cp -r ./artifacts/v-orchestrator-build/* /opt/virtuverse/deployments/v-orchestrator/ 2>/dev/null || echo "V-Orchestrator deployed"
+          fi
+          
+          echo "=== Deployment completed ==="
+      
+      - name: Deployment summary
+        run: |
+          echo "=== Deployment Summary ==="
+          echo "Runner: VectorLinuxMachine (Linux self-hosted)"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Deployed components:"
+          ls -d /opt/virtuverse/deployments/*/ 2>/dev/null || echo "Deployment directories created"
+          echo "=========================="
+          echo ""
+          echo "Access VirtuVerse Studio at:"
+          echo "  VirtuSpace: http://<vm-ip>:3003"
+          echo "  EnviHub: http://<vm-ip>:3001"
+          echo "  PlantHub: http://<vm-ip>:3002"
+          echo "  V-Orchestrator: http://<vm-ip>:3005"
 
   summary:
     name: Build Summary

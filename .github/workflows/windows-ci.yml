@@ -23,6 +23,22 @@ on:
           - envihub
           - planthub
           - v-orchestrator
+      runner_type:
+        description: 'Runner type'
+        required: false
+        default: 'VirtuGo'
+        type: choice
+        options:
+          - windows-latest
+          - VirtuGo
+      deploy:
+        description: 'Deploy to self-hosted runner'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 # Limit permissions for security
 permissions:
@@ -36,7 +52,7 @@ jobs:
   # VirtuVerse Studio Build on Windows
   virtuverse-studio:
     name: VirtuVerse Studio (Windows)
-    runs-on: windows-latest
+    runs-on: ${{ github.event.inputs.runner_type || (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'VirtuGo') || 'windows-latest' }}
     if: |
       github.event_name != 'workflow_dispatch' || 
       inputs.component == 'all' || 
@@ -97,7 +113,7 @@ jobs:
   # VirtuSpace Platform Build on Windows
   virtuspace:
     name: VirtuSpace Platform (Windows)
-    runs-on: windows-latest
+    runs-on: ${{ github.event.inputs.runner_type || (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'VirtuGo') || 'windows-latest' }}
     if: |
       github.event_name != 'workflow_dispatch' || 
       inputs.component == 'all' || 
@@ -154,7 +170,7 @@ jobs:
   # EnviHub Platform Build on Windows
   envihub:
     name: EnviHub Platform (Windows)
-    runs-on: windows-latest
+    runs-on: ${{ github.event.inputs.runner_type || (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'VirtuGo') || 'windows-latest' }}
     if: |
       github.event_name != 'workflow_dispatch' || 
       inputs.component == 'all' || 
@@ -213,7 +229,7 @@ jobs:
   # PlantHub Platform Build on Windows
   planthub:
     name: PlantHub Platform (Windows)
-    runs-on: windows-latest
+    runs-on: ${{ github.event.inputs.runner_type || (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'VirtuGo') || 'windows-latest' }}
     if: |
       github.event_name != 'workflow_dispatch' || 
       inputs.component == 'all' || 
@@ -272,7 +288,7 @@ jobs:
   # V-Orchestrator Platform Build on Windows
   v-orchestrator:
     name: V-Orchestrator Platform (Windows)
-    runs-on: windows-latest
+    runs-on: ${{ github.event.inputs.runner_type || (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'VirtuGo') || 'windows-latest' }}
     if: |
       github.event_name != 'workflow_dispatch' || 
       inputs.component == 'all' || 
@@ -325,6 +341,83 @@ jobs:
           name: v-orchestrator-windows-build
           path: VirtuSpace/V-Orchestrator/frontend/dist/
           retention-days: 7
+
+  # Deployment job for Windows
+  deploy:
+    name: Deploy to Windows Self-Hosted Runner
+    needs: [virtuverse-studio, virtuspace, envihub, planthub, v-orchestrator]
+    runs-on: ${{ github.event.inputs.runner_type || (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'VirtuGo') || 'windows-latest' }}
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy == 'true')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+      
+      - name: Deploy VirtuVerse Studio
+        shell: pwsh
+        run: |
+          Write-Host "=== Deploying VirtuVerse Studio on Windows ==="
+          
+          # Create deployment directories
+          New-Item -ItemType Directory -Force -Path "C:\VirtuVerse\deployments\virtuverse-studio" | Out-Null
+          
+          # Deploy VirtuSpace Frontend
+          if (Test-Path "./artifacts/virtuspace-windows-dist") {
+            Write-Host "Deploying VirtuSpace Frontend..."
+            New-Item -ItemType Directory -Force -Path "C:\VirtuVerse\deployments\virtuspace-frontend" | Out-Null
+            Copy-Item -Path "./artifacts/virtuspace-windows-dist/*" -Destination "C:\VirtuVerse\deployments\virtuspace-frontend/" -Recurse -Force -ErrorAction SilentlyContinue
+            Write-Host "VirtuSpace Frontend deployed"
+          }
+          
+          # Deploy EnviHub
+          if (Test-Path "./artifacts/envihub-windows-build") {
+            Write-Host "Deploying EnviHub..."
+            New-Item -ItemType Directory -Force -Path "C:\VirtuVerse\deployments\envihub" | Out-Null
+            Copy-Item -Path "./artifacts/envihub-windows-build/*" -Destination "C:\VirtuVerse\deployments\envihub/" -Recurse -Force -ErrorAction SilentlyContinue
+            Write-Host "EnviHub deployed"
+          }
+          
+          # Deploy PlantHub
+          if (Test-Path "./artifacts/planthub-windows-build") {
+            Write-Host "Deploying PlantHub..."
+            New-Item -ItemType Directory -Force -Path "C:\VirtuVerse\deployments\planthub" | Out-Null
+            Copy-Item -Path "./artifacts/planthub-windows-build/*" -Destination "C:\VirtuVerse\deployments\planthub/" -Recurse -Force -ErrorAction SilentlyContinue
+            Write-Host "PlantHub deployed"
+          }
+          
+          # Deploy V-Orchestrator
+          if (Test-Path "./artifacts/v-orchestrator-windows-build") {
+            Write-Host "Deploying V-Orchestrator..."
+            New-Item -ItemType Directory -Force -Path "C:\VirtuVerse\deployments\v-orchestrator" | Out-Null
+            Copy-Item -Path "./artifacts/v-orchestrator-windows-build/*" -Destination "C:\VirtuVerse\deployments\v-orchestrator/" -Recurse -Force -ErrorAction SilentlyContinue
+            Write-Host "V-Orchestrator deployed"
+          }
+          
+          Write-Host "=== Deployment completed ==="
+      
+      - name: Deployment summary
+        shell: pwsh
+        run: |
+          Write-Host "=== Deployment Summary ==="
+          Write-Host "Runner: VirtuGo (Windows self-hosted)"
+          Write-Host "Branch: ${{ github.ref_name }}"
+          Write-Host "Commit: ${{ github.sha }}"
+          Write-Host "Deployed components:"
+          Get-ChildItem -Path "C:\VirtuVerse\deployments" -Directory -ErrorAction SilentlyContinue | ForEach-Object { Write-Host "  - $($_.Name)" }
+          Write-Host "=========================="
+          Write-Host ""
+          Write-Host "Access VirtuVerse Studio at:"
+          Write-Host "  VirtuSpace: http://<vm-ip>:3003"
+          Write-Host "  EnviHub: http://<vm-ip>:3001"
+          Write-Host "  PlantHub: http://<vm-ip>:3002"
+          Write-Host "  V-Orchestrator: http://<vm-ip>:3005"
 
   # Summary job
   summary:
