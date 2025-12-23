@@ -73,6 +73,9 @@ echo "${YELLOW}Starting services in the background...${NC}"
 echo "To stop all services, run: ./stop-all.sh"
 echo ""
 
+# Ensure logs directory exists
+mkdir -p logs
+
 # Start VirtuVerse Studio Backend
 echo "Starting VirtuVerse Studio Backend (Port 5001)..."
 cd VirtuVerse-Studio
