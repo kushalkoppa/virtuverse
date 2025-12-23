@@ -30,6 +30,11 @@ on:
           - planthub
           - v-orchestrator
 
+# Limit permissions for security
+permissions:
+  contents: read
+  actions: read
+
 env:
   NODE_VERSION: '18'
 

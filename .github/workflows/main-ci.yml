@@ -28,6 +28,11 @@ on:
           - ubuntu-latest
           - self-hosted
 
+# Limit permissions for security
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   frontend-build:
     name: Build and Lint Frontend

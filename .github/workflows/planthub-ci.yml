@@ -26,6 +26,11 @@ on:
           - ubuntu-latest
           - self-hosted
 
+# Limit permissions for security
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   planthub-build:
     name: Build and Test PlantHub Platform

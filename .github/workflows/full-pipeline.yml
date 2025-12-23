@@ -20,6 +20,11 @@ on:
           - ubuntu-latest
           - self-hosted
 
+# Limit permissions for security
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   main-frontend:
     name: Main Frontend Build
