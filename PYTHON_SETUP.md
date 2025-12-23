@@ -26,9 +26,6 @@ Poetry is the recommended way to manage Python dependencies for this project.
    # Install with database support
    poetry install --extras db
    
-   # Install with testing tools
-   poetry install --extras test
-   
    # Install with data processing tools
    poetry install --extras data
    
@@ -59,9 +56,10 @@ The following optional dependency groups are available:
 
 - **web**: Flask, FastAPI, and Uvicorn for web services
 - **db**: SQLAlchemy and PostgreSQL support for database operations
-- **test**: pytest and coverage tools for testing
 - **data**: pandas and numpy for data processing
 - **all**: All optional dependencies
+
+**Note**: Testing dependencies (pytest, pytest-cov) are included in the dev dependencies and will be installed with `poetry install --with dev`.
 
 ## Development
 

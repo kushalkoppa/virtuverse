@@ -73,7 +73,7 @@ This document provides a comprehensive summary of all changes made to fix deploy
 **Solution Implemented:**
 
 #### Created Poetry Configuration (`pyproject.toml`)
-- Configured for Python 3.8+
+- Configured for Python 3.9+
 - Added core dependencies: `pyyaml`, `requests`, `python-dotenv`
 - Added optional dependency groups:
   - **web**: Flask, FastAPI, Uvicorn for web services
