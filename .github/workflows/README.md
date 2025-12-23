@@ -1,58 +1,33 @@
 # GitHub Actions Workflows
 
-This directory contains GitHub Actions workflow files that automate the build, test, and deployment processes for the VirtuVerse platform.
+This directory contains streamlined GitHub Actions workflow files that automate the build, test, and deployment processes for the VirtuVerse platform.
 
 ## Workflow Files
 
-### 1. Azure VM Deployment (`azure-deployment.yml`) **NEW**
+### 1. Full Pipeline CI/CD (`full-pipeline.yml`)
+**Triggers:** All pushes, pull requests, and manual workflow dispatch
+- **Purpose**: Main CI/CD workflow for all platform components
+- Builds all components: VirtuSpace (frontend/backend), EnviHub, PlantHub, V-Orchestrator
+- Tests Docker image builds
+- Runs on every push to ensure overall system integrity
+- Supports manual runner selection via workflow_dispatch
+
+### 2. Azure VM Deployment (`azure-deployment.yml`)
 **Triggers:** Push to main, pull requests, and manual workflow dispatch
-- **Purpose**: Primary deployment workflow with Azure VM self-hosted runner support
+- **Purpose**: Deployment workflow with Azure VM self-hosted runner support
 - Builds all components of the platform (VirtuSpace, EnviHub, PlantHub, V-Orchestrator)
-- Supports both GitHub-hosted and self-hosted Azure VM runners
+- Supports both GitHub-hosted (`ubuntu-latest`) and self-hosted Azure VM runners
 - Automatic deployment to Azure VM when using self-hosted runner
 - **Manual Deployment Options**:
   - Choose runner type: `self-hosted` or `ubuntu-latest`
-  - Select deployment target: `all` or specific platform
-- Provides comprehensive build and deployment summary
+  - Select deployment target: `all` or specific platform component
 
-### 2. Full Pipeline CI/CD (`full-pipeline.yml`)
+### 3. Windows CI/CD Pipeline (`windows-ci.yml`)
 **Triggers:** All pushes, pull requests, and manual workflow dispatch
-- Builds all components of the platform (main frontend/backend, EnviHub, PlantHub, V-Orchestrator)
-- Tests Docker image builds
-- Provides comprehensive build summary
-- Runs on every push to ensure overall system integrity
-- **NEW**: Supports manual runner selection via workflow_dispatch
-
-### 3. Main CI/CD Pipeline (`main-ci.yml`)
-**Triggers:** Changes to `VirtuSpace/frontend/` or `VirtuSpace/backend/` directories
-- **Frontend Job:**
-  - Installs dependencies
-  - Lints frontend code (optional)
-  - Builds React/Vite application
-  - Uploads build artifacts
-- **Backend Job:**
-  - Installs dependencies
-  - Runs tests
-  - Validates server startup
-- **NEW**: Supports manual runner selection via workflow_dispatch
-
-### 4. EnviHub CI/CD Pipeline (`envihub-ci.yml`)
-**Triggers:** Changes to `VirtuSpace/EnviHub/` directory
-- Builds EnviHub frontend application
-- Tests EnviHub backend and validates server startup
-- **NEW**: Supports manual runner selection via workflow_dispatch
-
-### 5. PlantHub CI/CD Pipeline (`planthub-ci.yml`)
-**Triggers:** Changes to `VirtuSpace/PlantHub/` directory
-- Builds PlantHub frontend application
-- Tests PlantHub backend and validates server startup
-- **NEW**: Supports manual runner selection via workflow_dispatch
-
-### 6. V-Orchestrator CI/CD Pipeline (`v-orchestrator-ci.yml`)
-**Triggers:** Changes to `VirtuSpace/V-Orchestrator/` directory
-- Builds V-Orchestrator frontend application
-- Tests V-Orchestrator backend and validates server startup
-- **NEW**: Supports manual runner selection via workflow_dispatch
+- **Purpose**: Windows platform-specific builds and tests
+- Tests all components on Windows environment (VirtuVerse Studio, VirtuSpace, EnviHub, PlantHub, V-Orchestrator)
+- Supports selective component building via workflow_dispatch
+- Validates Windows compatibility
 
 ## Runner Configuration
 
@@ -89,10 +64,9 @@ All workflows support manual runner selection via workflow_dispatch:
 
 ## Trigger Conditions
 
-All workflows are triggered by:
-- **Push events** to `main` or `develop` branches
-- **Pull request events** targeting `main` or `develop` branches
-- Path-specific triggers ensure only relevant workflows run for each change
+- **full-pipeline.yml**: Triggered by all pushes and PRs to `main` or `develop` branches
+- **azure-deployment.yml**: Triggered by pushes and PRs to `main` branch, plus manual dispatch
+- **windows-ci.yml**: Triggered by all pushes and PRs to `main` or `develop` branches
 
 ## Technology Stack
 
@@ -130,35 +104,39 @@ All workflows are triggered by:
 
 ### Parallel Execution
 - Independent jobs run in parallel for faster feedback
-- Platform-specific workflows run only when needed
+- All platform components build concurrently in full-pipeline workflow
 
 ## Local Testing
 
 Before pushing changes, you can test builds locally:
 
 ```bash
-# Frontend
-cd frontend
-npm ci
+# VirtuSpace Frontend
+cd VirtuSpace/frontend
+npm install
 npm run lint
 npm run build
 
-# Backend
-cd backend
+# VirtuSpace Backend
+cd VirtuSpace/backend
 npm install
 npm test
 
 # EnviHub
-cd EnviHub/frontend && npm install && npm run build
-cd EnviHub/backend && npm install && npm test
+cd VirtuSpace/EnviHub
+npm install
+npm test
+npm run build
 
 # PlantHub
-cd PlantHub/frontend && npm install && npm run build
-cd PlantHub/backend && npm install && npm test
+cd VirtuSpace/PlantHub
+npm install
+npm test
+npm run build
 
 # V-Orchestrator
-cd V-Orchestrator/frontend && npm install && npm run build
-cd V-Orchestrator/backend && npm install && npm test
+cd VirtuSpace/V-Orchestrator/frontend && npm install && npm run build
+cd VirtuSpace/V-Orchestrator/backend && npm install && npm test
 ```
 
 ## Viewing Workflow Results
@@ -181,9 +159,9 @@ To add a new workflow:
 Add workflow status badges to your README:
 
 ```markdown
+![Full Pipeline CI/CD](https://github.com/kushalkoppa/virtuverse/actions/workflows/full-pipeline.yml/badge.svg)
 ![Azure VM Deployment](https://github.com/kushalkoppa/virtuverse/actions/workflows/azure-deployment.yml/badge.svg)
-![Full Pipeline](https://github.com/kushalkoppa/virtuverse/actions/workflows/full-pipeline.yml/badge.svg)
-![Main CI/CD](https://github.com/kushalkoppa/virtuverse/actions/workflows/main-ci.yml/badge.svg)
+![Windows CI/CD](https://github.com/kushalkoppa/virtuverse/actions/workflows/windows-ci.yml/badge.svg)
 ```
 
 ## Azure VM Self-Hosted Runner Setup
@@ -217,8 +195,8 @@ Quick setup steps:
 
 ## Best Practices
 
-1. **Keep workflows focused:** Each workflow handles specific components
-2. **Use path filters:** Reduce unnecessary workflow runs
+1. **Consolidated workflows:** Full pipeline workflow handles all components efficiently
+2. **Platform-specific testing:** Use windows-ci for Windows compatibility checks
 3. **Cache dependencies:** Faster builds with npm caching
 4. **Fail fast:** Critical failures stop the workflow early
 5. **Artifact retention:** Balance storage costs with debugging needs
