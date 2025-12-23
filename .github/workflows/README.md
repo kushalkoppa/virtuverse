@@ -1,209 +1,130 @@
-# GitHub Actions Workflows
+# GitHub Workflows
 
-This directory contains streamlined GitHub Actions workflow files that automate the build, test, and deployment processes for the VirtuVerse platform.
+This directory contains GitHub Actions workflows for the VirtuVerse project.
 
-## Workflow Files
+## CI/CD Pipeline (`ci-cd.yml`)
 
-### 1. Full Pipeline CI/CD (`full-pipeline.yml`)
-**Triggers:** All pushes, pull requests, and manual workflow dispatch
-- **Purpose**: Main CI/CD workflow for all platform components
-- Builds all components: VirtuSpace (frontend/backend), EnviHub, PlantHub, V-Orchestrator
-- Tests Docker image builds
-- Runs on every push to ensure overall system integrity
-- Supports manual runner selection via workflow_dispatch
+The main CI/CD pipeline automatically builds and tests all components of the VirtuVerse project whenever changes are pushed or pull requests are created.
 
-### 2. Azure VM Deployment (`azure-deployment.yml`)
-**Triggers:** Push to main, pull requests, and manual workflow dispatch
-- **Purpose**: Deployment workflow with Azure VM self-hosted runner support
-- Builds all components of the platform (VirtuSpace, EnviHub, PlantHub, V-Orchestrator)
-- Supports both GitHub-hosted (`ubuntu-latest`) and self-hosted Azure VM runners
-- Automatic deployment to Azure VM when using self-hosted runner
-- **Manual Deployment Options**:
-  - Choose runner type: `self-hosted` or `ubuntu-latest`
-  - Select deployment target: `all` or specific platform component
+### Workflow Overview
 
-### 3. Windows CI/CD Pipeline (`windows-ci.yml`)
-**Triggers:** All pushes, pull requests, and manual workflow dispatch
-- **Purpose**: Windows platform-specific builds and tests
-- Tests all components on Windows environment (VirtuVerse Studio, VirtuSpace, EnviHub, PlantHub, V-Orchestrator)
-- Supports selective component building via workflow_dispatch
-- Validates Windows compatibility
+The pipeline consists of the following jobs:
 
-## Runner Configuration
+1. **Detect Changes**: Automatically detects which components have changed to optimize build times
+2. **Build Backend**: Builds backend/server/api components
+3. **Build Frontend**: Builds frontend/client components  
+4. **Build UI**: Builds UI components
+5. **Integration Check**: Verifies all builds completed successfully
 
-All workflows now support both **GitHub-hosted** and **self-hosted** runners:
+### Supported Project Structures
 
-### GitHub-Hosted Runners (Default)
-- Automatically provisioned by GitHub
-- Clean environment for each run
-- No setup required
-- Used by default for all automated triggers (push, pull_request)
+The workflow automatically detects and builds projects in the following directories:
 
-### Self-Hosted Runners (Azure VM)
-- Hosted on your Azure Linux VM
-- Persistent environment
-- Can deploy directly to the VM
-- Requires setup (see [AZURE_RUNNER_SETUP.md](../../AZURE_RUNNER_SETUP.md))
+- **Backend**: `backend/`, `server/`, `api/`
+- **Frontend**: `frontend/`, `client/`
+- **UI**: `ui/`
 
-### Selecting Runner Type
+### Supported Technologies
 
-#### Automatic (Default Behavior):
-- **azure-deployment.yml**: Uses self-hosted runner by default
-- **All other workflows**: Use GitHub-hosted runners by default
+The workflow supports multiple technology stacks:
 
-#### Manual Selection:
-All workflows support manual runner selection via workflow_dispatch:
+#### Backend
+- Node.js (with npm)
+- Python (with pip/requirements.txt)
+- Java (with Maven/pom.xml)
 
-1. Go to **Actions** tab
-2. Select the workflow
-3. Click **Run workflow**
-4. Choose runner type from dropdown:
-   - `ubuntu-latest` - GitHub-hosted runner
-   - `self-hosted` - Your Azure VM runner
-5. Click **Run workflow**
+#### Frontend/UI
+- Node.js-based frameworks (React, Vue, Angular, etc.)
+- Automatic dependency installation via npm
+- Build artifact generation and upload
 
-## Trigger Conditions
+### Triggers
 
-- **full-pipeline.yml**: Triggered by all pushes and PRs to `main` or `develop` branches
-- **azure-deployment.yml**: Triggered by pushes and PRs to `main` branch, plus manual dispatch
-- **windows-ci.yml**: Triggered by all pushes and PRs to `main` or `develop` branches
+The workflow runs on:
+- Push to `main`, `master`, or `develop` branches
+- Pull requests targeting `main`, `master`, or `develop` branches
+- Manual trigger via workflow_dispatch
 
-## Technology Stack
+### Build Matrix
 
-- **Node.js:** Version 18
-- **Build Tools:** Vite (frontend), npm (all)
-- **Docker:** Multi-stage builds for production deployments
-- **Artifact Storage:** Build artifacts retained for 7 days
-- **Runners:** GitHub-hosted (ubuntu-latest) or Self-hosted (Azure VM)
+The workflow tests against multiple Node.js versions:
+- Node.js 18.x
+- Node.js 20.x
 
-## Workflow Features
+### Features
 
-### Runner Support
-- **Dual Runner Support**: All workflows work with both GitHub-hosted and self-hosted runners
-- **Automatic Runner Selection**: Smart defaults based on workflow trigger
-- **Manual Override**: Select runner type via workflow_dispatch for testing
+- **Automatic Detection**: Only builds components that exist in the repository
+- **Parallel Builds**: Backend, frontend, and UI are built in parallel for faster execution
+- **Multi-language Support**: Handles Node.js, Python, and Java projects
+- **Artifact Upload**: Build outputs are saved as artifacts for deployment
+- **Test Execution**: Automatically runs tests if available
+- **Linting**: Runs linters if configured in the project
+- **Graceful Failures**: Non-critical steps use `continue-on-error` to prevent blocking
 
-### Dependency Management
-- Uses `npm install` instead of `npm ci` for flexibility
-- No package-lock.json required
-- Compatible with package.json only
+### Directory Structure
 
-### Error Handling
-- `continue-on-error: true` for non-critical steps
-- Ensures pipeline completes even if some optional checks fail
+To use this workflow, organize your project as follows:
 
-### Artifact Management
-- Build artifacts uploaded for deployment
-- 7-day retention policy for build outputs
-- Artifacts automatically deployed to Azure VM when using self-hosted runner
-
-### Deployment
-- **Azure VM Deployment**: Automatic deployment when using self-hosted runner
-- **Deployment Directory**: `/opt/virtuverse/deployments/` on Azure VM
-- **Health Checks**: Automated post-deployment verification
-
-### Parallel Execution
-- Independent jobs run in parallel for faster feedback
-- All platform components build concurrently in full-pipeline workflow
-
-## Local Testing
-
-Before pushing changes, you can test builds locally:
-
-```bash
-# VirtuSpace Frontend
-cd VirtuSpace/frontend
-npm install
-npm run lint
-npm run build
-
-# VirtuSpace Backend
-cd VirtuSpace/backend
-npm install
-npm test
-
-# EnviHub
-cd VirtuSpace/EnviHub
-npm install
-npm test
-npm run build
-
-# PlantHub
-cd VirtuSpace/PlantHub
-npm install
-npm test
-npm run build
-
-# V-Orchestrator
-cd VirtuSpace/V-Orchestrator/frontend && npm install && npm run build
-cd VirtuSpace/V-Orchestrator/backend && npm install && npm test
+```
+virtuverse/
+├── backend/           # Backend logic
+│   ├── package.json   # For Node.js backend
+│   └── ...
+├── frontend/          # Frontend application
+│   ├── package.json
+│   └── ...
+├── ui/                # UI components
+│   ├── package.json
+│   └── ...
+└── .github/
+    └── workflows/
+        └── ci-cd.yml
 ```
 
-## Viewing Workflow Results
+### Customization
 
-1. Navigate to the **Actions** tab in the GitHub repository
-2. Select a workflow run to view details
-3. Click on individual jobs to see logs
-4. Download artifacts from successful builds
+To customize the workflow for your specific needs:
 
-## Adding New Workflows
+1. **Add Build Steps**: Edit the workflow file to add technology-specific build steps
+2. **Modify Test Commands**: Update the test execution commands for your testing framework
+3. **Change Triggers**: Modify the `on:` section to change when the workflow runs
+4. **Add Deployment**: Extend the workflow with deployment jobs after successful builds
 
-To add a new workflow:
-1. Create a new `.yml` file in `.github/workflows/`
-2. Define the trigger conditions
-3. Add jobs with appropriate steps
-4. Test with a pull request
+### Expected Scripts in package.json
 
-## Workflow Badges
+For Node.js projects, the workflow expects the following npm scripts:
 
-Add workflow status badges to your README:
+- `build`: Build the project (required for frontend/UI)
+- `test`: Run tests (optional)
+- `lint`: Run linters (optional)
+
+Example package.json scripts:
+```json
+{
+  "scripts": {
+    "build": "react-scripts build",
+    "test": "jest",
+    "lint": "eslint src/"
+  }
+}
+```
+
+### Status Badge
+
+Add this badge to your README.md to show the workflow status:
 
 ```markdown
-![Full Pipeline CI/CD](https://github.com/kushalkoppa/virtuverse/actions/workflows/full-pipeline.yml/badge.svg)
-![Azure VM Deployment](https://github.com/kushalkoppa/virtuverse/actions/workflows/azure-deployment.yml/badge.svg)
-![Windows CI/CD](https://github.com/kushalkoppa/virtuverse/actions/workflows/windows-ci.yml/badge.svg)
+![CI/CD Pipeline](https://github.com/kushalkoppa/virtuverse/workflows/CI%2FCD%20Pipeline/badge.svg)
 ```
 
-## Azure VM Self-Hosted Runner Setup
+## Future Enhancements
 
-To use the self-hosted runner features, you need to configure an Azure Linux VM as a GitHub Actions runner.
+Potential improvements to consider:
 
-**See detailed setup instructions in [AZURE_RUNNER_SETUP.md](../../AZURE_RUNNER_SETUP.md)**
-
-Quick setup steps:
-1. Provision Azure Linux VM (Ubuntu 20.04+)
-2. Install Node.js 18 and required dependencies
-3. Download and configure GitHub Actions runner
-4. Start runner as a service
-5. Create deployment directories
-6. Test with manual workflow trigger
-
-## Troubleshooting
-
-### Build Failures
-- Check the Actions tab for detailed error logs
-- Verify dependencies are correctly specified in package.json
-- Ensure Node.js version compatibility
-
-### Cache Issues
-- Workflows automatically handle cache invalidation
-- Manual cache clearing: modify cache key in workflow file
-
-### Permission Issues
-- Ensure repository has proper workflow permissions enabled
-- Check GITHUB_TOKEN permissions in repository settings
-
-## Best Practices
-
-1. **Consolidated workflows:** Full pipeline workflow handles all components efficiently
-2. **Platform-specific testing:** Use windows-ci for Windows compatibility checks
-3. **Cache dependencies:** Faster builds with npm caching
-4. **Fail fast:** Critical failures stop the workflow early
-5. **Artifact retention:** Balance storage costs with debugging needs
-
-## Maintenance
-
-- Review and update Node.js versions periodically
-- Update action versions (e.g., `actions/checkout@v4`)
-- Monitor workflow run times and optimize as needed
-- Clean up old artifacts to manage storage
+- Add deployment steps for staging/production
+- Integrate with cloud platforms (AWS, Azure, GCP)
+- Add security scanning (SAST, dependency checks)
+- Implement code coverage reporting
+- Add performance testing
+- Set up Docker image building
+- Configure notifications (Slack, email, etc.)
