@@ -198,8 +198,8 @@ V-DevContainers provides templates for common scenarios:
 ### Frontend
 - React 18
 - React Router
-- Tailwind CSS
 - Lucide Icons
+- Vite
 
 ### Backend
 - Node.js
