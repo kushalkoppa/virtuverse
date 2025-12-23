@@ -1,45 +1,113 @@
-# VirtuVerse - EnviHub Platform
+# VirtuVerse - E2E Virtualization & Simulation Universe
 
 ![Main CI/CD](https://github.com/kushalkoppa/virtuverse/actions/workflows/main-ci.yml/badge.svg)
 ![Full Pipeline](https://github.com/kushalkoppa/virtuverse/actions/workflows/full-pipeline.yml/badge.svg)
 
-VirtuVerse is an E2E Virtualization & Simulation universe in SDV, a collaborator platform that includes **EnviHub** - a comprehensive platform for simulation model management and tool integration.
+VirtuVerse is an E2E Virtualization & Simulation universe in SDV (Software-Defined Vehicles), providing a comprehensive collaborative platform for simulation model management, tool integration, and cosimulation orchestration.
 
-## 🚀 EnviHub Platform
-
-EnviHub is a part of VirtuSpace that provides:
-
-- **Model Library Management** - Store, organize, and share simulation models
-- **Tool Integration** - Connect with tools like IPG CarMaker, MATLAB/Simulink, dSPACE VEOS
-- **Metadata Extraction** - Extract smart harness metadata for cosimulation integration
-- **Model Editor** - Edit and configure models across different tools
-- **Collaboration** - Share models with OEMs, suppliers, and internal Bosch teams
-
-## 🏗️ Architecture
+## 🏗️ Repository Structure
 
 ```
 virtuverse/
-├── frontend/          # React-based UI application
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   ├── styles/
-│   │   └── App.jsx
-│   └── package.json
-├── backend/           # Node.js/Express API server
-│   ├── src/
-│   │   ├── routes/
-│   │   ├── config/
-│   │   └── server.js
-│   └── package.json
-└── README.md
+├── VirtuSpace/         # Unified parent platform with landing page, config management, AI agent
+│   ├── frontend/       # React-based UI
+│   ├── backend/        # Node.js/Express API
+│   ├── docker-compose.yml
+│   └── README.md
+├── EnviHub/           # Environment modeling platform
+│   ├── frontend/
+│   ├── backend/
+│   └── README.md
+├── PlantHub/          # Plant modeling platform
+│   ├── frontend/
+│   ├── backend/
+│   └── README.md
+├── V-Orchestrator/    # Cosimulation orchestration platform
+│   ├── frontend/
+│   ├── backend/
+│   └── README.md
+├── .github/workflows/ # CI/CD pipelines
+└── README.md         # This file
 ```
+
+## 🚀 Platforms Overview
+
+### VirtuSpace
+The unified parent platform that brings together all sub-platforms:
+- **Landing Page** - Central entry point to the entire ecosystem
+- **Configuration Management** - Centralized connection to JFrog Artifactory and GitHub Enterprise Server
+- **AI Agent Assistant** - Intelligent guidance for model import and integration
+- **Shared Services** - Authentication, configuration, and common utilities
+
+**[Get Started with VirtuSpace →](./VirtuSpace/README.md)**
+
+### EnviHub
+Environment modeling platform for simulation model management:
+- **Model Library Management** - Store, organize, and share simulation models
+- **Tool Integration** - Connect with IPG CarMaker, MATLAB/Simulink, dSPACE VEOS
+- **Metadata Extraction** - Extract smart harness metadata for cosimulation
+- **Model Editor** - Edit and configure models across different tools
+- **Collaboration** - Share models with OEMs, suppliers, and internal teams
+
+**[Get Started with EnviHub →](./EnviHub/README.md)**
+
+### PlantHub
+Plant modeling platform for vehicle component models:
+- **Component Library** - Manage plant models (sensors, actuators, etc.)
+- **Tool Integration** - Connect with simulation tools
+- **Model Sharing** - Collaborate with teams and partners
+- **Version Control** - Track model history and changes
+
+**[Get Started with PlantHub →](./PlantHub/README.md)**
+
+### V-Orchestrator
+Cosimulation orchestration platform:
+- **Cosimulation Setup** - Configure and manage cosimulation scenarios
+- **Model Integration** - Integrate models from different tools
+- **Execution Control** - Run and monitor cosimulations
+- **Results Analysis** - Analyze simulation results
+
+**[Get Started with V-Orchestrator →](./V-Orchestrator/README.md)**
+
+## 📦 Quick Start
+
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or yarn
+- Docker (optional, for containerized deployment)
+
+### Running VirtuSpace Platform
+
+```bash
+cd VirtuSpace
+docker-compose up
+```
+
+Or run manually:
+```bash
+# Backend
+cd VirtuSpace/backend
+npm install
+npm start
+
+# Frontend (in another terminal)
+cd VirtuSpace/frontend
+npm install
+npm run dev
+```
+
+Access VirtuSpace at: **http://localhost:5173**
+
+### Running Individual Platforms
+
+Each platform (EnviHub, PlantHub, V-Orchestrator) can be run independently. See their respective README files for detailed instructions.
 
 ## 🛠️ Technology Stack
 
+All platforms are built with modern web technologies:
+
 ### Frontend
-- **React** - UI framework
+- **React** 19 - UI framework
 - **React Router** - Navigation
 - **Lucide React** - Icons
 - **Axios** - HTTP client
@@ -47,128 +115,44 @@ virtuverse/
 
 ### Backend
 - **Node.js** - Runtime
-- **Express** - Web framework
+- **Express** 5 - Web framework
 - **SQLite** - Database
 - **Multer** - File upload handling
 - **Axios** - HTTP client for tool integration
 
-## 📦 Installation & Setup
+## 🎯 Key Features Across Platforms
 
-### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn
+### Model Management
+- Centralized model library
+- Version control and history tracking
+- Model metadata and tagging
+- Search and filtering capabilities
+- Secure file upload handling
 
-### Backend Setup
+### Tool Integration
+- IPG CarMaker integration
+- MATLAB/Simulink support
+- dSPACE VEOS connectivity
+- Extensible architecture for additional tools
+- Connection testing and monitoring
 
-1. Navigate to backend directory:
-```bash
-cd backend
-```
+### Collaboration
+- Share models with external OEMs and suppliers
+- Internal team collaboration
+- Role-based access control (planned)
+- Model permissions management
 
-2. Install dependencies:
-```bash
-npm install
-```
+### Configuration Management
+- Centralized JFrog Artifactory connection
+- GitHub Enterprise Server integration
+- Artifact synchronization
+- Repository cloning and management
 
-3. Start the backend server:
-```bash
-npm start
-```
-
-The backend API will be available at `http://localhost:5000`
-
-### Frontend Setup
-
-1. Navigate to frontend directory:
-```bash
-cd frontend
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Start the development server:
-```bash
-npm run dev
-```
-
-The frontend will be available at `http://localhost:5173`
-
-## 🎯 Key Features
-
-### 1. Dashboard
-- Overview of all models and integrations
-- Recent activity tracking
-- Quick actions for common tasks
-- Statistics and metrics
-
-### 2. Model Library
-- Browse and search models
-- Filter by type and tags
-- Upload new models
-- Share models with teams
-- Download and edit capabilities
-
-### 3. Tool Integration
-- Connect to IPG CarMaker
-- Connect to MATLAB/Simulink
-- Connect to dSPACE VEOS
-- Test connections
-- Sync models between tools
-- Add custom tool integrations
-
-### 4. Metadata Extractor
-- Upload simulation models
-- Extract metadata automatically
-- View interface definitions
-- Generate smart harness configuration
-- Export metadata as JSON
-- Integration-ready metadata for cosimulation
-
-### 5. Model Editor
-- Visual and code editing modes
-- Edit model parameters
-- Configure tool integrations
-- Set sharing permissions
-- Update model metadata
-
-## 🔌 API Endpoints
-
-### Models API
-- `GET /api/models` - List all models
-- `GET /api/models/:id` - Get specific model
-- `POST /api/models/upload` - Upload new model
-- `PUT /api/models/:id` - Update model
-- `DELETE /api/models/:id` - Delete model
-- `GET /api/models/stats/summary` - Get statistics
-
-### Tools API
-- `GET /api/tools` - List all integrations
-- `GET /api/tools/:id` - Get specific integration
-- `POST /api/tools` - Add new integration
-- `POST /api/tools/:id/test` - Test connection
-- `POST /api/tools/:id/sync` - Sync models
-- `PUT /api/tools/:id` - Update integration
-- `DELETE /api/tools/:id` - Delete integration
-
-### Metadata API
-- `POST /api/metadata/extract` - Extract metadata from file
-- `GET /api/metadata/model/:modelId` - Get model metadata
-- `POST /api/metadata/model/:modelId` - Save metadata
-- `GET /api/metadata/all` - List all models with metadata
-- `GET /api/metadata/model/:modelId/harness` - Generate smart harness config
-
-## 🎨 UI Screenshots
-
-The EnviHub platform features a modern, intuitive interface with:
-- Clean navigation bar
-- Interactive dashboard with statistics
-- Searchable model library
-- Tool integration management
-- Metadata extraction workflow
-- Visual and code-based model editing
+### AI Assistant
+- Intelligent model import guidance
+- Model compatibility checking
+- Integration strategy recommendations
+- Step-by-step setup instructions
 
 ## 🔐 Security Features
 
@@ -176,42 +160,65 @@ The EnviHub platform features a modern, intuitive interface with:
 - API endpoint validation
 - Database parameter sanitization
 - Error handling and logging
+- CORS configuration
 
 ## 🚀 Deployment
 
 ### Continuous Integration/Continuous Deployment (CI/CD)
 
-The repository includes automated GitHub Actions workflows that build and test the platform:
-- **Automated Builds:** Any changes to frontend or backend code trigger builds automatically
-- **Platform-Specific Pipelines:** Separate workflows for EnviHub, PlantHub, and V-Orchestrator
-- **Full Integration Tests:** Comprehensive pipeline testing on every push
-- **Docker Support:** Automated Docker image building for deployment
+The repository includes automated GitHub Actions workflows:
+- **Main CI/CD Pipeline** - Builds and tests VirtuSpace platform
+- **Platform-Specific Pipelines** - Separate workflows for EnviHub, PlantHub, and V-Orchestrator
+- **Full Integration Tests** - Comprehensive pipeline testing on every push
+- **Docker Support** - Automated Docker image building for deployment
 
 For more details, see [.github/workflows/README.md](.github/workflows/README.md)
 
-### Frontend Deployment
+### Docker Deployment
+
+Each platform includes Docker support:
+
 ```bash
-cd frontend
-npm run build
-# Deploy the 'dist' folder to your hosting service
+# VirtuSpace
+cd VirtuSpace
+docker-compose up -d
+
+# Individual platforms
+cd EnviHub  # or PlantHub, V-Orchestrator
+# Follow platform-specific deployment instructions
 ```
 
-### Backend Deployment
-```bash
-cd backend
-npm start
-# Deploy to your Node.js hosting service (e.g., Heroku, AWS, Azure)
-```
+### Manual Deployment
 
-## 🤝 Integration with IPG CarMaker
+See individual platform README files for detailed deployment instructions.
 
-The platform provides ready-to-use integration with IPG CarMaker:
+## 📚 Documentation
+
+- **[VirtuSpace Platform](./VirtuSpace/README.md)** - Unified parent platform documentation
+- **[EnviHub Platform](./EnviHub/README.md)** - Environment modeling platform
+- **[PlantHub Platform](./PlantHub/README.md)** - Plant modeling platform
+- **[V-Orchestrator Platform](./V-Orchestrator/README.md)** - Cosimulation orchestration
+- **[CI/CD Workflows](./.github/workflows/README.md)** - Build and deployment pipelines
+- **[Workflows Summary](./WORKFLOWS_SUMMARY.md)** - Overview of all workflows
+
+## 🤝 Integration Capabilities
+
+### IPG CarMaker
 - Connect to CarMaker instances
 - Import and export models
 - Sync model changes
 - Extract metadata for cosimulation
 
-## 📊 Smart Harness
+### MATLAB/Simulink
+- Model import and export
+- Interface with Simulink models
+- Parameter configuration
+
+### dSPACE VEOS
+- Virtual ECU integration
+- Real-time simulation support
+
+## 📊 Smart Harness Feature
 
 The platform's unique **Smart Harness** feature:
 - Extracts interface definitions automatically
@@ -220,7 +227,7 @@ The platform's unique **Smart Harness** feature:
 - Enables seamless cosimulation
 - Supports FMI/FMU export
 
-## 🌐 Sharing and Collaboration
+## 🌐 Collaboration & Sharing
 
 Models can be shared with:
 - External OEMs
@@ -228,6 +235,40 @@ Models can be shared with:
 - Tool vendors
 - Internal Bosch teams
 - Other domains within the organization
+
+## 🐛 Troubleshooting
+
+Common issues and solutions:
+
+### Port Conflicts
+- VirtuSpace: Backend (5000), Frontend (5173/3000)
+- Check platform-specific README files for port configurations
+
+### Module Installation
+```bash
+# Install dependencies for each platform
+cd VirtuSpace/backend && npm install
+cd VirtuSpace/frontend && npm install
+```
+
+### Database Issues
+```bash
+# Reset VirtuSpace database
+cd VirtuSpace/backend
+rm envihub.db
+npm start  # Database will be recreated
+```
+
+For platform-specific issues, see individual platform documentation.
+
+## 🔄 Migration from Previous Structure
+
+**Note:** The repository structure has been reorganized for better clarity and easier deployment. The previous root-level `backend/` and `frontend/` folders are now located in `VirtuSpace/backend/` and `VirtuSpace/frontend/`.
+
+If you have existing scripts or configurations that reference the old paths, update them as follows:
+- `backend/` → `VirtuSpace/backend/`
+- `frontend/` → `VirtuSpace/frontend/`
+- `docker-compose.yml` → `VirtuSpace/docker-compose.yml`
 
 ## 📝 License
 

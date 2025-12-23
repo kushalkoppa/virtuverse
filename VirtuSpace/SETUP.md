@@ -1,4 +1,4 @@
-# EnviHub Platform - Setup Guide
+# VirtuSpace Platform - Setup Guide
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@
 
 ```bash
 git clone https://github.com/kushalkoppa/virtuverse.git
-cd virtuverse
+cd virtuverse/VirtuSpace
 ```
 
 ### 2. Backend Setup
@@ -38,6 +38,8 @@ The backend server will start on `http://localhost:5000`
 - File upload handling
 - Tool integration endpoints
 - Metadata extraction service
+- Configuration management API
+- AI Agent API
 
 ### 3. Frontend Setup
 
@@ -57,16 +59,20 @@ The frontend will start on `http://localhost:5173`
 
 **Frontend Features:**
 - React-based UI
-- 5 main pages (Dashboard, Model Library, Tool Integration, Metadata Extractor, Model Editor)
+- VirtuSpace landing page with platform cards
+- Configuration Management interface
+- AI Agent Assistant
+- Dashboard and Model Library pages
+- Tool Integration pages
 - Responsive design
 - Modern UI with gradient backgrounds
 
-## Using Docker (Alternative)
+## Using Docker (Recommended)
 
 If you prefer to use Docker:
 
 ```bash
-# Build and start all services
+# From the VirtuSpace directory
 docker-compose up
 
 # Access the application
@@ -77,23 +83,26 @@ docker-compose up
 ## Project Structure
 
 ```
-virtuverse/
+VirtuSpace/
 ├── README.md              # Main documentation
 ├── SETUP.md              # This file
-├── .gitignore            # Git ignore rules
+├── VIRTUSPACE.md         # Detailed UI documentation
 ├── docker-compose.yml    # Docker orchestration
 │
 ├── frontend/             # React Application
 │   ├── src/
 │   │   ├── pages/
+│   │   │   ├── VirtuSpace.jsx      # Landing page
 │   │   │   ├── Dashboard.jsx
 │   │   │   ├── ModelLibrary.jsx
 │   │   │   ├── ToolIntegration.jsx
 │   │   │   ├── MetadataExtractor.jsx
 │   │   │   └── ModelEditor.jsx
-│   │   ├── styles/       # Page-specific styles
+│   │   ├── components/
+│   │   │   ├── ConfigManagement.jsx
+│   │   │   └── ChatBot.jsx
 │   │   ├── App.jsx       # Main app with routing
-│   │   └── main.jsx      # Entry point
+│   │   └── index.css
 │   ├── Dockerfile
 │   ├── nginx.conf
 │   └── package.json
@@ -103,7 +112,9 @@ virtuverse/
     │   ├── routes/
     │   │   ├── models.js     # Model CRUD endpoints
     │   │   ├── tools.js      # Tool integration endpoints
-    │   │   └── metadata.js   # Metadata extraction endpoints
+    │   │   ├── metadata.js   # Metadata extraction endpoints
+    │   │   ├── config.js     # Configuration management
+    │   │   └── aiagent.js    # AI Agent endpoints
     │   ├── config/
     │   │   └── database.js   # SQLite configuration
     │   └── server.js         # Express server setup
