@@ -168,6 +168,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: VirtuSpace/EnviHub/package.json
       
       - name: Install root dependencies
         working-directory: ./VirtuSpace/EnviHub
@@ -225,6 +227,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: VirtuSpace/PlantHub/package.json
       
       - name: Install root dependencies
         working-directory: ./VirtuSpace/PlantHub
