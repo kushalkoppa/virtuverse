@@ -196,7 +196,7 @@ V-DevContainers provides templates for common scenarios:
 ## Technology Stack
 
 ### Frontend
-- React 19
+- React 18
 - React Router
 - Tailwind CSS
 - Lucide Icons
