@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./EnviHub
+        working-directory: ./VirtuSpace/EnviHub
     
     steps:
       - name: Checkout code
@@ -85,7 +85,7 @@ jobs:
         run: npm install
       
       - name: Install frontend dependencies
-        working-directory: ./EnviHub/frontend
+        working-directory: ./VirtuSpace/EnviHub/frontend
         run: npm install
       
       - name: Run tests
@@ -101,7 +101,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./PlantHub
+        working-directory: ./VirtuSpace/PlantHub
     
     steps:
       - name: Checkout code
@@ -116,7 +116,7 @@ jobs:
         run: npm install
       
       - name: Install frontend dependencies
-        working-directory: ./PlantHub/frontend
+        working-directory: ./VirtuSpace/PlantHub/frontend
         run: npm install
       
       - name: Run tests
@@ -141,14 +141,14 @@ jobs:
           node-version: '18'
       
       - name: Build V-Orchestrator Frontend
-        working-directory: ./V-Orchestrator/frontend
+        working-directory: ./VirtuSpace/V-Orchestrator/frontend
         run: |
           npm install
           npm run build
         continue-on-error: true
       
       - name: Build V-Orchestrator Backend
-        working-directory: ./V-Orchestrator/backend
+        working-directory: ./VirtuSpace/V-Orchestrator/backend
         run: |
           npm install
           npm test

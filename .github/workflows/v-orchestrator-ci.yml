@@ -6,14 +6,14 @@ on:
       - main
       - develop
     paths:
-      - 'V-Orchestrator/**'
+      - 'VirtuSpace/V-Orchestrator/**'
       - '.github/workflows/v-orchestrator-ci.yml'
   pull_request:
     branches:
       - main
       - develop
     paths:
-      - 'V-Orchestrator/**'
+      - 'VirtuSpace/V-Orchestrator/**'
       - '.github/workflows/v-orchestrator-ci.yml'
 
 jobs:
@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./V-Orchestrator/frontend
+        working-directory: ./VirtuSpace/V-Orchestrator/frontend
     
     steps:
       - name: Checkout code
@@ -33,7 +33,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: V-Orchestrator/frontend/package.json
+          cache-dependency-path: VirtuSpace/V-Orchestrator/frontend/package.json
       
       - name: Install dependencies
         run: npm install
@@ -47,7 +47,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: v-orchestrator-frontend-build
-          path: V-Orchestrator/frontend/dist/
+          path: VirtuSpace/V-Orchestrator/frontend/dist/
           retention-days: 7
 
   v-orchestrator-backend:
@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./V-Orchestrator/backend
+        working-directory: ./VirtuSpace/V-Orchestrator/backend
     
     steps:
       - name: Checkout code
@@ -66,7 +66,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: V-Orchestrator/backend/package.json
+          cache-dependency-path: VirtuSpace/V-Orchestrator/backend/package.json
       
       - name: Install dependencies
         run: npm install
@@ -86,7 +86,7 @@ jobs:
     needs: [v-orchestrator-frontend, v-orchestrator-backend]
     defaults:
       run:
-        working-directory: ./V-Orchestrator
+        working-directory: ./VirtuSpace/V-Orchestrator
     
     steps:
       - name: Checkout code
@@ -102,7 +102,7 @@ jobs:
         continue-on-error: true
       
       - name: Run integration tests
-        working-directory: ./V-Orchestrator/tests
+        working-directory: ./VirtuSpace/V-Orchestrator/tests
         run: |
           if [ -f "package.json" ]; then
             npm install
