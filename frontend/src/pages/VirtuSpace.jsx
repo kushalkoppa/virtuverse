@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Box, Cpu, Leaf, Zap, Github, Database, Bot } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import ChatBot from '../components/ChatBot';
 import '../styles/VirtuSpace.css';
 
 function VirtuSpace() {
   const navigate = useNavigate();
-  const [showAIAgent, setShowAIAgent] = useState(false);
+  const [showChatBot, setShowChatBot] = useState(false);
 
   const platforms = [
     {
@@ -72,43 +73,19 @@ function VirtuSpace() {
         </div>
       </div>
 
-      {/* AI Agent Section */}
+      {/* AI ChatBot Section */}
       <div className="ai-agent-section">
         <button 
           className="ai-agent-trigger"
-          onClick={() => setShowAIAgent(!showAIAgent)}
+          onClick={() => setShowChatBot(true)}
         >
           <Bot size={24} />
-          <span>AI Agent Assistant</span>
+          <span>AI ChatBot Assistant</span>
         </button>
-        
-        {showAIAgent && (
-          <div className="ai-agent-panel">
-            <div className="ai-agent-header">
-              <Bot size={20} />
-              <h3>VirtuSpace AI Agent</h3>
-              <button onClick={() => setShowAIAgent(false)} className="close-btn">×</button>
-            </div>
-            <div className="ai-agent-content">
-              <p>Hello! I'm your AI assistant for VirtuSpace. I can help you with:</p>
-              <ul>
-                <li>Importing the right models from configuration management</li>
-                <li>Suggesting optimal integration strategies</li>
-                <li>Detecting model compatibility</li>
-                <li>Recommending cosimulation middleware</li>
-                <li>Guiding through model setup and configuration</li>
-              </ul>
-              <div className="ai-agent-input">
-                <input 
-                  type="text" 
-                  placeholder="Ask me anything about model integration..."
-                />
-                <button>Send</button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* ChatBot Component */}
+      <ChatBot isOpen={showChatBot} onClose={() => setShowChatBot(false)} />
 
       {/* Platforms Grid */}
       <div className="platforms-section">
