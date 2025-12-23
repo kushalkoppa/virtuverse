@@ -25,9 +25,11 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'healthy', service: 'EnviHub API' });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`EnviHub server running on port ${PORT}`);
-});
+// Start server only if not in test environment
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`EnviHub server running on port ${PORT}`);
+  });
+}
 
 module.exports = app;
