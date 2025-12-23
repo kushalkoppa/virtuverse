@@ -15,11 +15,21 @@ on:
     paths:
       - 'VirtuSpace/V-Orchestrator/**'
       - '.github/workflows/v-orchestrator-ci.yml'
+  workflow_dispatch:
+    inputs:
+      runner_type:
+        description: 'Runner type'
+        required: false
+        default: 'ubuntu-latest'
+        type: choice
+        options:
+          - ubuntu-latest
+          - self-hosted
 
 jobs:
   v-orchestrator-frontend:
     name: Build V-Orchestrator Frontend
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.inputs.runner_type || 'ubuntu-latest' }}
     defaults:
       run:
         working-directory: ./VirtuSpace/V-Orchestrator/frontend
@@ -52,7 +62,7 @@ jobs:
 
   v-orchestrator-backend:
     name: Build and Test V-Orchestrator Backend
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.inputs.runner_type || 'ubuntu-latest' }}
     defaults:
       run:
         working-directory: ./VirtuSpace/V-Orchestrator/backend
@@ -82,7 +92,7 @@ jobs:
 
   v-orchestrator-tests:
     name: Run V-Orchestrator Integration Tests
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.inputs.runner_type || 'ubuntu-latest' }}
     needs: [v-orchestrator-frontend, v-orchestrator-backend]
     defaults:
       run:

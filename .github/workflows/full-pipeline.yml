@@ -10,11 +10,20 @@ on:
       - main
       - develop
   workflow_dispatch:
+    inputs:
+      runner_type:
+        description: 'Runner type (github-hosted or self-hosted)'
+        required: false
+        default: 'ubuntu-latest'
+        type: choice
+        options:
+          - ubuntu-latest
+          - self-hosted
 
 jobs:
   main-frontend:
     name: Main Frontend Build
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.inputs.runner_type || 'ubuntu-latest' }}
     defaults:
       run:
         working-directory: ./VirtuSpace/frontend
@@ -28,10 +37,10 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: VirtuSpace/frontend/package-lock.json
+          cache-dependency-path: VirtuSpace/frontend/package.json
       
       - name: Install dependencies
-        run: npm ci
+        run: npm install
       
       - name: Run linter
         run: npm run lint
@@ -42,7 +51,7 @@ jobs:
 
   main-backend:
     name: Main Backend Build
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.inputs.runner_type || 'ubuntu-latest' }}
     defaults:
       run:
         working-directory: ./VirtuSpace/backend
@@ -67,7 +76,7 @@ jobs:
 
   envihub:
     name: EnviHub Platform
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.inputs.runner_type || 'ubuntu-latest' }}
     defaults:
       run:
         working-directory: ./VirtuSpace/EnviHub
@@ -98,7 +107,7 @@ jobs:
 
   planthub:
     name: PlantHub Platform
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.inputs.runner_type || 'ubuntu-latest' }}
     defaults:
       run:
         working-directory: ./VirtuSpace/PlantHub
@@ -129,7 +138,7 @@ jobs:
 
   v-orchestrator:
     name: V-Orchestrator Platform
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.inputs.runner_type || 'ubuntu-latest' }}
     
     steps:
       - name: Checkout code
@@ -156,7 +165,7 @@ jobs:
 
   docker-build:
     name: Docker Build Test
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.inputs.runner_type || 'ubuntu-latest' }}
     needs: [main-frontend, main-backend]
     
     steps:
@@ -191,9 +200,11 @@ jobs:
     steps:
       - name: Check build status
         run: |
-          echo "Pipeline execution completed"
+          echo "=== Pipeline Execution Summary ==="
+          echo "Runner: ${{ github.event.inputs.runner_type || 'ubuntu-latest' }}"
           echo "Main Frontend: ${{ needs.main-frontend.result }}"
           echo "Main Backend: ${{ needs.main-backend.result }}"
           echo "EnviHub: ${{ needs.envihub.result }}"
           echo "PlantHub: ${{ needs.planthub.result }}"
           echo "V-Orchestrator: ${{ needs.v-orchestrator.result }}"
+          echo "=================================="

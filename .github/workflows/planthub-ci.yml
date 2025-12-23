@@ -15,11 +15,21 @@ on:
     paths:
       - 'VirtuSpace/PlantHub/**'
       - '.github/workflows/planthub-ci.yml'
+  workflow_dispatch:
+    inputs:
+      runner_type:
+        description: 'Runner type'
+        required: false
+        default: 'ubuntu-latest'
+        type: choice
+        options:
+          - ubuntu-latest
+          - self-hosted
 
 jobs:
   planthub-build:
     name: Build and Test PlantHub Platform
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.inputs.runner_type || 'ubuntu-latest' }}
     defaults:
       run:
         working-directory: ./VirtuSpace/PlantHub

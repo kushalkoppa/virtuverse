@@ -4,41 +4,88 @@ This directory contains GitHub Actions workflow files that automate the build, t
 
 ## Workflow Files
 
-### 1. Full Pipeline CI/CD (`full-pipeline.yml`)
+### 1. Azure VM Deployment (`azure-deployment.yml`) **NEW**
+**Triggers:** Push to main, pull requests, and manual workflow dispatch
+- **Purpose**: Primary deployment workflow with Azure VM self-hosted runner support
+- Builds all components of the platform (VirtuSpace, EnviHub, PlantHub, V-Orchestrator)
+- Supports both GitHub-hosted and self-hosted Azure VM runners
+- Automatic deployment to Azure VM when using self-hosted runner
+- **Manual Deployment Options**:
+  - Choose runner type: `self-hosted` or `ubuntu-latest`
+  - Select deployment target: `all` or specific platform
+- Provides comprehensive build and deployment summary
+
+### 2. Full Pipeline CI/CD (`full-pipeline.yml`)
 **Triggers:** All pushes, pull requests, and manual workflow dispatch
 - Builds all components of the platform (main frontend/backend, EnviHub, PlantHub, V-Orchestrator)
 - Tests Docker image builds
 - Provides comprehensive build summary
 - Runs on every push to ensure overall system integrity
+- **NEW**: Supports manual runner selection via workflow_dispatch
 
-### 2. Main CI/CD Pipeline (`main-ci.yml`)
+### 3. Main CI/CD Pipeline (`main-ci.yml`)
 **Triggers:** Changes to `VirtuSpace/frontend/` or `VirtuSpace/backend/` directories
 - **Frontend Job:**
-  - Lints frontend code
+  - Installs dependencies
+  - Lints frontend code (optional)
   - Builds React/Vite application
   - Uploads build artifacts
 - **Backend Job:**
   - Installs dependencies
   - Runs tests
   - Validates server startup
+- **NEW**: Supports manual runner selection via workflow_dispatch
 
-### 3. EnviHub CI/CD Pipeline (`envihub-ci.yml`)
-**Triggers:** Changes to `EnviHub/` directory
-- **Frontend Job:** Builds EnviHub frontend application
-- **Backend Job:** Tests EnviHub backend and validates server startup
-- **Integration Tests:** Runs EnviHub-specific integration tests
+### 4. EnviHub CI/CD Pipeline (`envihub-ci.yml`)
+**Triggers:** Changes to `VirtuSpace/EnviHub/` directory
+- Builds EnviHub frontend application
+- Tests EnviHub backend and validates server startup
+- **NEW**: Supports manual runner selection via workflow_dispatch
 
-### 4. PlantHub CI/CD Pipeline (`planthub-ci.yml`)
-**Triggers:** Changes to `PlantHub/` directory
-- **Frontend Job:** Builds PlantHub frontend application
-- **Backend Job:** Tests PlantHub backend and validates server startup
-- **Integration Tests:** Runs PlantHub-specific integration tests
+### 5. PlantHub CI/CD Pipeline (`planthub-ci.yml`)
+**Triggers:** Changes to `VirtuSpace/PlantHub/` directory
+- Builds PlantHub frontend application
+- Tests PlantHub backend and validates server startup
+- **NEW**: Supports manual runner selection via workflow_dispatch
 
-### 5. V-Orchestrator CI/CD Pipeline (`v-orchestrator-ci.yml`)
-**Triggers:** Changes to `V-Orchestrator/` directory
-- **Frontend Job:** Builds V-Orchestrator frontend application
-- **Backend Job:** Tests V-Orchestrator backend and validates server startup
-- **Integration Tests:** Runs V-Orchestrator-specific integration tests
+### 6. V-Orchestrator CI/CD Pipeline (`v-orchestrator-ci.yml`)
+**Triggers:** Changes to `VirtuSpace/V-Orchestrator/` directory
+- Builds V-Orchestrator frontend application
+- Tests V-Orchestrator backend and validates server startup
+- **NEW**: Supports manual runner selection via workflow_dispatch
+
+## Runner Configuration
+
+All workflows now support both **GitHub-hosted** and **self-hosted** runners:
+
+### GitHub-Hosted Runners (Default)
+- Automatically provisioned by GitHub
+- Clean environment for each run
+- No setup required
+- Used by default for all automated triggers (push, pull_request)
+
+### Self-Hosted Runners (Azure VM)
+- Hosted on your Azure Linux VM
+- Persistent environment
+- Can deploy directly to the VM
+- Requires setup (see [AZURE_RUNNER_SETUP.md](../../AZURE_RUNNER_SETUP.md))
+
+### Selecting Runner Type
+
+#### Automatic (Default Behavior):
+- **azure-deployment.yml**: Uses self-hosted runner by default
+- **All other workflows**: Use GitHub-hosted runners by default
+
+#### Manual Selection:
+All workflows support manual runner selection via workflow_dispatch:
+
+1. Go to **Actions** tab
+2. Select the workflow
+3. Click **Run workflow**
+4. Choose runner type from dropdown:
+   - `ubuntu-latest` - GitHub-hosted runner
+   - `self-hosted` - Your Azure VM runner
+5. Click **Run workflow**
 
 ## Trigger Conditions
 
@@ -53,12 +100,19 @@ All workflows are triggered by:
 - **Build Tools:** Vite (frontend), npm (all)
 - **Docker:** Multi-stage builds for production deployments
 - **Artifact Storage:** Build artifacts retained for 7 days
+- **Runners:** GitHub-hosted (ubuntu-latest) or Self-hosted (Azure VM)
 
 ## Workflow Features
 
-### Caching
-- npm package caching for faster builds
-- Cache is scoped to specific package.json files
+### Runner Support
+- **Dual Runner Support**: All workflows work with both GitHub-hosted and self-hosted runners
+- **Automatic Runner Selection**: Smart defaults based on workflow trigger
+- **Manual Override**: Select runner type via workflow_dispatch for testing
+
+### Dependency Management
+- Uses `npm install` instead of `npm ci` for flexibility
+- No package-lock.json required
+- Compatible with package.json only
 
 ### Error Handling
 - `continue-on-error: true` for non-critical steps
@@ -67,6 +121,12 @@ All workflows are triggered by:
 ### Artifact Management
 - Build artifacts uploaded for deployment
 - 7-day retention policy for build outputs
+- Artifacts automatically deployed to Azure VM when using self-hosted runner
+
+### Deployment
+- **Azure VM Deployment**: Automatic deployment when using self-hosted runner
+- **Deployment Directory**: `/opt/virtuverse/deployments/` on Azure VM
+- **Health Checks**: Automated post-deployment verification
 
 ### Parallel Execution
 - Independent jobs run in parallel for faster feedback
@@ -121,9 +181,24 @@ To add a new workflow:
 Add workflow status badges to your README:
 
 ```markdown
-![Main CI/CD](https://github.com/kushalkoppa/virtuverse/actions/workflows/main-ci.yml/badge.svg)
+![Azure VM Deployment](https://github.com/kushalkoppa/virtuverse/actions/workflows/azure-deployment.yml/badge.svg)
 ![Full Pipeline](https://github.com/kushalkoppa/virtuverse/actions/workflows/full-pipeline.yml/badge.svg)
+![Main CI/CD](https://github.com/kushalkoppa/virtuverse/actions/workflows/main-ci.yml/badge.svg)
 ```
+
+## Azure VM Self-Hosted Runner Setup
+
+To use the self-hosted runner features, you need to configure an Azure Linux VM as a GitHub Actions runner.
+
+**See detailed setup instructions in [AZURE_RUNNER_SETUP.md](../../AZURE_RUNNER_SETUP.md)**
+
+Quick setup steps:
+1. Provision Azure Linux VM (Ubuntu 20.04+)
+2. Install Node.js 18 and required dependencies
+3. Download and configure GitHub Actions runner
+4. Start runner as a service
+5. Create deployment directories
+6. Test with manual workflow trigger
 
 ## Troubleshooting
 
