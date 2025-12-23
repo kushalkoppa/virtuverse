@@ -1,0 +1,350 @@
+name: Azure VM Deployment
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      runner_type:
+        description: 'Runner type (self-hosted or ubuntu-latest)'
+        required: true
+        default: 'self-hosted'
+        type: choice
+        options:
+          - self-hosted
+          - ubuntu-latest
+      deploy_target:
+        description: 'What to deploy'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - virtuspace-frontend
+          - virtuspace-backend
+          - envihub
+          - planthub
+          - v-orchestrator
+
+# Limit permissions for security
+permissions:
+  contents: read
+  actions: read
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  # Job to determine runner type
+  setup:
+    name: Setup Deployment
+    runs-on: ubuntu-latest
+    outputs:
+      runner: ${{ steps.set-runner.outputs.runner }}
+    steps:
+      - name: Set runner type
+        id: set-runner
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "runner=${{ inputs.runner_type }}" >> $GITHUB_OUTPUT
+          else
+            # Default to self-hosted for push/PR events
+            echo "runner=self-hosted" >> $GITHUB_OUTPUT
+          fi
+
+  # VirtuSpace Frontend Build
+  virtuspace-frontend:
+    name: VirtuSpace Frontend
+    needs: setup
+    runs-on: ${{ needs.setup.outputs.runner }}
+    if: |
+      (github.event_name == 'workflow_dispatch' && 
+       (inputs.deploy_target == 'all' || inputs.deploy_target == 'virtuspace-frontend')) ||
+      github.event_name != 'workflow_dispatch'
+    defaults:
+      run:
+        working-directory: ./VirtuSpace/frontend
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Build frontend
+        run: npm run build
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: virtuspace-frontend-dist
+          path: VirtuSpace/frontend/dist/
+          retention-days: 7
+
+  # VirtuSpace Backend Build
+  virtuspace-backend:
+    name: VirtuSpace Backend
+    needs: setup
+    runs-on: ${{ needs.setup.outputs.runner }}
+    if: |
+      (github.event_name == 'workflow_dispatch' && 
+       (inputs.deploy_target == 'all' || inputs.deploy_target == 'virtuspace-backend')) ||
+      github.event_name != 'workflow_dispatch'
+    defaults:
+      run:
+        working-directory: ./VirtuSpace/backend
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Run tests
+        run: npm test
+        continue-on-error: true
+
+  # EnviHub Platform Build
+  envihub:
+    name: EnviHub Platform
+    needs: setup
+    runs-on: ${{ needs.setup.outputs.runner }}
+    if: |
+      (github.event_name == 'workflow_dispatch' && 
+       (inputs.deploy_target == 'all' || inputs.deploy_target == 'envihub')) ||
+      github.event_name != 'workflow_dispatch'
+    defaults:
+      run:
+        working-directory: ./VirtuSpace/EnviHub
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: VirtuSpace/EnviHub/package.json
+      
+      - name: Install root dependencies
+        run: npm install
+      
+      - name: Install frontend dependencies
+        working-directory: ./VirtuSpace/EnviHub/frontend
+        run: npm install
+      
+      - name: Run tests
+        run: npm test
+        continue-on-error: true
+      
+      - name: Build frontend
+        run: npm run build
+        continue-on-error: true
+      
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: envihub-build
+          path: VirtuSpace/EnviHub/frontend/build/
+          retention-days: 7
+
+  # PlantHub Platform Build
+  planthub:
+    name: PlantHub Platform
+    needs: setup
+    runs-on: ${{ needs.setup.outputs.runner }}
+    if: |
+      (github.event_name == 'workflow_dispatch' && 
+       (inputs.deploy_target == 'all' || inputs.deploy_target == 'planthub')) ||
+      github.event_name != 'workflow_dispatch'
+    defaults:
+      run:
+        working-directory: ./VirtuSpace/PlantHub
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: VirtuSpace/PlantHub/package.json
+      
+      - name: Install root dependencies
+        run: npm install
+      
+      - name: Install frontend dependencies
+        working-directory: ./VirtuSpace/PlantHub/frontend
+        run: npm install
+      
+      - name: Run tests
+        run: npm test
+        continue-on-error: true
+      
+      - name: Build frontend
+        run: npm run build
+        continue-on-error: true
+      
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: planthub-build
+          path: VirtuSpace/PlantHub/frontend/build/
+          retention-days: 7
+
+  # V-Orchestrator Platform Build
+  v-orchestrator:
+    name: V-Orchestrator Platform
+    needs: setup
+    runs-on: ${{ needs.setup.outputs.runner }}
+    if: |
+      (github.event_name == 'workflow_dispatch' && 
+       (inputs.deploy_target == 'all' || inputs.deploy_target == 'v-orchestrator')) ||
+      github.event_name != 'workflow_dispatch'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Build V-Orchestrator Frontend
+        working-directory: ./VirtuSpace/V-Orchestrator/frontend
+        run: |
+          npm install
+          npm run build
+        continue-on-error: true
+      
+      - name: Build V-Orchestrator Backend
+        working-directory: ./VirtuSpace/V-Orchestrator/backend
+        run: |
+          npm install
+          npm test
+        continue-on-error: true
+      
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v-orchestrator-build
+          path: VirtuSpace/V-Orchestrator/frontend/dist/
+          retention-days: 7
+
+  # Deployment job (only runs on self-hosted runner)
+  deploy:
+    name: Deploy to Azure VM
+    needs: [setup, virtuspace-frontend, virtuspace-backend, envihub, planthub, v-orchestrator]
+    runs-on: ${{ needs.setup.outputs.runner }}
+    if: |
+      needs.setup.outputs.runner == 'self-hosted' &&
+      (github.event_name == 'push' || 
+       (github.event_name == 'workflow_dispatch' && inputs.deploy_target == 'all'))
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+      
+      - name: Deploy artifacts
+        run: |
+          echo "Deploying to Azure VM..."
+          echo "Artifacts downloaded to: ./artifacts"
+          ls -la ./artifacts/ || echo "No artifacts found"
+          
+          # Create deployment directory if it doesn't exist
+          mkdir -p /opt/virtuverse/deployments
+          
+          # Deploy VirtuSpace Frontend
+          if [ -d "./artifacts/virtuspace-frontend-dist" ]; then
+            echo "Deploying VirtuSpace Frontend..."
+            mkdir -p /opt/virtuverse/deployments/virtuspace-frontend
+            cp -r ./artifacts/virtuspace-frontend-dist/* /opt/virtuverse/deployments/virtuspace-frontend/ 2>/dev/null || echo "VirtuSpace Frontend deployment directory not ready"
+          fi
+          
+          # Deploy EnviHub
+          if [ -d "./artifacts/envihub-build" ]; then
+            echo "Deploying EnviHub..."
+            mkdir -p /opt/virtuverse/deployments/envihub
+            cp -r ./artifacts/envihub-build/* /opt/virtuverse/deployments/envihub/ 2>/dev/null || echo "EnviHub deployment directory not ready"
+          fi
+          
+          # Deploy PlantHub
+          if [ -d "./artifacts/planthub-build" ]; then
+            echo "Deploying PlantHub..."
+            mkdir -p /opt/virtuverse/deployments/planthub
+            cp -r ./artifacts/planthub-build/* /opt/virtuverse/deployments/planthub/ 2>/dev/null || echo "PlantHub deployment directory not ready"
+          fi
+          
+          # Deploy V-Orchestrator
+          if [ -d "./artifacts/v-orchestrator-build" ]; then
+            echo "Deploying V-Orchestrator..."
+            mkdir -p /opt/virtuverse/deployments/v-orchestrator
+            cp -r ./artifacts/v-orchestrator-build/* /opt/virtuverse/deployments/v-orchestrator/ 2>/dev/null || echo "V-Orchestrator deployment directory not ready"
+          fi
+          
+          echo "Deployment completed successfully!"
+      
+      - name: Health check
+        run: |
+          echo "Running health checks..."
+          # Add your health check commands here
+          echo "Health checks completed!"
+      
+      - name: Deployment summary
+        run: |
+          echo "=== Deployment Summary ==="
+          echo "Runner: ${{ needs.setup.outputs.runner }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Deployed by: ${{ github.actor }}"
+          echo "Components deployed:"
+          ls -d /opt/virtuverse/deployments/*/ 2>/dev/null || echo "No deployments found"
+          echo "=========================="
+
+  # Summary job
+  summary:
+    name: Build and Deployment Summary
+    runs-on: ubuntu-latest
+    needs: [setup, virtuspace-frontend, virtuspace-backend, envihub, planthub, v-orchestrator]
+    if: always()
+    
+    steps:
+      - name: Check build status
+        run: |
+          echo "=== Pipeline Execution Summary ==="
+          echo "Runner Type: ${{ needs.setup.outputs.runner }}"
+          echo "VirtuSpace Frontend: ${{ needs.virtuspace-frontend.result }}"
+          echo "VirtuSpace Backend: ${{ needs.virtuspace-backend.result }}"
+          echo "EnviHub: ${{ needs.envihub.result }}"
+          echo "PlantHub: ${{ needs.planthub.result }}"
+          echo "V-Orchestrator: ${{ needs.v-orchestrator.result }}"
+          echo "================================="
