@@ -17,7 +17,7 @@
   "author": "VirtuVerse Team",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.0.0",
+    "express": "^5.2.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "dockerode": "^4.0.0",
