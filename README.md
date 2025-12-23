@@ -1,5 +1,8 @@
 # VirtuVerse - EnviHub Platform
 
+![Main CI/CD](https://github.com/kushalkoppa/virtuverse/actions/workflows/main-ci.yml/badge.svg)
+![Full Pipeline](https://github.com/kushalkoppa/virtuverse/actions/workflows/full-pipeline.yml/badge.svg)
+
 VirtuVerse is an E2E Virtualization & Simulation universe in SDV, a collaborator platform that includes **EnviHub** - a comprehensive platform for simulation model management and tool integration.
 
 ## 🚀 EnviHub Platform
@@ -175,6 +178,16 @@ The EnviHub platform features a modern, intuitive interface with:
 - Error handling and logging
 
 ## 🚀 Deployment
+
+### Continuous Integration/Continuous Deployment (CI/CD)
+
+The repository includes automated GitHub Actions workflows that build and test the platform:
+- **Automated Builds:** Any changes to frontend or backend code trigger builds automatically
+- **Platform-Specific Pipelines:** Separate workflows for EnviHub, PlantHub, and V-Orchestrator
+- **Full Integration Tests:** Comprehensive pipeline testing on every push
+- **Docker Support:** Automated Docker image building for deployment
+
+For more details, see [.github/workflows/README.md](.github/workflows/README.md)
 
 ### Frontend Deployment
 ```bash
