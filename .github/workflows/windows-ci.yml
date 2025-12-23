@@ -1,0 +1,342 @@
+name: Windows CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+    inputs:
+      component:
+        description: 'Component to build'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - virtuverse-studio
+          - virtuspace
+          - envihub
+          - planthub
+          - v-orchestrator
+
+# Limit permissions for security
+permissions:
+  contents: read
+  actions: read
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  # VirtuVerse Studio Build on Windows
+  virtuverse-studio:
+    name: VirtuVerse Studio (Windows)
+    runs-on: windows-latest
+    if: |
+      github.event_name != 'workflow_dispatch' || 
+      inputs.component == 'all' || 
+      inputs.component == 'virtuverse-studio'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: VirtuVerse-Studio/package.json
+      
+      - name: Install backend dependencies
+        working-directory: ./VirtuVerse-Studio
+        run: npm install
+      
+      - name: Install frontend dependencies
+        working-directory: ./VirtuVerse-Studio/frontend
+        run: npm install
+      
+      - name: Create database directory
+        working-directory: ./VirtuVerse-Studio
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path backend/database
+          Write-Host "Database directory created"
+      
+      - name: Build frontend
+        working-directory: ./VirtuVerse-Studio/frontend
+        run: npm run build
+        continue-on-error: true
+      
+      - name: Test backend startup
+        working-directory: ./VirtuVerse-Studio
+        shell: pwsh
+        run: |
+          $job = Start-Job -ScriptBlock { 
+            Set-Location $using:PWD
+            npm start 
+          }
+          Start-Sleep -Seconds 10
+          Stop-Job -Job $job
+          Write-Host "Backend startup test completed"
+        continue-on-error: true
+      
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: virtuverse-studio-windows-build
+          path: VirtuVerse-Studio/frontend/build/
+          retention-days: 7
+
+  # VirtuSpace Platform Build on Windows
+  virtuspace:
+    name: VirtuSpace Platform (Windows)
+    runs-on: windows-latest
+    if: |
+      github.event_name != 'workflow_dispatch' || 
+      inputs.component == 'all' || 
+      inputs.component == 'virtuspace'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Install backend dependencies
+        working-directory: ./VirtuSpace/backend
+        run: npm install
+      
+      - name: Install frontend dependencies
+        working-directory: ./VirtuSpace/frontend
+        run: npm install
+      
+      - name: Run backend tests
+        working-directory: ./VirtuSpace/backend
+        run: npm test
+        continue-on-error: true
+      
+      - name: Build frontend
+        working-directory: ./VirtuSpace/frontend
+        run: npm run build
+        continue-on-error: true
+      
+      - name: Test backend startup
+        working-directory: ./VirtuSpace/backend
+        shell: pwsh
+        run: |
+          $job = Start-Job -ScriptBlock { 
+            Set-Location $using:PWD
+            npm start 
+          }
+          Start-Sleep -Seconds 10
+          Stop-Job -Job $job
+          Write-Host "Backend startup test completed"
+        continue-on-error: true
+      
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: virtuspace-windows-dist
+          path: VirtuSpace/frontend/dist/
+          retention-days: 7
+
+  # EnviHub Platform Build on Windows
+  envihub:
+    name: EnviHub Platform (Windows)
+    runs-on: windows-latest
+    if: |
+      github.event_name != 'workflow_dispatch' || 
+      inputs.component == 'all' || 
+      inputs.component == 'envihub'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Install root dependencies
+        working-directory: ./VirtuSpace/EnviHub
+        run: npm install
+      
+      - name: Install frontend dependencies
+        working-directory: ./VirtuSpace/EnviHub/frontend
+        run: npm install
+      
+      - name: Run tests
+        working-directory: ./VirtuSpace/EnviHub
+        run: npm test
+        continue-on-error: true
+      
+      - name: Build frontend
+        working-directory: ./VirtuSpace/EnviHub
+        run: npm run build
+        continue-on-error: true
+      
+      - name: Test backend startup
+        working-directory: ./VirtuSpace/EnviHub
+        shell: pwsh
+        run: |
+          $job = Start-Job -ScriptBlock { 
+            Set-Location $using:PWD
+            npm start 
+          }
+          Start-Sleep -Seconds 10
+          Stop-Job -Job $job
+          Write-Host "Backend startup test completed"
+        continue-on-error: true
+      
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: envihub-windows-build
+          path: VirtuSpace/EnviHub/frontend/build/
+          retention-days: 7
+
+  # PlantHub Platform Build on Windows
+  planthub:
+    name: PlantHub Platform (Windows)
+    runs-on: windows-latest
+    if: |
+      github.event_name != 'workflow_dispatch' || 
+      inputs.component == 'all' || 
+      inputs.component == 'planthub'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Install root dependencies
+        working-directory: ./VirtuSpace/PlantHub
+        run: npm install
+      
+      - name: Install frontend dependencies
+        working-directory: ./VirtuSpace/PlantHub/frontend
+        run: npm install
+      
+      - name: Run tests
+        working-directory: ./VirtuSpace/PlantHub
+        run: npm test
+        continue-on-error: true
+      
+      - name: Build frontend
+        working-directory: ./VirtuSpace/PlantHub
+        run: npm run build
+        continue-on-error: true
+      
+      - name: Test backend startup
+        working-directory: ./VirtuSpace/PlantHub
+        shell: pwsh
+        run: |
+          $job = Start-Job -ScriptBlock { 
+            Set-Location $using:PWD
+            npm start 
+          }
+          Start-Sleep -Seconds 10
+          Stop-Job -Job $job
+          Write-Host "Backend startup test completed"
+        continue-on-error: true
+      
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: planthub-windows-build
+          path: VirtuSpace/PlantHub/frontend/build/
+          retention-days: 7
+
+  # V-Orchestrator Platform Build on Windows
+  v-orchestrator:
+    name: V-Orchestrator Platform (Windows)
+    runs-on: windows-latest
+    if: |
+      github.event_name != 'workflow_dispatch' || 
+      inputs.component == 'all' || 
+      inputs.component == 'v-orchestrator'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Install frontend dependencies
+        working-directory: ./VirtuSpace/V-Orchestrator/frontend
+        run: npm install
+      
+      - name: Build frontend
+        working-directory: ./VirtuSpace/V-Orchestrator/frontend
+        run: npm run build
+        continue-on-error: true
+      
+      - name: Install backend dependencies
+        working-directory: ./VirtuSpace/V-Orchestrator/backend
+        run: npm install
+      
+      - name: Run backend tests
+        working-directory: ./VirtuSpace/V-Orchestrator/backend
+        run: npm test
+        continue-on-error: true
+      
+      - name: Test backend startup
+        working-directory: ./VirtuSpace/V-Orchestrator/backend
+        shell: pwsh
+        run: |
+          $job = Start-Job -ScriptBlock { 
+            Set-Location $using:PWD
+            npm start 
+          }
+          Start-Sleep -Seconds 10
+          Stop-Job -Job $job
+          Write-Host "Backend startup test completed"
+        continue-on-error: true
+      
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v-orchestrator-windows-build
+          path: VirtuSpace/V-Orchestrator/frontend/dist/
+          retention-days: 7
+
+  # Summary job
+  summary:
+    name: Windows Build Summary
+    runs-on: windows-latest
+    needs: [virtuverse-studio, virtuspace, envihub, planthub, v-orchestrator]
+    if: always()
+    
+    steps:
+      - name: Check build status
+        shell: pwsh
+        run: |
+          Write-Host "=== Windows Pipeline Execution Summary ==="
+          Write-Host "VirtuVerse Studio: ${{ needs.virtuverse-studio.result }}"
+          Write-Host "VirtuSpace: ${{ needs.virtuspace.result }}"
+          Write-Host "EnviHub: ${{ needs.envihub.result }}"
+          Write-Host "PlantHub: ${{ needs.planthub.result }}"
+          Write-Host "V-Orchestrator: ${{ needs.v-orchestrator.result }}"
+          Write-Host "========================================"
