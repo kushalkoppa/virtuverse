@@ -1,6 +1,6 @@
 # V-Analyzer
 
-V-Analyzer is a dashboard and analytics platform within VirtuSphere that provides visualization of simulation data and platform metrics using Grafana-style dashboards.
+V-Analyzer is a dashboard and analytics platform within VirtuSphere that provides visualization of simulation data and platform metrics using Grafana-style dashboards with **SmartHarness** AI-powered insights.
 
 ## Overview
 
@@ -9,6 +9,7 @@ V-Analyzer provides:
 - **Platform Metrics**: Usage statistics and performance metrics for VirtuVerse Studio
 - **Real-time Monitoring**: Live metrics from V-Orchestrator simulations
 - **Historical Analysis**: Trend analysis and historical data visualization
+- **SmartHarness Insights**: AI-powered recommendations and anomaly detection
 
 ## Features
 
@@ -34,6 +35,16 @@ V-Analyzer provides:
 - Receives data from V-Orchestrator
 - Connects to EnviHub and PlantHub for metrics
 - Integrates with VirtuVerse Studio authentication
+
+### 5. SmartHarness Integration
+SmartHarness in V-Analyzer provides:
+- **Intelligent Insights**: AI-powered analysis of simulation results and patterns
+- **Anomaly Detection**: Automatic identification of unusual metrics or performance issues
+- **Predictive Analytics**: Forecast future trends based on historical data
+- **Optimization Recommendations**: Suggest improvements for simulation performance
+- **Contextual Scoring**: Evaluate dashboard effectiveness and data quality
+- **Smart Alerts**: AI-driven alerting for critical metrics and thresholds
+- **Correlation Analysis**: Identify relationships between different metrics and simulations
 
 ## Architecture
 
@@ -63,3 +74,31 @@ V-Analyzer provides:
 ## Getting Started
 
 See the main VirtuSphere documentation for setup instructions.
+
+## UI Screenshots
+
+### V-Analyzer Main Dashboard
+![V-Analyzer Dashboard](docs/screenshots/v-analyzer-main-dashboard.png)
+*Main analytics dashboard with simulation results and platform metrics*
+
+### SmartHarness Insights Panel
+![SmartHarness Insights](docs/screenshots/v-analyzer-smartharness-insights.png)
+*SmartHarness providing AI-powered insights and recommendations*
+
+### Simulation Results Visualization
+![Simulation Results](docs/screenshots/v-analyzer-simulation-results.png)
+*Detailed visualization of open-loop and closed-loop simulation results*
+
+### Platform Metrics Dashboard
+![Platform Metrics](docs/screenshots/v-analyzer-platform-metrics.png)
+*Real-time monitoring of VirtuVerse platform health and usage*
+
+### Custom Dashboard Builder
+![Dashboard Builder](docs/screenshots/v-analyzer-dashboard-builder.png)
+*Custom dashboard creation with SmartHarness suggestions*
+
+### Anomaly Detection View
+![Anomaly Detection](docs/screenshots/v-analyzer-anomaly-detection.png)
+*SmartHarness identifying anomalies and performance issues*
+
+> **Note**: Place actual screenshots in `V-Analyzer/docs/screenshots/` directory once deployed.

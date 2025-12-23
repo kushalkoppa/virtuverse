@@ -7,13 +7,23 @@ VirtuVerse Studio is a complete end-to-end virtualization and simulation platfor
 ```
 VirtuVerse Studio (Authentication & Entry Point)
     ├── VirtuSpace (Simulation & Virtualization)
-    │   ├── V-Orchestrator (Simulation Orchestration)
-    │   ├── EnviHub (Virtualization Tools)
-    │   └── PlantHub (Manufacturing Simulation)
+    │   ├── V-Orchestrator (Simulation Orchestration) [with SmartHarness]
+    │   ├── EnviHub (Virtualization Tools) [with SmartHarness]
+    │   └── PlantHub (Manufacturing Simulation) [with SmartHarness]
     ├── VirtuSphere (Analytics & Visualization)
-    │   └── V-Analyzer (Grafana-style Dashboards)
-    └── VirtuMind (AI & Intelligence - Coming Soon)
+    │   ├── V-Analyzer (Grafana-style Dashboards) [with SmartHarness]
+    │   └── V-DevContainers (DevContainer Generation)
+    └── VirtuMind (AI & Intelligence) [with SmartHarness]
 ```
+
+### SmartHarness - AI-Enabled Component
+
+All platforms include **SmartHarness**, an AI-enabled component that assists users in:
+- **Model Integration** (V-Orchestrator): Quickly integrate models from various sources
+- **Model Reusability** (EnviHub/PlantHub): Check models for reuse in different tools
+- **Interface Analysis**: Verify model interfaces with details on direction, datatype, and source tool
+- **Contextual Scoring**: Provide scores for model suitability in integration, simulation, or adaptation contexts
+- **Smart Recommendations**: Suggest next steps and best practices for model usage
 
 ## Platforms
 
@@ -41,6 +51,7 @@ VirtuVerse Studio (Authentication & Entry Point)
 - **Purpose**: Analytics and visualization
 - **Sub-platforms**:
   - **V-Analyzer**: Grafana-style dashboards (Ports: 3021/3020)
+  - **V-DevContainers**: DevContainer generation tool (Ports: 3031/3030)
 - **Documentation**: [VirtuSphere/README.md](VirtuSphere/README.md)
 
 ### 4. VirtuMind (AI Platform - Coming Soon)
@@ -82,6 +93,7 @@ For detailed step-by-step instructions, see **[GETTING_STARTED.md](GETTING_START
   - PlantHub: http://localhost:3004
 - **VirtuSphere**:
   - V-Analyzer: http://localhost:3021
+  - V-DevContainers: http://localhost:3031
 
 ### Default Admin Credentials
 
@@ -174,6 +186,9 @@ virtuverse/
 │   └── V-Analyzer/         # Dashboard platform
 │       ├── backend/
 │       └── frontend/
+│   └── V-DevContainers/    # DevContainer generation
+│       ├── backend/
+│       └── frontend/
 ├── VirtuMind/              # AI platform (coming soon)
 ├── DEPLOYMENT.md           # Deployment guide
 └── README.md              # This file
@@ -194,12 +209,15 @@ virtuverse/
 - ✅ PlantHub for manufacturing simulation
 - ✅ Unified dashboard
 - ✅ Seamless navigation
+- ✅ SmartHarness AI assistance in all tools
 
 ### Analytics Platform (VirtuSphere)
 - ✅ V-Analyzer with Grafana-style dashboards
 - ✅ Simulation results visualization
 - ✅ Platform usage metrics
 - ✅ Real-time monitoring
+- ✅ V-DevContainers for DevContainer generation
+- ✅ SmartHarness AI assistance
 
 ### Virtualization Tools (EnviHub)
 - ✅ Tool interfaces (CarMaker, Simulink, etc.)
@@ -207,6 +225,7 @@ virtuverse/
 - ✅ Model editor
 - ✅ Sharing hub
 - ✅ Collaboration features
+- ✅ SmartHarness for model compatibility checking
 
 ### Manufacturing Tools (PlantHub)
 - ✅ Plant simulation tools
@@ -214,17 +233,20 @@ virtuverse/
 - ✅ Factory planning
 - ✅ Production optimization
 - ✅ Process simulator
+- ✅ SmartHarness for adaptation scoring
 
 ### Orchestration (V-Orchestrator)
 - ✅ Open-loop simulations
 - ✅ Closed-loop simulations
 - ✅ Workflow management
 - ✅ Results tracking
+- ✅ SmartHarness for model integration
 
 ### AI Platform (VirtuMind - Coming Soon)
 - 🔄 ML-powered optimization
 - 🔄 Predictive analytics
 - 🔄 Intelligent automation
+- 🔄 SmartHarness integration
 
 ## Technology Stack
 
@@ -233,6 +255,42 @@ virtuverse/
 - **Database**: SQLite (development), PostgreSQL/MySQL (production)
 - **Authentication**: JWT with bcrypt
 - **Deployment**: Docker, PM2, Nginx
+
+## UI Screenshots & Preview
+
+### VirtuVerse Studio - Login Interface
+![VirtuVerse Studio Login](docs/screenshots/virtuverse-studio-login.png)
+*Main authentication portal providing secure access to all VirtuVerse platforms*
+
+### VirtuSpace - Platform Dashboard
+![VirtuSpace Dashboard](docs/screenshots/virtuspace-dashboard.png)
+*Unified dashboard showing V-Orchestrator, EnviHub, and PlantHub with SmartHarness integration*
+
+### V-Orchestrator - Simulation Orchestration
+![V-Orchestrator Interface](docs/screenshots/v-orchestrator-ui.png)
+*Simulation workflow management with SmartHarness AI assistance for model integration*
+
+### EnviHub - Virtualization Platform
+![EnviHub Interface](docs/screenshots/envihub-ui.png)
+*Model library and tool integration interface with SmartHarness for compatibility checking*
+
+### PlantHub - Manufacturing Simulation
+![PlantHub Interface](docs/screenshots/planthub-ui.png)
+*Plant simulation and factory planning tools with SmartHarness adaptation scoring*
+
+### VirtuSphere V-Analyzer - Analytics Dashboard
+![V-Analyzer Dashboard](docs/screenshots/v-analyzer-ui.png)
+*Grafana-style dashboards for simulation results and platform metrics with SmartHarness insights*
+
+### VirtuSphere V-DevContainers - DevContainer Generation
+![V-DevContainers Interface](docs/screenshots/v-devcontainers-ui.png)
+*Quick DevContainer generation from V-Orchestrator projects or individual components*
+
+### VirtuMind - AI Platform (Coming Soon)
+![VirtuMind Preview](docs/screenshots/virtumind-preview.png)
+*AI-powered optimization and predictive analytics with SmartHarness integration*
+
+> **Note**: Screenshot files should be placed in the `docs/screenshots/` directory. For actual deployment, replace these placeholder references with actual screenshots of your deployed applications.
 
 ## Contributing
 

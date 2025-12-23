@@ -5,7 +5,7 @@ VirtuSpace is the unified parent platform for VirtuVerse Studio that brings toge
 - **EnviHub** - Environment modeling platform
 - **PlantHub** - Plant modeling platform
 
-All platforms are integrated with centralized Configuration Management (JFrog Artifactory & GitHub Enterprise Server) and an AI Agent for intelligent assistance.
+All platforms are integrated with centralized Configuration Management (JFrog Artifactory & GitHub Enterprise Server), an AI Agent for intelligent assistance, and **SmartHarness** - an AI-enabled component for model integration and analysis.
 
 ## 🚀 Quick Start
 
@@ -76,6 +76,7 @@ VirtuSpace/
 - Visual cards for each platform (V-Orchestrator, EnviHub, PlantHub)
 - Configuration Management status display
 - AI Agent Assistant access
+- SmartHarness integration for all sub-platforms
 
 ### 2. Configuration Management
 - Centralized connection to JFrog Artifactory
@@ -88,6 +89,20 @@ VirtuSpace/
 - Model compatibility checking
 - Integration strategy recommendations
 - Step-by-step setup guidance
+
+### 4. SmartHarness - AI-Enabled Component
+SmartHarness is integrated into all VirtuSpace platforms and provides:
+- **Model Integration Support** (V-Orchestrator): Quickly integrate models from various sources with AI guidance
+- **Model Reusability Checking** (EnviHub/PlantHub): Verify if models can be reused in different tools
+- **Interface Analysis**: Check model interfaces with details on:
+  - Interface direction (input/output)
+  - Data types
+  - Source tool information (which tool the model was developed/compiled in)
+- **Contextual Scoring**: Evaluate models for:
+  - Integration suitability (V-Orchestrator)
+  - Simulation compatibility (EnviHub)
+  - Adaptation feasibility (PlantHub)
+- **Smart Recommendations**: Suggest next steps and best practices
 
 ## 🔌 API Endpoints
 
@@ -124,6 +139,13 @@ VirtuSpace/
 - `POST /api/metadata/extract` - Extract metadata from file
 - `GET /api/metadata/model/:modelId` - Get model metadata
 - `GET /api/metadata/model/:modelId/harness` - Generate smart harness
+
+### SmartHarness API
+- `POST /api/smartharness/analyze` - Analyze model with SmartHarness
+- `GET /api/smartharness/score/:modelId` - Get contextual scoring for model
+- `POST /api/smartharness/compatibility` - Check model compatibility across tools
+- `GET /api/smartharness/interfaces/:modelId` - Get detailed interface information
+- `POST /api/smartharness/recommend` - Get AI-powered recommendations
 
 ## 🛠️ Technology Stack
 
@@ -237,6 +259,26 @@ For issues or questions:
 1. Check the main repository [README.md](../README.md)
 2. Review [VIRTUSPACE.md](./VIRTUSPACE.md) for detailed documentation
 3. Contact the VirtuVerse VirtuSpace team
+
+## 📸 UI Screenshots
+
+### VirtuSpace Landing Page
+![VirtuSpace Landing](docs/screenshots/virtuspace-landing.png)
+*Main landing page with access to V-Orchestrator, EnviHub, and PlantHub*
+
+### SmartHarness Interface
+![SmartHarness Dashboard](docs/screenshots/smartharness-interface.png)
+*SmartHarness AI assistant providing model analysis and recommendations*
+
+### Configuration Management
+![Config Management](docs/screenshots/config-management.png)
+*Centralized configuration for JFrog Artifactory and GitHub Enterprise*
+
+### Model Integration with SmartHarness
+![Model Integration](docs/screenshots/model-integration-smartharness.png)
+*Model integration workflow with SmartHarness scoring and compatibility checks*
+
+> **Note**: Place actual screenshots in `VirtuSpace/docs/screenshots/` directory once the UI is deployed.
 
 ## 📄 License
 
