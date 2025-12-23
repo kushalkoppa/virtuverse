@@ -8,7 +8,8 @@
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "nodemon backend/server.js",
     "dev:frontend": "cd frontend && npm start",
-    "build": "cd frontend && npm run build"
+    "build": "cd frontend && npm run build",
+    "test": "jest"
   },
   "keywords": [
     "orchestration",
@@ -25,6 +26,8 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.22",
-    "concurrently": "^8.0.1"
+    "concurrently": "^8.0.1",
+    "jest": "^29.5.0",
+    "supertest": "^6.3.3"
   }
 }

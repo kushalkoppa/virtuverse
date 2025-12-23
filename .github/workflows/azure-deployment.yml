@@ -62,8 +62,8 @@ jobs:
     needs: setup
     runs-on: ${{ needs.setup.outputs.runner }}
     if: |
-      github.event_name == 'workflow_dispatch' && 
-      (inputs.deploy_target == 'all' || inputs.deploy_target == 'virtuspace-frontend') ||
+      (github.event_name == 'workflow_dispatch' && 
+       (inputs.deploy_target == 'all' || inputs.deploy_target == 'virtuspace-frontend')) ||
       github.event_name != 'workflow_dispatch'
     defaults:
       run:
@@ -97,8 +97,8 @@ jobs:
     needs: setup
     runs-on: ${{ needs.setup.outputs.runner }}
     if: |
-      github.event_name == 'workflow_dispatch' && 
-      (inputs.deploy_target == 'all' || inputs.deploy_target == 'virtuspace-backend') ||
+      (github.event_name == 'workflow_dispatch' && 
+       (inputs.deploy_target == 'all' || inputs.deploy_target == 'virtuspace-backend')) ||
       github.event_name != 'workflow_dispatch'
     defaults:
       run:
@@ -126,8 +126,8 @@ jobs:
     needs: setup
     runs-on: ${{ needs.setup.outputs.runner }}
     if: |
-      github.event_name == 'workflow_dispatch' && 
-      (inputs.deploy_target == 'all' || inputs.deploy_target == 'envihub') ||
+      (github.event_name == 'workflow_dispatch' && 
+       (inputs.deploy_target == 'all' || inputs.deploy_target == 'envihub')) ||
       github.event_name != 'workflow_dispatch'
     defaults:
       run:
@@ -171,8 +171,8 @@ jobs:
     needs: setup
     runs-on: ${{ needs.setup.outputs.runner }}
     if: |
-      github.event_name == 'workflow_dispatch' && 
-      (inputs.deploy_target == 'all' || inputs.deploy_target == 'planthub') ||
+      (github.event_name == 'workflow_dispatch' && 
+       (inputs.deploy_target == 'all' || inputs.deploy_target == 'planthub')) ||
       github.event_name != 'workflow_dispatch'
     defaults:
       run:
@@ -216,8 +216,8 @@ jobs:
     needs: setup
     runs-on: ${{ needs.setup.outputs.runner }}
     if: |
-      github.event_name == 'workflow_dispatch' && 
-      (inputs.deploy_target == 'all' || inputs.deploy_target == 'v-orchestrator') ||
+      (github.event_name == 'workflow_dispatch' && 
+       (inputs.deploy_target == 'all' || inputs.deploy_target == 'v-orchestrator')) ||
       github.event_name != 'workflow_dispatch'
     
     steps:
@@ -279,10 +279,32 @@ jobs:
           # Create deployment directory if it doesn't exist
           mkdir -p /opt/virtuverse/deployments
           
-          # Copy artifacts to deployment location
+          # Deploy VirtuSpace Frontend
           if [ -d "./artifacts/virtuspace-frontend-dist" ]; then
             echo "Deploying VirtuSpace Frontend..."
-            cp -r ./artifacts/virtuspace-frontend-dist/* /opt/virtuverse/deployments/frontend/ 2>/dev/null || echo "Frontend deployment directory not ready"
+            mkdir -p /opt/virtuverse/deployments/virtuspace-frontend
+            cp -r ./artifacts/virtuspace-frontend-dist/* /opt/virtuverse/deployments/virtuspace-frontend/ 2>/dev/null || echo "VirtuSpace Frontend deployment directory not ready"
+          fi
+          
+          # Deploy EnviHub
+          if [ -d "./artifacts/envihub-build" ]; then
+            echo "Deploying EnviHub..."
+            mkdir -p /opt/virtuverse/deployments/envihub
+            cp -r ./artifacts/envihub-build/* /opt/virtuverse/deployments/envihub/ 2>/dev/null || echo "EnviHub deployment directory not ready"
+          fi
+          
+          # Deploy PlantHub
+          if [ -d "./artifacts/planthub-build" ]; then
+            echo "Deploying PlantHub..."
+            mkdir -p /opt/virtuverse/deployments/planthub
+            cp -r ./artifacts/planthub-build/* /opt/virtuverse/deployments/planthub/ 2>/dev/null || echo "PlantHub deployment directory not ready"
+          fi
+          
+          # Deploy V-Orchestrator
+          if [ -d "./artifacts/v-orchestrator-build" ]; then
+            echo "Deploying V-Orchestrator..."
+            mkdir -p /opt/virtuverse/deployments/v-orchestrator
+            cp -r ./artifacts/v-orchestrator-build/* /opt/virtuverse/deployments/v-orchestrator/ 2>/dev/null || echo "V-Orchestrator deployment directory not ready"
           fi
           
           echo "Deployment completed successfully!"
@@ -300,6 +322,8 @@ jobs:
           echo "Branch: ${{ github.ref_name }}"
           echo "Commit: ${{ github.sha }}"
           echo "Deployed by: ${{ github.actor }}"
+          echo "Components deployed:"
+          ls -d /opt/virtuverse/deployments/*/ 2>/dev/null || echo "No deployments found"
           echo "=========================="
 
   # Summary job
