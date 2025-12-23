@@ -17,73 +17,9 @@ on:
       - '.github/workflows/envihub-ci.yml'
 
 jobs:
-  envihub-frontend:
-    name: Build EnviHub Frontend
+  envihub-build:
+    name: Build and Test EnviHub Platform
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./EnviHub/frontend
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: EnviHub/frontend/package.json
-      
-      - name: Install dependencies
-        run: npm install
-      
-      - name: Build frontend
-        run: npm run build
-        continue-on-error: true
-      
-      - name: Upload build artifacts
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: envihub-frontend-build
-          path: EnviHub/frontend/build/
-          retention-days: 7
-
-  envihub-backend:
-    name: Build and Test EnviHub Backend
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./EnviHub/backend
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: EnviHub/backend/package.json
-      
-      - name: Install dependencies
-        run: npm install
-      
-      - name: Run tests
-        run: npm test
-        continue-on-error: true
-      
-      - name: Check server starts
-        run: |
-          timeout 10s node server.js || echo "Server started successfully"
-        continue-on-error: true
-
-  envihub-tests:
-    name: Run EnviHub Integration Tests
-    runs-on: ubuntu-latest
-    needs: [envihub-frontend, envihub-backend]
     defaults:
       run:
         working-directory: ./EnviHub
@@ -96,18 +32,33 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: EnviHub/package.json
       
       - name: Install root dependencies
         run: npm install
+      
+      - name: Install frontend dependencies
+        working-directory: ./EnviHub/frontend
+        run: npm install
+      
+      - name: Run tests
+        run: npm test
         continue-on-error: true
       
-      - name: Run integration tests
-        working-directory: ./EnviHub/tests
-        run: |
-          if [ -f "package.json" ]; then
-            npm install
-            npm test
-          else
-            echo "No integration tests configured"
-          fi
+      - name: Build frontend
+        run: npm run build
         continue-on-error: true
+      
+      - name: Check server starts
+        run: |
+          timeout 10s npm start || echo "Server started successfully"
+        continue-on-error: true
+      
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: envihub-build
+          path: EnviHub/frontend/build/
+          retention-days: 7

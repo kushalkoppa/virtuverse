@@ -17,73 +17,9 @@ on:
       - '.github/workflows/planthub-ci.yml'
 
 jobs:
-  planthub-frontend:
-    name: Build PlantHub Frontend
+  planthub-build:
+    name: Build and Test PlantHub Platform
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./PlantHub/frontend
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: PlantHub/frontend/package.json
-      
-      - name: Install dependencies
-        run: npm install
-      
-      - name: Build frontend
-        run: npm run build
-        continue-on-error: true
-      
-      - name: Upload build artifacts
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: planthub-frontend-build
-          path: PlantHub/frontend/build/
-          retention-days: 7
-
-  planthub-backend:
-    name: Build and Test PlantHub Backend
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./PlantHub/backend
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: PlantHub/backend/package.json
-      
-      - name: Install dependencies
-        run: npm install
-      
-      - name: Run tests
-        run: npm test
-        continue-on-error: true
-      
-      - name: Check server starts
-        run: |
-          timeout 10s node server.js || echo "Server started successfully"
-        continue-on-error: true
-
-  planthub-tests:
-    name: Run PlantHub Integration Tests
-    runs-on: ubuntu-latest
-    needs: [planthub-frontend, planthub-backend]
     defaults:
       run:
         working-directory: ./PlantHub
@@ -96,18 +32,33 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: PlantHub/package.json
       
       - name: Install root dependencies
         run: npm install
+      
+      - name: Install frontend dependencies
+        working-directory: ./PlantHub/frontend
+        run: npm install
+      
+      - name: Run tests
+        run: npm test
         continue-on-error: true
       
-      - name: Run integration tests
-        working-directory: ./PlantHub/tests
-        run: |
-          if [ -f "package.json" ]; then
-            npm install
-            npm test
-          else
-            echo "No integration tests configured"
-          fi
+      - name: Build frontend
+        run: npm run build
         continue-on-error: true
+      
+      - name: Check server starts
+        run: |
+          timeout 10s npm start || echo "Server started successfully"
+        continue-on-error: true
+      
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: planthub-build
+          path: PlantHub/frontend/build/
+          retention-days: 7

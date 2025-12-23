@@ -68,6 +68,9 @@ jobs:
   envihub:
     name: EnviHub Platform
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./EnviHub
     
     steps:
       - name: Checkout code
@@ -78,23 +81,27 @@ jobs:
         with:
           node-version: '18'
       
-      - name: Build EnviHub Frontend
+      - name: Install root dependencies
+        run: npm install
+      
+      - name: Install frontend dependencies
         working-directory: ./EnviHub/frontend
-        run: |
-          npm install
-          npm run build
+        run: npm install
+      
+      - name: Run tests
+        run: npm test
         continue-on-error: true
       
-      - name: Build EnviHub Backend
-        working-directory: ./EnviHub/backend
-        run: |
-          npm install
-          npm test
+      - name: Build frontend
+        run: npm run build
         continue-on-error: true
 
   planthub:
     name: PlantHub Platform
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./PlantHub
     
     steps:
       - name: Checkout code
@@ -105,18 +112,19 @@ jobs:
         with:
           node-version: '18'
       
-      - name: Build PlantHub Frontend
+      - name: Install root dependencies
+        run: npm install
+      
+      - name: Install frontend dependencies
         working-directory: ./PlantHub/frontend
-        run: |
-          npm install
-          npm run build
+        run: npm install
+      
+      - name: Run tests
+        run: npm test
         continue-on-error: true
       
-      - name: Build PlantHub Backend
-        working-directory: ./PlantHub/backend
-        run: |
-          npm install
-          npm test
+      - name: Build frontend
+        run: npm run build
         continue-on-error: true
 
   v-orchestrator:

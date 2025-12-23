@@ -47,7 +47,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: v-orchestrator-frontend-build
-          path: V-Orchestrator/frontend/build/
+          path: V-Orchestrator/frontend/dist/
           retention-days: 7
 
   v-orchestrator-backend:
@@ -77,7 +77,7 @@ jobs:
       
       - name: Check server starts
         run: |
-          timeout 10s node server.js || echo "Server started successfully"
+          timeout 10s npm start || echo "Server started successfully"
         continue-on-error: true
 
   v-orchestrator-tests:
