@@ -244,9 +244,9 @@ jobs:
     needs: [virtuspace-frontend, virtuspace-backend, envihub, planthub, v-orchestrator]
     runs-on: ${{ github.event.inputs.runner_type || 'ubuntu-latest' }}
     if: |
+      github.event_name == 'workflow_dispatch' && 
       (github.event.inputs.runner_type == 'self-hosted' || github.event.inputs.runner_type == 'VectorLinuxMachine') &&
-      (github.event_name == 'push' || 
-       (github.event_name == 'workflow_dispatch' && inputs.deploy_target == 'all'))
+      inputs.deploy_target == 'all'
     
     steps:
       - name: Checkout code

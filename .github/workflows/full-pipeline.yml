@@ -250,8 +250,9 @@ jobs:
     needs: [main-frontend, main-backend, envihub, planthub, v-orchestrator]
     runs-on: ${{ github.event.inputs.runner_type || 'ubuntu-latest' }}
     if: |
-      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy == 'true')
+      github.event_name == 'workflow_dispatch' && 
+      github.event.inputs.deploy == 'true' &&
+      (github.event.inputs.runner_type == 'self-hosted' || github.event.inputs.runner_type == 'VectorLinuxMachine')
     
     steps:
       - name: Checkout code

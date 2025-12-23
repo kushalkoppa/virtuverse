@@ -352,8 +352,9 @@ jobs:
     needs: [virtuverse-studio, virtuspace, envihub, planthub, v-orchestrator]
     runs-on: ${{ github.event.inputs.runner_type || 'windows-latest' }}
     if: |
-      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy == 'true')
+      github.event_name == 'workflow_dispatch' && 
+      github.event.inputs.deploy == 'true' &&
+      (github.event.inputs.runner_type == 'VirtuGo' || github.event.inputs.runner_type == 'self-hosted')
     
     steps:
       - name: Checkout code
