@@ -110,27 +110,35 @@ Password: Admin@123
 Each component can be run independently in development mode:
 
 ```bash
-# VirtuVerse
-cd VirtuVerse && npm run dev
+# VirtuVerse Studio
+cd VirtuVerse-Studio && npm run dev
 
 # VirtuSpace
 cd VirtuSpace && npm run dev
 
+# V-Orchestrator
+cd VirtuSpace/V-Orchestrator && npm run dev
+
 # EnviHub
-cd EnviHub && npm run dev
+cd VirtuSpace/EnviHub && npm run dev
 
 # PlantHub
-cd PlantHub && npm run dev
+cd VirtuSpace/PlantHub && npm run dev
+
+# V-Analyzer
+cd VirtuSphere/V-Analyzer && npm run dev
 ```
 
 ### Building for Production
 
 ```bash
 # Build all frontend applications
-cd VirtuVerse/frontend && npm run build && cd ../..
+cd VirtuVerse-Studio/frontend && npm run build && cd ../..
 cd VirtuSpace/frontend && npm run build && cd ../..
-cd EnviHub/frontend && npm run build && cd ../..
-cd PlantHub/frontend && npm run build && cd ../..
+cd VirtuSpace/V-Orchestrator/frontend && npm run build && cd ../../..
+cd VirtuSpace/EnviHub/frontend && npm run build && cd ../../..
+cd VirtuSpace/PlantHub/frontend && npm run build && cd ../../..
+cd VirtuSphere/V-Analyzer/frontend && npm run build && cd ../../..
 ```
 
 ## Deployment
@@ -150,18 +158,18 @@ virtuverse/
 ├── VirtuVerse-Studio/      # Main authentication application
 │   ├── backend/            # Node.js/Express API with SQLite
 │   └── frontend/           # React application
-├── VirtuSpace/             # Simulation platform
+├── VirtuSpace/             # Simulation & Virtualization platform
 │   ├── V-Orchestrator/     # Simulation orchestration
 │   │   ├── backend/
 │   │   └── frontend/
+│   ├── EnviHub/            # Virtualization platform
+│   │   ├── backend/        # Node.js/Express API
+│   │   └── frontend/       # React application
+│   ├── PlantHub/           # Manufacturing platform
+│   │   ├── backend/        # Node.js/Express API
+│   │   └── frontend/       # React application
 │   ├── backend/            # VirtuSpace aggregation API
 │   └── frontend/           # VirtuSpace UI
-├── EnviHub/                # Virtualization platform
-│   ├── backend/            # Node.js/Express API
-│   └── frontend/           # React application
-├── PlantHub/               # Manufacturing platform
-│   ├── backend/            # Node.js/Express API
-│   └── frontend/           # React application
 ├── VirtuSphere/            # Analytics platform
 │   └── V-Analyzer/         # Dashboard platform
 │       ├── backend/

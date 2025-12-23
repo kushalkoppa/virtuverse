@@ -12,6 +12,22 @@ const PORT = process.env.PORT || 3003;
 app.use(cors());
 app.use(express.json());
 
+// Proxy routes to V-Orchestrator
+app.use('/api/v-orchestrator', async (req, res) => {
+  try {
+    const url = `${process.env.V_ORCHESTRATOR_API_URL || 'http://localhost:3010/api'}${req.url}`;
+    const response = await axios({
+      method: req.method,
+      url: url,
+      data: req.body,
+      headers: req.headers
+    });
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.message });
+  }
+});
+
 // Proxy routes to EnviHub
 app.use('/api/envihub', async (req, res) => {
   try {
@@ -52,10 +68,12 @@ app.get('/api/health', (req, res) => {
 // Aggregated stats endpoint
 app.get('/api/stats', async (req, res) => {
   try {
+    const vOrchestratorHealth = await axios.get(`${process.env.V_ORCHESTRATOR_API_URL || 'http://localhost:3010/api'}/health`);
     const enviHubHealth = await axios.get(`${process.env.ENVIHUB_API_URL || 'http://localhost:3001/api'}/health`);
     const plantHubHealth = await axios.get(`${process.env.PLANTHUB_API_URL || 'http://localhost:3002/api'}/health`);
     
     res.json({
+      vOrchestrator: vOrchestratorHealth.data,
       enviHub: enviHubHealth.data,
       plantHub: plantHubHealth.data,
       overall: 'healthy'

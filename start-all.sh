@@ -39,15 +39,17 @@ check_dependencies() {
 
 # Install dependencies for all components
 echo "📦 Checking dependencies..."
-check_dependencies "VirtuVerse"
+check_dependencies "VirtuVerse-Studio"
 check_dependencies "VirtuSpace"
-check_dependencies "EnviHub"
-check_dependencies "PlantHub"
+check_dependencies "VirtuSpace/V-Orchestrator"
+check_dependencies "VirtuSpace/EnviHub"
+check_dependencies "VirtuSpace/PlantHub"
+check_dependencies "VirtuSphere/V-Analyzer"
 echo ""
 
 # Setup environment files
 echo "⚙️  Setting up environment files..."
-for dir in VirtuVerse VirtuSpace EnviHub PlantHub; do
+for dir in VirtuVerse-Studio VirtuSpace VirtuSpace/V-Orchestrator VirtuSpace/EnviHub VirtuSpace/PlantHub VirtuSphere/V-Analyzer; do
     if [ ! -f "$dir/.env" ]; then
         cp "$dir/.env.example" "$dir/.env"
         echo "✅ Created .env file for $dir"
@@ -56,9 +58,9 @@ done
 echo ""
 
 # Initialize admin user
-if [ ! -f "VirtuVerse/backend/database/virtuverse.db" ]; then
+if [ ! -f "VirtuVerse-Studio/backend/database/virtuverse.db" ]; then
     echo "👤 Initializing admin user..."
-    cd VirtuVerse
+    cd VirtuVerse-Studio
     npm run init-admin
     cd ..
     echo ""
@@ -71,9 +73,9 @@ echo "${YELLOW}Starting services in the background...${NC}"
 echo "To stop all services, run: ./stop-all.sh"
 echo ""
 
-# Start VirtuVerse Backend
-echo "Starting VirtuVerse Backend (Port 5001)..."
-cd VirtuVerse
+# Start VirtuVerse Studio Backend
+echo "Starting VirtuVerse Studio Backend (Port 5001)..."
+cd VirtuVerse-Studio
 npm start > ../logs/virtuverse-backend.log 2>&1 &
 VIRTUVERSE_PID=$!
 cd ..
@@ -87,43 +89,65 @@ VIRTUSPACE_PID=$!
 cd ..
 sleep 2
 
+# Start V-Orchestrator Backend
+echo "Starting V-Orchestrator Backend (Port 3010)..."
+cd VirtuSpace/V-Orchestrator
+npm start > ../../logs/v-orchestrator-backend.log 2>&1 &
+V_ORCHESTRATOR_PID=$!
+cd ../..
+sleep 2
+
 # Start EnviHub Backend
 echo "Starting EnviHub Backend (Port 3001)..."
-cd EnviHub
-npm start > ../logs/envihub-backend.log 2>&1 &
+cd VirtuSpace/EnviHub
+npm start > ../../logs/envihub-backend.log 2>&1 &
 ENVIHUB_PID=$!
-cd ..
+cd ../..
 sleep 2
 
 # Start PlantHub Backend
 echo "Starting PlantHub Backend (Port 3002)..."
-cd PlantHub
-npm start > ../logs/planthub-backend.log 2>&1 &
+cd VirtuSpace/PlantHub
+npm start > ../../logs/planthub-backend.log 2>&1 &
 PLANTHUB_PID=$!
-cd ..
+cd ../..
+sleep 2
+
+# Start V-Analyzer Backend
+echo "Starting V-Analyzer Backend (Port 3020)..."
+cd VirtuSphere/V-Analyzer
+npm start > ../../logs/v-analyzer-backend.log 2>&1 &
+V_ANALYZER_PID=$!
+cd ../..
 sleep 2
 
 # Save PIDs
 mkdir -p .pids
 echo $VIRTUVERSE_PID > .pids/virtuverse.pid
 echo $VIRTUSPACE_PID > .pids/virtuspace.pid
+echo $V_ORCHESTRATOR_PID > .pids/v-orchestrator.pid
 echo $ENVIHUB_PID > .pids/envihub.pid
 echo $PLANTHUB_PID > .pids/planthub.pid
+echo $V_ANALYZER_PID > .pids/v-analyzer.pid
 
 echo ""
 echo "${GREEN}✅ All services started successfully!${NC}"
 echo ""
 echo "📋 Service Status:"
-echo "  VirtuVerse API: http://localhost:5001/api/health"
-echo "  VirtuSpace API: http://localhost:3003/api/health"
-echo "  EnviHub API:    http://localhost:3001/api/health"
-echo "  PlantHub API:   http://localhost:3002/api/health"
+echo "  VirtuVerse Studio API:  http://localhost:5001/api/health"
+echo "  VirtuSpace API:         http://localhost:3003/api/health"
+echo "  V-Orchestrator API:     http://localhost:3010/api/health"
+echo "  EnviHub API:            http://localhost:3001/api/health"
+echo "  PlantHub API:           http://localhost:3002/api/health"
+echo "  V-Analyzer API:         http://localhost:3020/api/health"
 echo ""
 echo "🌐 Frontend Access (you need to start these separately):"
-echo "  VirtuVerse:  cd VirtuVerse/frontend && npm install && npm start"
-echo "  VirtuSpace:  cd VirtuSpace/frontend && npm install && npm start"
-echo "  EnviHub:     cd EnviHub/frontend && npm install && npm start"
-echo "  PlantHub:    cd PlantHub/frontend && npm install && npm start"
+echo "  VirtuVerse Studio:  cd VirtuVerse-Studio/frontend && npm install && npm start"
+echo "  VirtuSpace:         cd VirtuSpace/frontend && npm install && npm start"
+echo "  V-Orchestrator:     cd VirtuSpace/V-Orchestrator/frontend && npm install && npm start"
+echo "  EnviHub:            cd VirtuSpace/EnviHub/frontend && npm install && npm start"
+echo "  PlantHub:           cd VirtuSpace/PlantHub/frontend && npm install && npm start"
+echo "  V-Analyzer:         cd VirtuSphere/V-Analyzer/frontend && npm install && npm start"
 echo ""
 echo "📊 Default Admin Credentials:"
 echo "  Email:    admin@virtuverse.com"
