@@ -77,7 +77,6 @@ jobs:
       - name: Setup Node.js
         if: |
           needs.setup.outputs.runner != 'self-hosted' &&
-          needs.setup.outputs.runner != 'VectorLinuxMachine' &&
           needs.setup.outputs.runner != 'VectorLinuxMachine'
         uses: actions/setup-node@v4
         with:
@@ -116,7 +115,6 @@ jobs:
       - name: Setup Node.js
         if: |
           needs.setup.outputs.runner != 'self-hosted' &&
-          needs.setup.outputs.runner != 'VectorLinuxMachine' &&
           needs.setup.outputs.runner != 'VectorLinuxMachine'
         uses: actions/setup-node@v4
         with:
