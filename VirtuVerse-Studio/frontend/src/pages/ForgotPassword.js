@@ -74,7 +74,7 @@ function ForgotPassword() {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          <h1>🌌 VirtuVerse</h1>
+          <h1>🌌 VirtuVerse Studio</h1>
           <p>{token || resetToken ? 'Reset Your Password' : 'Forgot Password?'}</p>
         </div>
 

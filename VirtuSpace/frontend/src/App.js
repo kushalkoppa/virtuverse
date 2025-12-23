@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import VirtuSpaceDashboard from './components/VirtuSpaceDashboard';
+import VOrchestratorFrame from './components/VOrchestratorFrame';
 import EnviHubFrame from './components/EnviHubFrame';
 import PlantHubFrame from './components/PlantHubFrame';
 
@@ -27,6 +28,13 @@ function App() {
             Dashboard
           </Link>
           <Link 
+            to="/v-orchestrator" 
+            className={activePage === 'v-orchestrator' ? 'active' : ''} 
+            onClick={() => setActivePage('v-orchestrator')}
+          >
+            ⚙️ V-Orchestrator
+          </Link>
+          <Link 
             to="/envihub" 
             className={activePage === 'envihub' ? 'active' : ''} 
             onClick={() => setActivePage('envihub')}
@@ -45,13 +53,14 @@ function App() {
         <main className="app-main">
           <Routes>
             <Route path="/" element={<VirtuSpaceDashboard />} />
+            <Route path="/v-orchestrator" element={<VOrchestratorFrame />} />
             <Route path="/envihub" element={<EnviHubFrame />} />
             <Route path="/planthub" element={<PlantHubFrame />} />
           </Routes>
         </main>
 
         <footer className="app-footer">
-          <p>© 2024 Bosch - VirtuSpace Platform | VirtuVerse E2E Virtualization & Simulation Universe</p>
+          <p>© 2024 Bosch - VirtuSpace Platform | VirtuVerse Studio</p>
         </footer>
       </div>
     </Router>

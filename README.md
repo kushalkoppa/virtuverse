@@ -1,59 +1,52 @@
-# VirtuVerse - E2E Virtualization & Simulation Universe
+# VirtuVerse Studio - E2E Virtualization & Simulation Universe
 
-VirtuVerse is a complete end-to-end virtualization and simulation platform for Software Defined Vehicles (SDV). It provides a comprehensive ecosystem with authentication, user management, and access to integrated simulation tools.
+VirtuVerse Studio is a complete end-to-end virtualization and simulation platform for Software Defined Vehicles (SDV). It provides a comprehensive ecosystem with three major platforms.
 
 ## Architecture Overview
 
 ```
-VirtuVerse (Authentication & Entry Point)
-    └── VirtuSpace (Integration Platform)
-        ├── EnviHub (Virtualization & Simulation Tools)
-        └── PlantHub (Plant Simulation & Manufacturing)
+VirtuVerse Studio (Authentication & Entry Point)
+    ├── VirtuSpace (Simulation & Virtualization)
+    │   ├── V-Orchestrator (Simulation Orchestration)
+    │   ├── EnviHub (Virtualization Tools)
+    │   └── PlantHub (Manufacturing Simulation)
+    ├── VirtuSphere (Analytics & Visualization)
+    │   └── V-Analyzer (Grafana-style Dashboards)
+    └── VirtuMind (AI & Intelligence - Coming Soon)
 ```
 
-## Components
+## Platforms
 
-### 1. VirtuVerse (Main Application)
-- **Purpose**: Authentication and user management
+### 1. VirtuVerse Studio (Main Application)
+- **Purpose**: Authentication and main entry point
 - **Features**:
   - User registration and login
   - Password recovery
   - JWT-based authentication
   - Admin user management
-  - SQLite database (upgradeable to PostgreSQL/MySQL)
+  - SQLite database
 - **Ports**: Frontend (5000), Backend (5001)
-- **Documentation**: [VirtuVerse/README.md](VirtuVerse/README.md)
+- **Documentation**: [VirtuVerse-Studio/README.md](VirtuVerse-Studio/README.md)
 
-### 2. VirtuSpace (Integration Layer)
-- **Purpose**: Unified platform integrating EnviHub and PlantHub
-- **Features**:
-  - Seamless navigation between platforms
-  - Aggregated dashboard
-  - Single point of access
+### 2. VirtuSpace (Simulation Platform)
+- **Purpose**: Unified simulation and virtualization platform
+- **Sub-platforms**:
+  - **V-Orchestrator**: Simulation orchestration (Ports: 3011/3010)
+  - **EnviHub**: Virtualization tools (Ports: 3000/3001)
+  - **PlantHub**: Manufacturing simulation (Ports: 3004/3002)
 - **Ports**: Frontend (3005), Backend (3003)
 - **Documentation**: [VirtuSpace/README.md](VirtuSpace/README.md)
 
-### 3. EnviHub (Virtualization Platform)
-- **Purpose**: Virtualization and simulation tools
-- **Features**:
-  - IPG CarMaker integration
-  - MATLAB Simulink support
-  - Model library management
-  - External collaboration
-  - Model editor and validator
-- **Ports**: Frontend (3000), Backend (3001)
-- **Documentation**: [EnviHub/README.md](EnviHub/README.md)
+### 3. VirtuSphere (Analytics Platform)
+- **Purpose**: Analytics and visualization
+- **Sub-platforms**:
+  - **V-Analyzer**: Grafana-style dashboards (Ports: 3021/3020)
+- **Documentation**: [VirtuSphere/README.md](VirtuSphere/README.md)
 
-### 4. PlantHub (Manufacturing Platform)
-- **Purpose**: Plant simulation and manufacturing tools
-- **Features**:
-  - Plant simulation tools
-  - Manufacturing process models
-  - Factory layout planning
-  - Production optimization
-  - Process simulator
-- **Ports**: Frontend (3004), Backend (3002)
-- **Documentation**: [PlantHub/README.md](PlantHub/README.md)
+### 4. VirtuMind (AI Platform - Coming Soon)
+- **Purpose**: AI and intelligence platform
+- **Features**: ML-powered optimization, predictive analytics
+- **Documentation**: [VirtuMind/README.md](VirtuMind/README.md)
 
 ## Quick Start Guide
 
@@ -82,10 +75,13 @@ For detailed step-by-step instructions, see **[GETTING_STARTED.md](GETTING_START
 
 ### Access the Applications
 
-- **VirtuVerse** (Login): http://localhost:5000
+- **VirtuVerse Studio** (Login): http://localhost:5000
 - **VirtuSpace**: http://localhost:3003 (accessible after login)
-- **EnviHub**: http://localhost:3000
-- **PlantHub**: http://localhost:3004
+  - V-Orchestrator: http://localhost:3011
+  - EnviHub: http://localhost:3000
+  - PlantHub: http://localhost:3004
+- **VirtuSphere**:
+  - V-Analyzer: http://localhost:3021
 
 ### Default Admin Credentials
 
@@ -98,12 +94,14 @@ Password: Admin@123
 
 ## User Journey
 
-1. **Access VirtuVerse** → User visits http://localhost:5000
+1. **Access VirtuVerse Studio** → User visits http://localhost:5000
 2. **Authentication** → Login with credentials or register new account
-3. **Dashboard** → View welcome page with VirtuSpace access link
-4. **Access VirtuSpace** → Click "Launch VirtuSpace" button
-5. **Choose Platform** → Select EnviHub or PlantHub from VirtuSpace
-6. **Use Tools** → Access simulation and modeling tools
+3. **Choose Platform** → Select from three main platforms:
+   - **VirtuSpace** → Simulation and virtualization
+   - **VirtuSphere** → Analytics and dashboards
+   - **VirtuMind** → AI and intelligence (coming soon)
+4. **VirtuSpace Sub-platforms** → Access V-Orchestrator, EnviHub, or PlantHub
+5. **Use Tools** → Access simulation, orchestration, and modeling tools
 
 ## Development
 
@@ -149,36 +147,51 @@ For production deployment, see [DEPLOYMENT.md](DEPLOYMENT.md) for:
 
 ```
 virtuverse/
-├── VirtuVerse/          # Main authentication application
-│   ├── backend/         # Node.js/Express API with SQLite
-│   └── frontend/        # React application
-├── VirtuSpace/          # Integration platform
-│   ├── backend/         # Proxy and aggregation API
-│   └── frontend/        # React application
-├── EnviHub/             # Virtualization platform
-│   ├── backend/         # Node.js/Express API
-│   └── frontend/        # React application
-├── PlantHub/            # Manufacturing platform
-│   ├── backend/         # Node.js/Express API
-│   └── frontend/        # React application
-├── DEPLOYMENT.md        # Deployment guide
-└── README.md           # This file
+├── VirtuVerse-Studio/      # Main authentication application
+│   ├── backend/            # Node.js/Express API with SQLite
+│   └── frontend/           # React application
+├── VirtuSpace/             # Simulation platform
+│   ├── V-Orchestrator/     # Simulation orchestration
+│   │   ├── backend/
+│   │   └── frontend/
+│   ├── backend/            # VirtuSpace aggregation API
+│   └── frontend/           # VirtuSpace UI
+├── EnviHub/                # Virtualization platform
+│   ├── backend/            # Node.js/Express API
+│   └── frontend/           # React application
+├── PlantHub/               # Manufacturing platform
+│   ├── backend/            # Node.js/Express API
+│   └── frontend/           # React application
+├── VirtuSphere/            # Analytics platform
+│   └── V-Analyzer/         # Dashboard platform
+│       ├── backend/
+│       └── frontend/
+├── VirtuMind/              # AI platform (coming soon)
+├── DEPLOYMENT.md           # Deployment guide
+└── README.md              # This file
 ```
 
 ## Features
 
-### Authentication System (VirtuVerse)
+### Authentication System (VirtuVerse Studio)
 - ✅ User registration
 - ✅ Secure login (JWT)
 - ✅ Password recovery
 - ✅ Admin user management
 - ✅ Role-based access control
 
-### Integration Platform (VirtuSpace)
+### Simulation Platform (VirtuSpace)
+- ✅ V-Orchestrator for simulation orchestration
+- ✅ EnviHub for virtualization tools
+- ✅ PlantHub for manufacturing simulation
 - ✅ Unified dashboard
-- ✅ EnviHub integration
-- ✅ PlantHub integration
 - ✅ Seamless navigation
+
+### Analytics Platform (VirtuSphere)
+- ✅ V-Analyzer with Grafana-style dashboards
+- ✅ Simulation results visualization
+- ✅ Platform usage metrics
+- ✅ Real-time monitoring
 
 ### Virtualization Tools (EnviHub)
 - ✅ Tool interfaces (CarMaker, Simulink, etc.)
@@ -193,6 +206,17 @@ virtuverse/
 - ✅ Factory planning
 - ✅ Production optimization
 - ✅ Process simulator
+
+### Orchestration (V-Orchestrator)
+- ✅ Open-loop simulations
+- ✅ Closed-loop simulations
+- ✅ Workflow management
+- ✅ Results tracking
+
+### AI Platform (VirtuMind - Coming Soon)
+- 🔄 ML-powered optimization
+- 🔄 Predictive analytics
+- 🔄 Intelligent automation
 
 ## Technology Stack
 

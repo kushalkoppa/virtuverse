@@ -6,12 +6,25 @@ function VirtuSpaceDashboard() {
     <div className="dashboard">
       <h2>Welcome to VirtuSpace</h2>
       <p className="welcome-text">
-        VirtuSpace is the unified platform that brings together EnviHub and PlantHub, 
-        providing seamless access to virtualization, simulation, and plant manufacturing tools.
-        Choose a platform below to get started.
+        VirtuSpace is the unified platform for simulation and virtualization, bringing together 
+        V-Orchestrator, EnviHub, and PlantHub. Choose a platform below to get started.
       </p>
 
       <div className="platform-grid">
+        <Link to="/v-orchestrator" className="platform-card">
+          <div className="icon">⚙️</div>
+          <h3>V-Orchestrator</h3>
+          <p>
+            Simulation orchestration and workflow management platform.
+          </p>
+          <ul>
+            <li>Open-Loop Simulations</li>
+            <li>Closed-Loop Simulations</li>
+            <li>Workflow Coordination</li>
+            <li>Results Tracking</li>
+          </ul>
+        </Link>
+
         <Link to="/envihub" className="platform-card">
           <div className="icon">🌐</div>
           <h3>EnviHub</h3>
@@ -45,11 +58,11 @@ function VirtuSpaceDashboard() {
         <h3>Platform Overview</h3>
         <div className="stats-grid">
           <div className="stat-card">
-            <h4>2</h4>
+            <h4>3</h4>
             <p>Integrated Platforms</p>
           </div>
           <div className="stat-card">
-            <h4>8+</h4>
+            <h4>12+</h4>
             <p>Available Tools</p>
           </div>
           <div className="stat-card">
