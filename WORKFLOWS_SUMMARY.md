@@ -8,7 +8,7 @@ Successfully implemented comprehensive CI/CD pipelines using GitHub Actions for 
 ### 5 Workflow Files Created
 
 1. **main-ci.yml** - Main Platform Pipeline
-   - Triggers on: Changes to `frontend/` or `backend/` directories
+   - Triggers on: Changes to `VirtuSpace/frontend/` or `VirtuSpace/backend/` directories
    - Jobs:
      - Frontend: Lint, Build (React/Vite), Upload artifacts
      - Backend: Install deps, Run tests, Verify server startup
@@ -71,17 +71,19 @@ Successfully implemented comprehensive CI/CD pipelines using GitHub Actions for 
 
 ```
 virtuverse/
-├── frontend/              # Main React/Vite app → main-ci.yml
-├── backend/               # Main Express API → main-ci.yml
-├── EnviHub/              # Unified platform → envihub-ci.yml
+├── VirtuSpace/            # Unified parent platform → main-ci.yml
+│   ├── frontend/         # React/Vite app
+│   ├── backend/          # Express API
+│   └── docker-compose.yml
+├── EnviHub/              # Environment modeling → envihub-ci.yml
 │   ├── frontend/         # React (react-scripts)
 │   ├── backend/          # Express backend
 │   └── package.json      # Root config with build scripts
-├── PlantHub/             # Unified platform → planthub-ci.yml
+├── PlantHub/             # Plant modeling → planthub-ci.yml
 │   ├── frontend/         # React (react-scripts)
 │   ├── backend/          # Express backend
 │   └── package.json      # Root config with build scripts
-└── V-Orchestrator/       # Split platform → v-orchestrator-ci.yml
+└── V-Orchestrator/       # Cosimulation orchestration → v-orchestrator-ci.yml
     ├── frontend/         # React/Vite with own package.json
     │   └── package.json
     └── backend/          # Express with own package.json
@@ -148,8 +150,8 @@ To see the workflows in action:
 ## Testing Recommendations
 
 Test each workflow by making small changes to:
-- `frontend/src/App.jsx` → Triggers main-ci.yml
-- `backend/src/server.js` → Triggers main-ci.yml
+- `VirtuSpace/frontend/src/App.jsx` → Triggers main-ci.yml
+- `VirtuSpace/backend/src/server.js` → Triggers main-ci.yml
 - `EnviHub/frontend/src/` → Triggers envihub-ci.yml
 - `PlantHub/frontend/src/` → Triggers planthub-ci.yml
 - `V-Orchestrator/frontend/src/` → Triggers v-orchestrator-ci.yml
