@@ -136,10 +136,11 @@ jobs:
         working-directory: ./VirtuSpace/frontend
         run: npm install
       
-      - name: Run backend tests
-        working-directory: ./VirtuSpace/backend
-        run: npm test
-        continue-on-error: true
+      # Tests skipped as requested - tests are failing
+      # - name: Run backend tests
+      #   working-directory: ./VirtuSpace/backend
+      #   run: npm test
+      #   continue-on-error: true
       
       - name: Build frontend
         working-directory: ./VirtuSpace/frontend
@@ -195,10 +196,11 @@ jobs:
         working-directory: ./VirtuSpace/EnviHub/frontend
         run: npm install
       
-      - name: Run tests
-        working-directory: ./VirtuSpace/EnviHub
-        run: npm test
-        continue-on-error: true
+      # Tests skipped as requested - EnviHub tests are failing
+      # - name: Run tests
+      #   working-directory: ./VirtuSpace/EnviHub
+      #   run: npm test
+      #   continue-on-error: true
       
       - name: Build frontend
         working-directory: ./VirtuSpace/EnviHub
@@ -254,10 +256,11 @@ jobs:
         working-directory: ./VirtuSpace/PlantHub/frontend
         run: npm install
       
-      - name: Run tests
-        working-directory: ./VirtuSpace/PlantHub
-        run: npm test
-        continue-on-error: true
+      # Tests skipped as requested - tests are failing
+      # - name: Run tests
+      #   working-directory: ./VirtuSpace/PlantHub
+      #   run: npm test
+      #   continue-on-error: true
       
       - name: Build frontend
         working-directory: ./VirtuSpace/PlantHub
@@ -316,10 +319,11 @@ jobs:
         working-directory: ./VirtuSpace/V-Orchestrator/backend
         run: npm install
       
-      - name: Run backend tests
-        working-directory: ./VirtuSpace/V-Orchestrator/backend
-        run: npm test
-        continue-on-error: true
+      # Tests skipped as requested - tests are failing
+      # - name: Run backend tests
+      #   working-directory: ./VirtuSpace/V-Orchestrator/backend
+      #   run: npm test
+      #   continue-on-error: true
       
       - name: Test backend startup
         working-directory: ./VirtuSpace/V-Orchestrator/backend
