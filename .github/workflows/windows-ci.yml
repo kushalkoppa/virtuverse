@@ -52,7 +52,7 @@ jobs:
   # VirtuVerse Studio Build on Windows
   virtuverse-studio:
     name: VirtuVerse Studio (Windows)
-    runs-on: ${{ github.event.inputs.runner_type || (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'VirtuGo') || 'windows-latest' }}
+    runs-on: ${{ github.event.inputs.runner_type || 'windows-latest' }}
     if: |
       github.event_name != 'workflow_dispatch' || 
       inputs.component == 'all' || 
@@ -113,7 +113,7 @@ jobs:
   # VirtuSpace Platform Build on Windows
   virtuspace:
     name: VirtuSpace Platform (Windows)
-    runs-on: ${{ github.event.inputs.runner_type || (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'VirtuGo') || 'windows-latest' }}
+    runs-on: ${{ github.event.inputs.runner_type || 'windows-latest' }}
     if: |
       github.event_name != 'workflow_dispatch' || 
       inputs.component == 'all' || 
@@ -171,7 +171,7 @@ jobs:
   # EnviHub Platform Build on Windows
   envihub:
     name: EnviHub Platform (Windows)
-    runs-on: ${{ github.event.inputs.runner_type || (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'VirtuGo') || 'windows-latest' }}
+    runs-on: ${{ github.event.inputs.runner_type || 'windows-latest' }}
     if: |
       github.event_name != 'workflow_dispatch' || 
       inputs.component == 'all' || 
@@ -231,7 +231,7 @@ jobs:
   # PlantHub Platform Build on Windows
   planthub:
     name: PlantHub Platform (Windows)
-    runs-on: ${{ github.event.inputs.runner_type || (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'VirtuGo') || 'windows-latest' }}
+    runs-on: ${{ github.event.inputs.runner_type || 'windows-latest' }}
     if: |
       github.event_name != 'workflow_dispatch' || 
       inputs.component == 'all' || 
@@ -291,7 +291,7 @@ jobs:
   # V-Orchestrator Platform Build on Windows
   v-orchestrator:
     name: V-Orchestrator Platform (Windows)
-    runs-on: ${{ github.event.inputs.runner_type || (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'VirtuGo') || 'windows-latest' }}
+    runs-on: ${{ github.event.inputs.runner_type || 'windows-latest' }}
     if: |
       github.event_name != 'workflow_dispatch' || 
       inputs.component == 'all' || 
@@ -350,7 +350,7 @@ jobs:
   deploy:
     name: Deploy to Windows Self-Hosted Runner
     needs: [virtuverse-studio, virtuspace, envihub, planthub, v-orchestrator]
-    runs-on: ${{ github.event.inputs.runner_type || (github.event_name == 'push' && github.ref == 'refs/heads/main' && 'VirtuGo') || 'windows-latest' }}
+    runs-on: ${{ github.event.inputs.runner_type || 'windows-latest' }}
     if: |
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy == 'true')
