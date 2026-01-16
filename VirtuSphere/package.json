@@ -1,0 +1,29 @@
+{
+  "name": "virtusphere",
+  "version": "1.0.0",
+  "description": "VirtuSphere - Analytics and Visualization Platform",
+  "scripts": {
+    "start": "npm run start:backend",
+    "start:backend": "cd backend && npm start",
+    "start:analyzer": "cd V-Analyzer && npm start",
+    "start:devcontainers": "cd V-DevContainers/backend && node src/server.js",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:analyzer\" \"npm run dev:devcontainers\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:analyzer": "cd V-Analyzer && npm run dev",
+    "dev:devcontainers": "cd V-DevContainers/backend && npm run dev",
+    "install:all": "npm install && cd backend && npm install && cd ../V-Analyzer && npm install && cd ../V-DevContainers/backend && npm install",
+    "build:frontends": "cd V-Analyzer/frontend && npm run build && cd ../../V-DevContainers/frontend && npm run build",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "analytics",
+    "visualization",
+    "virtusphere",
+    "virtuverse"
+  ],
+  "author": "Bosch",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.0.1"
+  }
+}

@@ -5,8 +5,8 @@ function Dashboard() {
   const { user, logout } = useAuth();
 
   // Platform URLs - configure these based on deployment
-  const VIRTUSPACE_URL = 'http://localhost:3003';
-  const VIRTUSPHERE_URL = 'http://localhost:3021';
+  const VIRTUSPACE_URL = process.env.REACT_APP_VIRTUSPACE_URL || 'http://localhost:3003';
+  const VIRTUSPHERE_URL = process.env.REACT_APP_VIRTUSPHERE_URL || 'http://localhost:3021';
   const VIRTUMIND_URL = '#'; // Coming soon
 
   return (
