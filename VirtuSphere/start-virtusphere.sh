@@ -2,6 +2,14 @@
 
 # VirtuSphere Start Script
 # This script starts all VirtuSphere backend services for local development
+#
+# Prerequisites:
+# - Node.js installed
+# - Dependencies installed (npm run install:all)
+# - Proper directory structure:
+#   - V-Analyzer/backend/server.js
+#   - V-DevContainers/backend/src/server.js
+#   - backend/server.js
 
 echo "Starting VirtuSphere services..."
 
