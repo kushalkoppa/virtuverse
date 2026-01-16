@@ -109,6 +109,15 @@ app.use('/api/v-analyzer', async (req, res) => {
     const targetUrl = `${V_ANALYZER_API_URL}${req.path}`;
     console.log(`Proxying to V-Analyzer: ${targetUrl}`);
     
+    // Validate URL before making request
+    let targetHost;
+    try {
+      targetHost = new URL(V_ANALYZER_API_URL).host;
+    } catch (urlError) {
+      console.error('Invalid V-Analyzer URL:', V_ANALYZER_API_URL);
+      return res.status(500).json({ error: 'V-Analyzer service configuration error' });
+    }
+    
     const response = await axios({
       method: req.method,
       url: targetUrl,
@@ -116,7 +125,7 @@ app.use('/api/v-analyzer', async (req, res) => {
       params: req.query,
       headers: {
         ...req.headers,
-        host: new URL(V_ANALYZER_API_URL).host
+        host: targetHost
       }
     });
     
@@ -137,6 +146,15 @@ app.use('/api/v-devcontainers', async (req, res) => {
     const targetUrl = `${V_DEVCONTAINERS_API_URL}${req.path}`;
     console.log(`Proxying to V-DevContainers: ${targetUrl}`);
     
+    // Validate URL before making request
+    let targetHost;
+    try {
+      targetHost = new URL(V_DEVCONTAINERS_API_URL).host;
+    } catch (urlError) {
+      console.error('Invalid V-DevContainers URL:', V_DEVCONTAINERS_API_URL);
+      return res.status(500).json({ error: 'V-DevContainers service configuration error' });
+    }
+    
     const response = await axios({
       method: req.method,
       url: targetUrl,
@@ -144,7 +162,7 @@ app.use('/api/v-devcontainers', async (req, res) => {
       params: req.query,
       headers: {
         ...req.headers,
-        host: new URL(V_DEVCONTAINERS_API_URL).host
+        host: targetHost
       }
     });
     

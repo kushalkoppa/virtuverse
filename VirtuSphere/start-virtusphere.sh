@@ -43,10 +43,9 @@ if check_port 3020; then
     echo -e "${YELLOW}V-Analyzer backend already running on port 3020${NC}"
 else
     echo "Starting V-Analyzer backend..."
-    cd V-Analyzer/backend && node server.js > /tmp/v-analyzer.log 2>&1 &
+    (cd V-Analyzer/backend && node server.js > /tmp/v-analyzer.log 2>&1 &)
     V_ANALYZER_PID=$!
     echo "V-Analyzer PID: $V_ANALYZER_PID"
-    cd ../..
     wait_for_service 3020 "V-Analyzer"
 fi
 
@@ -54,10 +53,9 @@ if check_port 3030; then
     echo -e "${YELLOW}V-DevContainers backend already running on port 3030${NC}"
 else
     echo "Starting V-DevContainers backend..."
-    cd V-DevContainers/backend && node src/server.js > /tmp/v-devcontainers.log 2>&1 &
+    (cd V-DevContainers/backend && node src/server.js > /tmp/v-devcontainers.log 2>&1 &)
     V_DEVCONTAINERS_PID=$!
     echo "V-DevContainers PID: $V_DEVCONTAINERS_PID"
-    cd ../..
     wait_for_service 3030 "V-DevContainers"
 fi
 
@@ -65,10 +63,9 @@ if check_port 3023; then
     echo -e "${YELLOW}VirtuSphere backend already running on port 3023${NC}"
 else
     echo "Starting VirtuSphere backend..."
-    cd backend && node server.js > /tmp/virtusphere.log 2>&1 &
+    (cd backend && node server.js > /tmp/virtusphere.log 2>&1 &)
     VIRTUSPHERE_PID=$!
     echo "VirtuSphere PID: $VIRTUSPHERE_PID"
-    cd ..
     wait_for_service 3023 "VirtuSphere"
 fi
 
