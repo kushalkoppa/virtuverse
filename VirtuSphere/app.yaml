@@ -1,0 +1,54 @@
+runtime: nodejs18
+
+env: standard
+
+instance_class: F2
+
+handlers:
+  # Serve static files from frontend build directory
+  - url: /static
+    static_dir: frontend/build/static
+    secure: always
+
+  - url: /(.*\.(gif|png|jpg|ico|txt|svg|js|css|map))$
+    static_files: frontend/build/\1
+    upload: frontend/build/.*\.(gif|png|jpg|ico|txt|svg|js|css|map)$
+    secure: always
+
+  # All other routes go to the backend API
+  - url: /.*
+    script: auto
+    secure: always
+
+# Environment variables for production
+env_variables:
+  NODE_ENV: "production"
+  V_ANALYZER_API_URL: "http://localhost:3020/api"
+  V_DEVCONTAINERS_API_URL: "http://localhost:3030/api"
+  PORT: "8080"
+
+# Automatic scaling configuration
+automatic_scaling:
+  min_instances: 1
+  max_instances: 10
+  target_cpu_utilization: 0.65
+  target_throughput_utilization: 0.65
+
+# VPC access (if needed for internal services)
+# vpc_access_connector:
+#   name: projects/YOUR_PROJECT_ID/locations/YOUR_REGION/connectors/YOUR_CONNECTOR_NAME
+
+# Health check configuration
+readiness_check:
+  path: "/api/health"
+  check_interval_sec: 5
+  timeout_sec: 4
+  failure_threshold: 2
+  success_threshold: 2
+
+liveness_check:
+  path: "/api/health"
+  check_interval_sec: 30
+  timeout_sec: 4
+  failure_threshold: 2
+  success_threshold: 2

@@ -1,0 +1,139 @@
+name: Deploy VirtuSphere to GCP
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'VirtuSphere/**'
+  workflow_dispatch:
+    inputs:
+      deployment_target:
+        description: 'Deployment target'
+        required: true
+        default: 'app-engine'
+        type: choice
+        options:
+          - app-engine
+          - cloud-run
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GCP_REGION: ${{ secrets.GCP_REGION || 'us-central1' }}
+
+jobs:
+  deploy-to-gcp:
+    name: Deploy VirtuSphere to GCP
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: |
+            VirtuSphere/backend/package-lock.json
+            VirtuSphere/V-Analyzer/package-lock.json
+            VirtuSphere/V-DevContainers/backend/package-lock.json
+
+      # Authenticate to Google Cloud
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.GCP_PROJECT_ID }}
+
+      # Install dependencies
+      - name: Install VirtuSphere backend dependencies
+        working-directory: ./VirtuSphere/backend
+        run: npm install
+
+      - name: Install V-Analyzer dependencies
+        working-directory: ./VirtuSphere/V-Analyzer
+        run: npm install
+
+      - name: Install V-DevContainers backend dependencies
+        working-directory: ./VirtuSphere/V-DevContainers/backend
+        run: npm install
+
+      # Build frontends
+      - name: Install and build V-Analyzer frontend
+        working-directory: ./VirtuSphere/V-Analyzer/frontend
+        run: |
+          npm install
+          CI=false npm run build
+
+      - name: Install and build V-DevContainers frontend
+        working-directory: ./VirtuSphere/V-DevContainers/frontend
+        run: |
+          npm install
+          CI=false npm run build
+
+      # Deploy to App Engine
+      - name: Deploy to App Engine
+        if: github.event.inputs.deployment_target == 'app-engine' || github.event.inputs.deployment_target == ''
+        working-directory: ./VirtuSphere
+        run: |
+          gcloud app deploy app.yaml \
+            --quiet \
+            --project=${{ env.GCP_PROJECT_ID }}
+
+      # Alternative: Deploy to Cloud Run
+      - name: Build Docker image for Cloud Run
+        if: github.event.inputs.deployment_target == 'cloud-run'
+        working-directory: ./VirtuSphere
+        run: |
+          gcloud builds submit \
+            --tag gcr.io/${{ env.GCP_PROJECT_ID }}/virtusphere:${{ github.sha }} \
+            --project=${{ env.GCP_PROJECT_ID }}
+
+      - name: Deploy to Cloud Run
+        if: github.event.inputs.deployment_target == 'cloud-run'
+        run: |
+          gcloud run deploy virtusphere \
+            --image gcr.io/${{ env.GCP_PROJECT_ID }}/virtusphere:${{ github.sha }} \
+            --platform managed \
+            --region ${{ env.GCP_REGION }} \
+            --allow-unauthenticated \
+            --set-env-vars NODE_ENV=production \
+            --project=${{ env.GCP_PROJECT_ID }}
+
+      # Get deployment URL
+      - name: Get deployment URL
+        id: get-url
+        run: |
+          if [ "${{ github.event.inputs.deployment_target }}" == "cloud-run" ]; then
+            URL=$(gcloud run services describe virtusphere \
+              --platform managed \
+              --region ${{ env.GCP_REGION }} \
+              --format 'value(status.url)' \
+              --project=${{ env.GCP_PROJECT_ID }})
+          else
+            URL="https://${{ env.GCP_PROJECT_ID }}.appspot.com"
+          fi
+          echo "deployment_url=$URL" >> $GITHUB_OUTPUT
+          echo "Deployment URL: $URL"
+
+      - name: Deployment Summary
+        run: |
+          echo "=== VirtuSphere GCP Deployment Summary ==="
+          echo "Project: ${{ env.GCP_PROJECT_ID }}"
+          echo "Region: ${{ env.GCP_REGION }}"
+          echo "Target: ${{ github.event.inputs.deployment_target || 'app-engine' }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "URL: ${{ steps.get-url.outputs.deployment_url }}"
+          echo "============================================"

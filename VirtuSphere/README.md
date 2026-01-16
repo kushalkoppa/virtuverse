@@ -9,6 +9,15 @@ VirtuSphere contains:
 - **V-DevContainers**: DevContainer generation tool for quick development environment setup
 - **SmartHarness**: AI-enabled component providing intelligent insights and recommendations
 
+## Deployment Architecture
+
+VirtuSphere is designed for hybrid cloud deployment:
+- **Frontend**: Deployed on Azure Static Web Apps
+- **Backend Logic**: Hosted on Google Cloud Platform (GCP)
+- **Integration**: Connected through the VirtuVerse Studio interface
+
+For detailed GCP deployment instructions, see [GCP_DEPLOYMENT.md](./GCP_DEPLOYMENT.md).
+
 ## Purpose
 
 VirtuSphere serves as the analytics hub for:
