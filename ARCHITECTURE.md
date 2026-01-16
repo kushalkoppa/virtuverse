@@ -154,12 +154,16 @@ CREATE TABLE password_resets (
 
 ## Port Allocation
 
-| Service | Frontend | Backend |
-|---------|----------|---------|
-| VirtuVerse | 5000 | 5001 |
-| VirtuSpace | 3005 | 3003 |
-| EnviHub | 3000 | 3001 |
-| PlantHub | 3004 | 3002 |
+| Service | Frontend | Backend | Cloud |
+|---------|----------|---------|-------|
+| VirtuVerse | 5000 | 5001 | Azure |
+| VirtuSpace | 3005 | 3003 | Azure |
+| EnviHub | 3000 | 3001 | Azure |
+| PlantHub | 3004 | 3002 | Azure |
+| VirtuSphere | Azure SWA | 3023 (8080 on GCP) | GCP |
+| V-Analyzer | - | 3020 | GCP |
+| V-DevContainers | - | 3030 | GCP |
+| V-Orchestrator | 3011 | 3010 | Azure |
 
 ## Security Features
 
@@ -205,7 +209,28 @@ Local Machine
 ├── VirtuVerse (Port 5000/5001)
 ├── VirtuSpace (Port 3003/3005)
 ├── EnviHub (Port 3000/3001)
-└── PlantHub (Port 3004/3002)
+├── PlantHub (Port 3004/3002)
+└── VirtuSphere (Port 3021/3023)
+    ├── V-Analyzer (Port 3020)
+    └── V-DevContainers (Port 3030)
+```
+
+### Production (Hybrid Cloud)
+```
+Azure (Frontend + APIs)
+├── VirtuVerse Studio Frontend (Azure Static Web Apps)
+├── VirtuVerse Studio Backend (Azure VM/App Service)
+├── VirtuSpace Frontend (Azure Static Web Apps)
+└── VirtuSpace Backend (Azure VM/App Service)
+
+GCP (VirtuSphere Backend Services)
+└── VirtuSphere
+    ├── VirtuSphere Backend API (App Engine/Cloud Run - Port 8080)
+    │   └── API Gateway & Proxy
+    ├── V-Analyzer Backend (Port 3020)
+    │   └── Analytics & Dashboards
+    └── V-DevContainers Backend (Port 3030)
+        └── DevContainer Generation
 ```
 
 ### Production (Docker)
@@ -344,6 +369,57 @@ virtuverse/
 
 ### PlantHub
 - `PORT`: Backend port (default: 3002)
+
+### VirtuSphere (GCP Backend)
+- `PORT`: Backend port (default: 3023, 8080 on GCP)
+- `NODE_ENV`: Environment (production recommended)
+- `V_ANALYZER_API_URL`: V-Analyzer backend URL
+- `V_DEVCONTAINERS_API_URL`: V-DevContainers backend URL
+- `ALLOWED_ORIGINS`: Comma-separated list of allowed origins for CORS
+
+## Hybrid Cloud Architecture
+
+VirtuSphere is deployed in a hybrid cloud configuration:
+
+### Why Hybrid Cloud?
+
+1. **Azure**: Hosts VirtuVerse Studio (authentication & main UI) and VirtuSpace (simulation platform)
+2. **GCP**: Hosts VirtuSphere backend services (analytics & DevContainer generation)
+3. **Benefits**:
+   - Leverage best features of each cloud provider
+   - Separation of concerns between platforms
+   - Independent scaling of analytics services
+   - Cost optimization by choosing optimal cloud for each workload
+
+### Communication Flow
+
+```
+User → Azure (VirtuVerse Studio) → Click VirtuSphere Icon
+  → Opens: REACT_APP_VIRTUSPHERE_URL (pointing to GCP)
+    → GCP VirtuSphere Backend (API Gateway)
+      → Proxies to V-Analyzer Backend
+      → Proxies to V-DevContainers Backend
+```
+
+### CORS Configuration
+
+For hybrid cloud deployment, ensure proper CORS settings:
+
+**VirtuSphere Backend (.env or GCP environment)**:
+```
+ALLOWED_ORIGINS=https://your-azure-frontend.azurestaticapps.net
+```
+
+**VirtuVerse Studio Frontend (.env)**:
+```
+REACT_APP_VIRTUSPHERE_URL=https://your-gcp-project.appspot.com
+```
+
+### Deployment Documentation
+
+- **VirtuSphere GCP Deployment**: See [VirtuSphere/GCP_DEPLOYMENT.md](VirtuSphere/GCP_DEPLOYMENT.md)
+- **Azure Deployment**: See [DEPLOYMENT.md](DEPLOYMENT.md)
+- **Integration Summary**: See [VirtuSphere/INTEGRATION_SUMMARY.md](VirtuSphere/INTEGRATION_SUMMARY.md)
 
 ## Future Enhancements
 
