@@ -8,3 +8,4 @@ coverage/
 backend/database/*.db
 backend/database/*.db-journal
 uploads/
+backend/database/*.db
