@@ -75,6 +75,11 @@ router.put('/:id', authMiddleware, (req, res) => {
   try {
     const { name, description, type, status } = req.body;
     
+    // Check if at least one field is provided
+    if (!name && !description && !type && !status) {
+      return res.status(400).json({ error: 'At least one field must be provided for update' });
+    }
+    
     const stmt = db.prepare(`
       UPDATE workspaces 
       SET name = COALESCE(?, name),

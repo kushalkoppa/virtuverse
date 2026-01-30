@@ -13,6 +13,8 @@ app.use(cors());
 app.use(express.json());
 
 // In-memory storage for DevContainer configurations
+// NOTE: For production deployment, replace this with a database (SQLite, PostgreSQL, etc.)
+// to ensure data persistence across service restarts
 let devcontainerConfigs = [];
 let configIdCounter = 1;
 
@@ -81,6 +83,12 @@ app.put('/api/devcontainers/:id', (req, res) => {
     const index = devcontainerConfigs.findIndex(c => c.id === parseInt(req.params.id));
     if (index === -1) {
       return res.status(404).json({ error: 'DevContainer configuration not found' });
+    }
+
+    // Check if at least one field is provided
+    const { name, description, components, baseImage, features } = req.body;
+    if (!name && !description && !components && !baseImage && !features) {
+      return res.status(400).json({ error: 'At least one field must be provided for update' });
     }
 
     devcontainerConfigs[index] = {

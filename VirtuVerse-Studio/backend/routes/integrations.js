@@ -67,7 +67,7 @@ router.all('/virtuspace/*', authMiddleware, async (req, res) => {
     console.error('VirtuSpace proxy error:', error.message);
     res.status(error.response?.status || 500).json({ 
       error: 'VirtuSpace request failed',
-      message: error.message 
+      details: process.env.NODE_ENV === 'development' ? error.message : 'An error occurred'
     });
   }
 });
@@ -95,7 +95,7 @@ router.all('/virtusphere/analyzer/*', authMiddleware, async (req, res) => {
     console.error('VirtuSphere Analyzer proxy error:', error.message);
     res.status(error.response?.status || 500).json({ 
       error: 'VirtuSphere Analyzer request failed',
-      message: error.message 
+      details: process.env.NODE_ENV === 'development' ? error.message : 'An error occurred'
     });
   }
 });
@@ -123,7 +123,7 @@ router.all('/virtusphere/devcontainers/*', authMiddleware, async (req, res) => {
     console.error('VirtuSphere DevContainers proxy error:', error.message);
     res.status(error.response?.status || 500).json({ 
       error: 'VirtuSphere DevContainers request failed',
-      message: error.message 
+      details: process.env.NODE_ENV === 'development' ? error.message : 'An error occurred'
     });
   }
 });
