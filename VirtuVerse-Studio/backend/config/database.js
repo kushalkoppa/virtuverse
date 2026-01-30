@@ -41,10 +41,49 @@ const createPasswordResetTable = () => {
   db.exec(sql);
 };
 
+// Create workspaces table
+const createWorkspacesTable = () => {
+  const sql = `
+    CREATE TABLE IF NOT EXISTS workspaces (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      name TEXT NOT NULL,
+      description TEXT,
+      type TEXT DEFAULT 'simulation',
+      status TEXT DEFAULT 'active',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    )
+  `;
+  db.exec(sql);
+};
+
+// Create projects table
+const createProjectsTable = () => {
+  const sql = `
+    CREATE TABLE IF NOT EXISTS projects (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      workspace_id INTEGER NOT NULL,
+      name TEXT NOT NULL,
+      description TEXT,
+      type TEXT DEFAULT 'simulation',
+      config TEXT,
+      status TEXT DEFAULT 'active',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE
+    )
+  `;
+  db.exec(sql);
+};
+
 // Initialize database
 const initDatabase = () => {
   createUsersTable();
   createPasswordResetTable();
+  createWorkspacesTable();
+  createProjectsTable();
   console.log('Database initialized successfully');
 };
 
