@@ -9,6 +9,7 @@ VirtuVerse Studio is the complete E2E Virtualization & Simulation Universe that 
 - **Secure Access**: JWT-based authentication
 - **Platform Integration**: Access to VirtuSpace, VirtuSphere, and VirtuMind
 - **SmartHarness**: AI-enabled component providing intelligent assistance across all platforms
+- **Backend Integrations**: VM connections, PostgreSQL, JFrog Artifactory, GitHub, and Azure AI
 
 ## Architecture
 
@@ -81,6 +82,33 @@ The application will be available at:
 - Password: Admin@123
 
 **Important**: Change these credentials immediately after first login in a production environment.
+
+## Backend Integrations
+
+VirtuVerse Studio now includes powerful backend integrations for enhanced functionality:
+
+### Available Integrations
+
+1. **VM Connection** - Connect to virtual machines for accessing tools to edit/modify models
+2. **PostgreSQL Database** - Advanced data storage and querying capabilities
+3. **JFrog Artifactory** - Artifact management and storage
+4. **GitHub Repository** - Version control and collaboration
+5. **Azure AI** - AI-powered chatbot and model analysis using Azure OpenAI
+
+### Quick Setup
+
+See [BACKEND_INTEGRATIONS_README.md](BACKEND_INTEGRATIONS_README.md) for detailed setup instructions.
+
+For API documentation, see [BACKEND_INTEGRATIONS_API.md](BACKEND_INTEGRATIONS_API.md).
+
+### Integration Status
+
+Check all integration statuses via the API:
+```bash
+GET /api/integrations/status
+```
+
+This endpoint returns the configuration status of all available integrations.
 
 ## Deployment
 
