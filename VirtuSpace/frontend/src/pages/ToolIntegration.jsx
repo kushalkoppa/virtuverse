@@ -50,7 +50,7 @@ function ToolIntegration() {
       status: 'disconnected',
       version: '1.0',
       lastSync: 'Never',
-      endpoint: 'https://medac-tool.example.com',
+      endpoint: 'TO_BE_CONFIGURED',
       description: 'MetaData Configurator backend tool for Virtual ECU management (URL to be configured)'
     }
   ];

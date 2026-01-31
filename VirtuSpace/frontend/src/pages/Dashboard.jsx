@@ -16,15 +16,19 @@ function Dashboard() {
     sharedModels: 0
   });
 
+  const getStatsForPlatform = () => {
+    if (isMeDaC) {
+      return { totalModels: 32, activeIntegrations: 4, recentActivities: 12, sharedModels: 18 };
+    } else if (isPlantHub) {
+      return { totalModels: 25, activeIntegrations: 3, recentActivities: 12, sharedModels: 23 };
+    }
+    return { totalModels: 47, activeIntegrations: 3, recentActivities: 12, sharedModels: 23 };
+  };
+
   useEffect(() => {
     // Simulate loading stats from API
     setTimeout(() => {
-      setStats({
-        totalModels: isMeDaC ? 32 : isPlantHub ? 25 : 47,
-        activeIntegrations: isMeDaC ? 4 : 3,
-        recentActivities: 12,
-        sharedModels: isMeDaC ? 18 : 23
-      });
+      setStats(getStatsForPlatform());
     }, 500);
   }, [isMeDaC, isPlantHub]);
 
