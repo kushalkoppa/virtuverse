@@ -149,10 +149,11 @@ router.post('/embeddings', authMiddleware, async (req, res) => {
     }
     
     const client = getAzureClient();
+    const embeddingModel = process.env.AZURE_OPENAI_EMBEDDING_MODEL || 'text-embedding-ada-002';
     
     const embeddings = await client.embeddings.create({
       input,
-      model: process.env.AZURE_OPENAI_EMBEDDING_DEPLOYMENT || 'text-embedding-ada-002'
+      model: embeddingModel
     });
     
     res.json({

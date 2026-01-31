@@ -2,6 +2,26 @@ const express = require('express');
 const router = express.Router();
 const { Client } = require('ssh2');
 const { authMiddleware } = require('../middleware/auth');
+const fs = require('fs');
+
+// Cache SSH private key on module load to avoid repeated synchronous reads
+let cachedPrivateKey = null;
+if (process.env.VM_SSH_PRIVATE_KEY_PATH) {
+  try {
+    cachedPrivateKey = fs.readFileSync(process.env.VM_SSH_PRIVATE_KEY_PATH);
+  } catch (error) {
+    console.error('Failed to read SSH private key:', error.message);
+  }
+}
+
+// Helper function to get SSH connection config
+const getSSHConfig = () => ({
+  host: process.env.VM_SSH_HOST,
+  port: process.env.VM_SSH_PORT || 22,
+  username: process.env.VM_SSH_USER,
+  privateKey: cachedPrivateKey,
+  password: process.env.VM_SSH_PASSWORD
+});
 
 // Get VM connection status
 router.get('/status', authMiddleware, async (req, res) => {
@@ -35,14 +55,7 @@ router.post('/test', authMiddleware, async (req, res) => {
         resolve(true);
       }).on('error', (err) => {
         reject(err);
-      }).connect({
-        host: process.env.VM_SSH_HOST,
-        port: process.env.VM_SSH_PORT || 22,
-        username: process.env.VM_SSH_USER,
-        privateKey: process.env.VM_SSH_PRIVATE_KEY_PATH ? 
-          require('fs').readFileSync(process.env.VM_SSH_PRIVATE_KEY_PATH) : undefined,
-        password: process.env.VM_SSH_PASSWORD
-      });
+      }).connect(getSSHConfig());
 
       // Set timeout
       setTimeout(() => reject(new Error('Connection timeout')), 10000);
@@ -93,14 +106,7 @@ router.post('/execute', authMiddleware, async (req, res) => {
         });
       }).on('error', (err) => {
         reject(err);
-      }).connect({
-        host: process.env.VM_SSH_HOST,
-        port: process.env.VM_SSH_PORT || 22,
-        username: process.env.VM_SSH_USER,
-        privateKey: process.env.VM_SSH_PRIVATE_KEY_PATH ? 
-          require('fs').readFileSync(process.env.VM_SSH_PRIVATE_KEY_PATH) : undefined,
-        password: process.env.VM_SSH_PASSWORD
-      });
+      }).connect(getSSHConfig());
 
       setTimeout(() => reject(new Error('Command execution timeout')), 30000);
     });
@@ -148,14 +154,7 @@ router.get('/tools', authMiddleware, async (req, res) => {
         });
       }).on('error', (err) => {
         reject(err);
-      }).connect({
-        host: process.env.VM_SSH_HOST,
-        port: process.env.VM_SSH_PORT || 22,
-        username: process.env.VM_SSH_USER,
-        privateKey: process.env.VM_SSH_PRIVATE_KEY_PATH ? 
-          require('fs').readFileSync(process.env.VM_SSH_PRIVATE_KEY_PATH) : undefined,
-        password: process.env.VM_SSH_PASSWORD
-      });
+      }).connect(getSSHConfig());
 
       setTimeout(() => reject(new Error('Timeout listing tools')), 10000);
     });
