@@ -3,6 +3,9 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
+const workspaceRoutes = require('./routes/workspaces');
+const projectRoutes = require('./routes/projects');
+const integrationRoutes = require('./routes/integrations');
 const { authMiddleware } = require('./middleware/auth');
 
 // Load environment variables
@@ -25,6 +28,9 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/workspaces', workspaceRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/integrations', integrationRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
