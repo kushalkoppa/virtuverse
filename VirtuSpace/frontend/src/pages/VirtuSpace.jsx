@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Cpu, Leaf, Zap, Github, Database, Bot } from 'lucide-react';
+import { Box, Cpu, Leaf, Zap, Github, Database, Bot, Microchip } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ChatBot from '../components/ChatBot';
 import '../styles/VirtuSpace.css';
@@ -35,6 +35,15 @@ function VirtuSpace() {
       color: '#10b981',
       features: ['MATLAB Simulink', 'Modelica', 'Simcenter Amesim', 'Model Management'],
       route: '/planthub'
+    },
+    {
+      id: 'medac',
+      name: 'MeDaC',
+      icon: Microchip,
+      description: 'MetaData Configurator for creating Virtual ECUs using Synopsys, Vector, dSPACE, and ETAS tools',
+      color: '#f59e0b',
+      features: ['Virtual ECU Creation', 'Tool Integration', 'Model Library', 'ECU Configuration'],
+      route: '/medac'
     }
   ];
 
@@ -174,6 +183,10 @@ function VirtuSpace() {
             <div className="arch-box arch-platform" style={{ background: '#10b981' }}>
               <Leaf size={20} />
               <span>PlantHub</span>
+            </div>
+            <div className="arch-box arch-platform" style={{ background: '#f59e0b' }}>
+              <Microchip size={20} />
+              <span>MeDaC</span>
             </div>
           </div>
           <div className="arch-connector"></div>
