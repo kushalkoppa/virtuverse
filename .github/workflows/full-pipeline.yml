@@ -331,4 +331,7 @@ jobs:
           echo "EnviHub: ${{ needs.envihub.result }}"
           echo "PlantHub: ${{ needs.planthub.result }}"
           echo "V-Orchestrator: ${{ needs.v-orchestrator.result }}"
+          echo ""
+          echo "Note: MeDaC platform is included in Main Frontend/Backend builds"
+          echo "MeDaC routes: /medac, /medac/library, /medac/tools, /medac/config"
           echo "=================================="

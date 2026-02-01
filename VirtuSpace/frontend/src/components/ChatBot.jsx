@@ -61,6 +61,8 @@ function ChatBot({ isOpen, onClose }) {
           platform: 'virtuspace',
           timestamp: new Date().toISOString()
         }
+      }, {
+        timeout: 10000 // 10 second timeout
       });
 
       setIsTyping(false);
@@ -74,12 +76,24 @@ function ChatBot({ isOpen, onClose }) {
         };
         setMessages(prev => [...prev, botMessage]);
       }
-    } catch {
+    } catch (error) {
       setIsTyping(false);
+      let errorContent = "I apologize, but I'm having trouble connecting to the server. Please try again later.";
+      
+      // Provide more specific error messages
+      if (error.code === 'ECONNABORTED') {
+        errorContent = "The request timed out. The server might be slow or unavailable. Please try again.";
+      } else if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+        errorContent = `Unable to connect to the backend server. Please ensure the VirtuSpace backend is running at ${API_BASE_URL}`;
+      } else if (error.response) {
+        // Server responded with an error
+        errorContent = `Server error: ${error.response.data?.error || error.response.statusText || 'Unknown error'}`;
+      }
+      
       const errorMessage = {
         id: getNextMessageId(),
         type: 'bot',
-        content: "I apologize, but I'm having trouble connecting to the server. Please try again later.",
+        content: errorContent,
         timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
