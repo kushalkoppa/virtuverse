@@ -1,9 +1,10 @@
 # VirtuSpace Platform
 
-VirtuSpace is the unified parent platform for VirtuVerse Studio that brings together three powerful sub-platforms:
+VirtuSpace is the unified parent platform for VirtuVerse Studio that brings together four powerful sub-platforms:
 - **V-Orchestrator** - Cosimulation orchestration platform
 - **EnviHub** - Environment modeling platform
 - **PlantHub** - Plant modeling platform
+- **MeDaC** - MetaData Configurator for Virtual ECU creation and configuration
 
 All platforms are integrated with centralized Configuration Management (JFrog Artifactory & GitHub Enterprise Server), an AI Agent for intelligent assistance, and **SmartHarness** - an AI-enabled component for model integration and analysis.
 
@@ -42,10 +43,15 @@ Backend API will be available at `http://localhost:5000`
 ```bash
 cd frontend
 npm install
+# Copy environment variables (optional)
+cp .env.example .env
+# Edit .env if you need to change the backend API URL
 npm run dev
 ```
 
 Frontend will be available at `http://localhost:5173`
+
+> **Note**: The ChatBot AI Assistant requires the backend server to be running at the URL specified in `VITE_API_BASE_URL` (default: http://localhost:5000). If the backend is not running, you'll see connection errors in the ChatBot.
 
 ## 📁 Structure
 
