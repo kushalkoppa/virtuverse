@@ -84,7 +84,7 @@ function ChatBot({ isOpen, onClose }) {
       if (error.code === 'ECONNABORTED') {
         errorContent = "The request timed out. The server might be slow or unavailable. Please try again.";
       } else if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
-        errorContent = "Unable to connect to the backend server. Please ensure the VirtuSpace backend is running at " + API_BASE_URL;
+        errorContent = `Unable to connect to the backend server. Please ensure the VirtuSpace backend is running at ${API_BASE_URL}`;
       } else if (error.response) {
         // Server responded with an error
         errorContent = `Server error: ${error.response.data?.error || error.response.statusText || 'Unknown error'}`;
