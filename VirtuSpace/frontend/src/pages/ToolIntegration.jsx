@@ -1,9 +1,61 @@
 import { useState } from 'react';
 import { Settings, CheckCircle, AlertCircle, RefreshCw } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import '../styles/ToolIntegration.css';
 
 function ToolIntegration() {
-  const [integrations, setIntegrations] = useState([
+  const location = useLocation();
+  const isMeDaC = location.pathname.startsWith('/medac');
+  
+  const getMeDaCIntegrations = () => [
+    {
+      id: 1,
+      name: 'Synopsys Virtualizer',
+      status: 'connected',
+      version: '2024.03',
+      lastSync: '2024-12-19 10:30',
+      endpoint: 'http://localhost:8090',
+      description: 'Virtual prototyping platform for creating fast, accurate Virtual ECUs'
+    },
+    {
+      id: 2,
+      name: 'Vector CANoe',
+      status: 'connected',
+      version: '18.0',
+      lastSync: '2024-12-19 09:15',
+      endpoint: 'http://localhost:9100',
+      description: 'Development and testing tool for ECU networks and individual ECUs'
+    },
+    {
+      id: 3,
+      name: 'dSPACE VEOS',
+      status: 'connected',
+      version: '5.2',
+      lastSync: '2024-12-19 08:45',
+      endpoint: 'http://localhost:7070',
+      description: 'PC-based simulation platform for virtual validation of ECU software'
+    },
+    {
+      id: 4,
+      name: 'ETAS LABCAR',
+      status: 'disconnected',
+      version: '10.1',
+      lastSync: '2024-12-18 16:45',
+      endpoint: 'http://localhost:8200',
+      description: 'Real-time simulation and testing system for Virtual ECU integration'
+    },
+    {
+      id: 5,
+      name: 'MeDaC Tool',
+      status: 'disconnected',
+      version: '1.0',
+      lastSync: 'Never',
+      endpoint: 'TO_BE_CONFIGURED',
+      description: 'MetaData Configurator backend tool for Virtual ECU management (URL to be configured)'
+    }
+  ];
+
+  const getDefaultIntegrations = () => [
     {
       id: 1,
       name: 'IPG CarMaker',
@@ -31,7 +83,11 @@ function ToolIntegration() {
       endpoint: 'http://localhost:7070',
       description: 'PC-based simulation platform'
     }
-  ]);
+  ];
+
+  const [integrations, setIntegrations] = useState(
+    isMeDaC ? getMeDaCIntegrations() : getDefaultIntegrations()
+  );
 
   const handleTestConnection = (id) => {
     // Simulate testing connection

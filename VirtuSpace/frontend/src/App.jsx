@@ -15,6 +15,7 @@ function NavBar() {
   const isEnviHub = location.pathname.startsWith('/envihub');
   const isVOrchestrator = location.pathname.startsWith('/v-orchestrator');
   const isPlantHub = location.pathname.startsWith('/planthub');
+  const isMeDaC = location.pathname.startsWith('/medac');
 
   if (isVirtuSpace) {
     return null; // No navbar on VirtuSpace landing page
@@ -32,6 +33,9 @@ function NavBar() {
   } else if (isPlantHub) {
     platformName = 'PlantHub';
     baseRoute = '/planthub';
+  } else if (isMeDaC) {
+    platformName = 'MeDaC';
+    baseRoute = '/medac';
   }
 
   return (
@@ -45,7 +49,7 @@ function NavBar() {
           <Home size={20} />
           <span>VirtuSpace</span>
         </Link>
-        {(isEnviHub || isVOrchestrator || isPlantHub) && (
+        {(isEnviHub || isVOrchestrator || isPlantHub || isMeDaC) && (
           <>
             <Link to={`${baseRoute}`} className="nav-item">
               <Database size={20} />
@@ -110,6 +114,12 @@ function App() {
             <Route path="/planthub/library" element={<ModelLibrary />} />
             <Route path="/planthub/tools" element={<ToolIntegration />} />
             <Route path="/planthub/config" element={<ConfigManagement />} />
+
+            {/* MeDaC Routes */}
+            <Route path="/medac" element={<Dashboard />} />
+            <Route path="/medac/library" element={<ModelLibrary />} />
+            <Route path="/medac/tools" element={<ToolIntegration />} />
+            <Route path="/medac/config" element={<ConfigManagement />} />
           </Routes>
         </main>
       </div>
