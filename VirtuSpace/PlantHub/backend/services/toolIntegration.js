@@ -135,7 +135,7 @@ class ToolIntegration {
    * Generate a unique session ID for tool sessions
    */
   generateSessionId() {
-    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `session_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
   }
 
   /**

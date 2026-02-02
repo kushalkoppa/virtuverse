@@ -88,6 +88,12 @@ let plantModels = [
   })
 ];
 
+// GET available tools for integration - MUST be before /:id route
+router.get('/tools/available', (req, res) => {
+  const tools = toolIntegration.getAllTools();
+  res.json(tools);
+});
+
 // GET all plant models
 router.get('/', (req, res) => {
   res.json(plantModels.map(m => m.toJSON()));
@@ -271,12 +277,6 @@ router.post('/:id/save-from-tool', upload.single('editedFile'), async (req, res)
       details: error.message 
     });
   }
-});
-
-// GET available tools for integration
-router.get('/tools/available', (req, res) => {
-  const tools = toolIntegration.getAllTools();
-  res.json(tools);
 });
 
 module.exports = router;
