@@ -36,10 +36,28 @@ SmartHarness is available throughout VirtuVerse Studio, providing:
 
 ## Getting Started
 
+### Quick Setup (Recommended)
+
+For a quick and automated setup, use the setup script:
+
+```bash
+cd VirtuVerse-Studio
+./setup-backend.sh
+```
+
+This will automatically:
+- Create the database directory
+- Copy `.env.example` to `.env`
+- Install all dependencies
+- Initialize the admin user
+
+For detailed setup instructions and troubleshooting, see [BACKEND_SETUP.md](BACKEND_SETUP.md).
+
 ### Prerequisites
 
-- Node.js v14 or higher
-- MongoDB (or SQLite for development)
+- Node.js v14 or higher (v18 or v20 recommended)
+- npm or yarn
+- SQLite for development (included with better-sqlite3)
 
 ### Installation
 
