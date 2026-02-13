@@ -4,6 +4,7 @@ import './App.css';
 import Dashboard from './components/Dashboard';
 import SimulationsList from './components/SimulationsList';
 import CreateSimulation from './components/CreateSimulation';
+import OrchestratorLayout from './components/OrchestratorLayout';
 
 function App() {
   const [activePage, setActivePage] = useState('dashboard');
@@ -22,6 +23,9 @@ function App() {
           <Link to="/" className={activePage === 'dashboard' ? 'active' : ''} onClick={() => setActivePage('dashboard')}>
             Dashboard
           </Link>
+          <Link to="/orchestrator" className={activePage === 'orchestrator' ? 'active' : ''} onClick={() => setActivePage('orchestrator')}>
+            Layout Editor
+          </Link>
           <Link to="/simulations" className={activePage === 'simulations' ? 'active' : ''} onClick={() => setActivePage('simulations')}>
             Simulations
           </Link>
@@ -33,6 +37,7 @@ function App() {
         <main className="app-main">
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/orchestrator" element={<OrchestratorLayout />} />
             <Route path="/simulations" element={<SimulationsList />} />
             <Route path="/create" element={<CreateSimulation />} />
           </Routes>
