@@ -2,6 +2,9 @@
 
 # VirtuVerse-Studio Backend Setup Script
 # This script sets up the backend environment and initializes the database
+#
+# Usage: ./setup-backend.sh
+# Note: If this script is not executable, run: chmod +x setup-backend.sh
 
 set -e
 

@@ -236,6 +236,6 @@ After setting up the backend:
 ## Support
 
 For issues or questions:
-- Check the main [README.md](../README.md)
+- Check the main [README.md](README.md)
 - Review [GETTING_STARTED.md](../GETTING_STARTED.md)
 - Check backend logs in `logs/virtuverse-backend.log`
