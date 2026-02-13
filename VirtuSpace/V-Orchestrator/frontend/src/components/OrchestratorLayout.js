@@ -15,13 +15,16 @@ import '../styles/OrchestratorLayout.css';
 const initialNodes = [];
 const initialEdges = [];
 
+const SIDEBAR_WIDTH = 250;
+const HEADER_HEIGHT = 100;
+
 let id = 0;
 const getId = () => `node_${id++}`;
 
 function OrchestratorLayout() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [tabs, setTabs] = useState([{ id: 1, name: 'Layout 1', active: true }]);
+  const [tabs, setTabs] = useState([{ id: 1, name: 'Layout 1' }]);
   const [activeTab, setActiveTab] = useState(1);
   const [nextTabId, setNextTabId] = useState(2);
 
@@ -48,13 +51,13 @@ function OrchestratorLayout() {
       }
 
       const position = {
-        x: event.clientX - 250,
-        y: event.clientY - 100,
+        x: event.clientX - SIDEBAR_WIDTH,
+        y: event.clientY - HEADER_HEIGHT,
       };
 
       const newNode = {
         id: getId(),
-        type: nodeType === 'platform' ? 'default' : 'default',
+        type: 'default',
         position,
         data: { 
           label: label,
@@ -80,14 +83,12 @@ function OrchestratorLayout() {
     const newTab = {
       id: nextTabId,
       name: `Layout ${nextTabId}`,
-      active: false,
     };
     setTabs([...tabs, newTab]);
     setNextTabId(nextTabId + 1);
   };
 
   const handleTabSwitch = (tabId) => {
-    setTabs(tabs.map(tab => ({ ...tab, active: tab.id === tabId })));
     setActiveTab(tabId);
   };
 
@@ -98,7 +99,6 @@ function OrchestratorLayout() {
     if (activeTab === tabId) {
       const newActiveTab = newTabs[0];
       setActiveTab(newActiveTab.id);
-      newTabs[0].active = true;
     }
     setTabs(newTabs);
   };
@@ -114,7 +114,7 @@ function OrchestratorLayout() {
         {tabs.map(tab => (
           <div
             key={tab.id}
-            className={`tab ${tab.active ? 'active' : ''}`}
+            className={`tab ${activeTab === tab.id ? 'active' : ''}`}
             onClick={() => handleTabSwitch(tab.id)}
           >
             <span>{tab.name}</span>
