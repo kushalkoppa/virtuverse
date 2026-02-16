@@ -2,6 +2,8 @@
 
 This guide explains how to set up and run the VirtuVerse-Studio backend authentication service.
 
+> **⚠️ IMPORTANT FOR LOGIN:** Before you can login with `admin@virtuverse.com` / `Admin@123`, you **MUST** run the backend setup script OR initialize the admin user manually. The admin user is not created automatically. Follow the Quick Setup instructions below.
+
 ## Prerequisites
 
 - Node.js v14 or higher (v18 or v20 recommended)
