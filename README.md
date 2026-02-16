@@ -97,6 +97,8 @@ For detailed step-by-step instructions, see **[GETTING_STARTED.md](GETTING_START
 
 ### Default Admin Credentials
 
+> **⚠️ CRITICAL**: Before you can login, you must initialize the backend. Run `./start-all.sh` OR follow the [VirtuVerse-Studio Backend Setup Guide](VirtuVerse-Studio/BACKEND_SETUP.md).
+
 ```
 Email: admin@virtuverse.com
 Password: Admin@123
