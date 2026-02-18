@@ -5,9 +5,9 @@ function Dashboard() {
   const { user, logout } = useAuth();
 
   // Platform URLs - configure these based on deployment
-  const VIRTUSPACE_URL = process.env.REACT_APP_VIRTUSPACE_URL || 'http://localhost:3003';
-  const VIRTUSPHERE_URL = process.env.REACT_APP_VIRTUSPHERE_URL || 'http://localhost:3021';
-  const VIRTUMIND_URL = '#'; // Coming soon
+  const VIRTUSPACE_URL = process.env.REACT_APP_VIRTUSPACE_URL || 'http://localhost:3005';
+  const VIRTUSPHERE_URL = process.env.REACT_APP_VIRTUSPHERE_URL || 'http://localhost:3025';
+  const VIRTUMIND_URL = process.env.REACT_APP_VIRTUMIND_URL || 'http://localhost:3035';
 
   return (
     <div className="dashboard-container">
@@ -56,8 +56,8 @@ function Dashboard() {
             </p>
             <ul>
               <li><strong>V-Analyzer:</strong> Grafana-style dashboards</li>
-              <li><strong>Simulation Results:</strong> Data visualization</li>
-              <li><strong>Platform Metrics:</strong> Usage analytics</li>
+              <li><strong>V-DevContainers:</strong> DevContainer generation</li>
+              <li><strong>V-Assessor:</strong> Assessment & evaluation</li>
               <li><strong>Real-time Monitoring:</strong> Live metrics</li>
             </ul>
             <div style={{ marginTop: '1rem', padding: '0.5rem 1rem', background: '#6366f1', color: 'white', borderRadius: '8px', textAlign: 'center', fontWeight: '600' }}>
@@ -65,7 +65,7 @@ function Dashboard() {
             </div>
           </div>
 
-          <div className="feature-card" style={{ opacity: 0.6, cursor: 'not-allowed' }}>
+          <div className="feature-card" style={{ cursor: 'pointer' }} onClick={() => window.open(VIRTUMIND_URL, '_blank')}>
             <h3>🧠 VirtuMind</h3>
             <p style={{ color: '#4a5568', marginBottom: '1rem' }}>
               AI & Intelligence Platform
@@ -76,8 +76,8 @@ function Dashboard() {
               <li><strong>Intelligent Automation:</strong> Smart workflows</li>
               <li><strong>Natural Language:</strong> Query interface</li>
             </ul>
-            <div style={{ marginTop: '1rem', padding: '0.5rem 1rem', background: '#9ca3af', color: 'white', borderRadius: '8px', textAlign: 'center', fontWeight: '600' }}>
-              Coming Soon
+            <div style={{ marginTop: '1rem', padding: '0.5rem 1rem', background: '#8b5cf6', color: 'white', borderRadius: '8px', textAlign: 'center', fontWeight: '600' }}>
+              Launch VirtuMind →
             </div>
           </div>
         </div>
