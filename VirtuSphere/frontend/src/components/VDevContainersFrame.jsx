@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import config from '../config';
 
 function VDevContainersFrame() {
