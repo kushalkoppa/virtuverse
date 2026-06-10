@@ -14,10 +14,12 @@ function Dashboard() {
       <header className="dashboard-header">
         <h1>🌌 VirtuVerse Studio</h1>
         <div className="user-info">
-          <span>Welcome, {user?.name || 'User'}</span>
-          <button onClick={logout} className="logout-button">
-            Logout
-          </button>
+          <span>Welcome, {user?.name || 'Guest User'}</span>
+          {user && (
+            <button onClick={logout} className="logout-button">
+              Logout
+            </button>
+          )}
         </div>
       </header>
 
