@@ -17,27 +17,33 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('token'));
 
+  const logout = () => {
+    localStorage.removeItem('token');
+    delete axios.defaults.headers.common['Authorization'];
+    setToken(null);
+    setUser(null);
+  };
+
   // Set up axios interceptor for authentication
   useEffect(() => {
     if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+      const fetchUser = async () => {
+        try {
+          const response = await axios.get(`${API_URL}/auth/me`);
+          setUser(response.data);
+        } catch (error) {
+          console.error('Error fetching user:', error);
+          logout();
+        } finally {
+          setLoading(false);
+        }
+      };
       fetchUser();
     } else {
       setLoading(false);
     }
   }, [token]);
-
-  const fetchUser = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/auth/me`);
-      setUser(response.data);
-    } catch (error) {
-      console.error('Error fetching user:', error);
-      logout();
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const login = async (email, password) => {
     const response = await axios.post(`${API_URL}/auth/login`, { email, password });
@@ -55,13 +61,6 @@ export const AuthProvider = ({ children }) => {
     setToken(token);
     setUser(user);
     return response.data;
-  };
-
-  const logout = () => {
-    localStorage.removeItem('token');
-    delete axios.defaults.headers.common['Authorization'];
-    setToken(null);
-    setUser(null);
   };
 
   const value = {

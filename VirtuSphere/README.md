@@ -1,12 +1,14 @@
 # VirtuSphere
 
-VirtuSphere is an analytics and monitoring platform within VirtuVerse Studio that provides visualization and insights for simulations and platform usage, along with DevContainer generation capabilities.
+VirtuSphere is an analytics and monitoring platform within VirtuVerse Studio that provides visualization and insights for simulations and platform usage, along with DevContainer generation and assessment capabilities.
 
 ## Overview
 
 VirtuSphere contains:
-- **V-Analyzer**: Grafana-based dashboard platform for simulation data visualization and platform metrics
-- **V-DevContainers**: DevContainer generation tool for quick development environment setup
+- **Main Dashboard**: Unified landing page for all VirtuSphere sub-platforms (Port: 3025)
+- **V-Analyzer**: Grafana-based dashboard platform for simulation data visualization and platform metrics (Port: 3021)
+- **V-DevContainers**: DevContainer generation tool for quick development environment setup (Port: 3031)
+- **V-Assessor**: Assessment and evaluation platform for simulation models and results (External: https://simulab.de.bosch.com:4200/costa)
 - **SmartHarness**: AI-enabled component providing intelligent insights and recommendations
 
 ## Deployment Architecture
@@ -28,6 +30,13 @@ VirtuSphere serves as the analytics hub for:
 
 ## Components
 
+### VirtuSphere Main Dashboard
+Landing page that provides access to all sub-platforms:
+- Unified interface for analytics and visualization tools
+- Easy navigation between V-Analyzer, V-DevContainers, and V-Assessor
+- SmartHarness integration overview
+- Port: 3025
+
 ### V-Analyzer
 Dashboard platform that provides:
 - Grafana dashboards for simulation data
@@ -35,6 +44,7 @@ Dashboard platform that provides:
 - Platform usage statistics
 - Historical trend analysis
 - SmartHarness insights integration
+- Port: 3021 (Frontend), 3020 (Backend)
 
 ### V-DevContainers
 DevContainer generation tool that provides:
@@ -43,6 +53,15 @@ DevContainer generation tool that provides:
 - Independent or grouped container creation
 - Pre-configured development environments
 - SmartHarness-assisted container configuration
+- Port: 3031 (Frontend), 3030 (Backend)
+
+### V-Assessor
+Assessment and evaluation platform that provides:
+- Model assessment and quality metrics
+- Performance evaluation
+- Compliance checking
+- Integration with external assessment tools
+- URL: https://simulab.de.bosch.com:4200/costa
 
 ## Getting Started
 
@@ -54,13 +73,17 @@ To run VirtuSphere locally:
 # Install dependencies
 npm run install:all
 
-# Start all services
+# Start all services (frontends and backends)
 ./start-virtusphere.sh
 
 # Access services
-# - VirtuSphere Backend: http://localhost:3023
+# - VirtuSphere Main Dashboard: http://localhost:3025
+# - V-Analyzer Frontend: http://localhost:3021
 # - V-Analyzer Backend: http://localhost:3020
+# - V-DevContainers Frontend: http://localhost:3031
 # - V-DevContainers Backend: http://localhost:3030
+# - VirtuSphere Backend: http://localhost:3023
+# - V-Assessor: https://simulab.de.bosch.com:4200/costa (external)
 
 # Stop services
 ./stop-virtusphere.sh

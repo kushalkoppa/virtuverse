@@ -52,11 +52,15 @@ All platforms include **SmartHarness**, an AI-enabled component that assists use
 - **Sub-platforms**:
   - **V-Analyzer**: Grafana-style dashboards (Ports: 3021/3020)
   - **V-DevContainers**: DevContainer generation tool (Ports: 3031/3030)
+  - **V-Assessor**: Assessment & evaluation (External: https://simulab.de.bosch.com:4200/costa)
+- **Ports**: Frontend (3025), Backend (3023)
 - **Documentation**: [VirtuSphere/README.md](VirtuSphere/README.md)
 
-### 4. VirtuMind (AI Platform - Coming Soon)
+### 4. VirtuMind (AI Platform)
 - **Purpose**: AI and intelligence platform
 - **Features**: ML-powered optimization, predictive analytics
+- **Ports**: Frontend (3035)
+- **Status**: Under Development
 - **Documentation**: [VirtuMind/README.md](VirtuMind/README.md)
 
 ## Quick Start Guide
@@ -87,13 +91,15 @@ For detailed step-by-step instructions, see **[GETTING_STARTED.md](GETTING_START
 ### Access the Applications
 
 - **VirtuVerse Studio** (Login): http://localhost:5000
-- **VirtuSpace**: http://localhost:3003 (accessible after login)
+- **VirtuSpace**: http://localhost:3005 (accessible after login)
   - V-Orchestrator: http://localhost:3011
   - EnviHub: http://localhost:3000
   - PlantHub: http://localhost:3004
-- **VirtuSphere**:
+- **VirtuSphere**: http://localhost:3025 (accessible after login)
   - V-Analyzer: http://localhost:3021
   - V-DevContainers: http://localhost:3031
+  - V-Assessor: https://simulab.de.bosch.com:4200/costa (external)
+- **VirtuMind**: http://localhost:3035 (accessible after login, under development)
 
 ### Default Admin Credentials
 
@@ -215,10 +221,11 @@ virtuverse/
 
 ### Analytics Platform (VirtuSphere)
 - ✅ V-Analyzer with Grafana-style dashboards
+- ✅ V-DevContainers for DevContainer generation
+- ✅ V-Assessor for assessment and evaluation
 - ✅ Simulation results visualization
 - ✅ Platform usage metrics
 - ✅ Real-time monitoring
-- ✅ V-DevContainers for DevContainer generation
 - ✅ SmartHarness AI assistance
 
 ### Virtualization Tools (EnviHub)
@@ -244,11 +251,12 @@ virtuverse/
 - ✅ Results tracking
 - ✅ SmartHarness for model integration
 
-### AI Platform (VirtuMind - Coming Soon)
+### AI Platform (VirtuMind)
 - 🔄 ML-powered optimization
 - 🔄 Predictive analytics
 - 🔄 Intelligent automation
 - 🔄 SmartHarness integration
+- 🔄 Frontend landing page available
 
 ## Technology Stack
 

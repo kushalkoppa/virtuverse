@@ -1,10 +1,11 @@
 # VirtuMind
 
-VirtuMind is an AI and intelligence platform within VirtuVerse Studio with integrated **SmartHarness** capabilities (coming soon).
+VirtuMind is an AI and intelligence platform within VirtuVerse Studio with integrated **SmartHarness** capabilities.
 
 ## Overview
 
-VirtuMind will provide:
+VirtuMind provides:
+- Main landing page with development roadmap (Port: 3035)
 - AI-powered simulation optimization
 - Predictive analytics
 - Machine learning models for simulation
@@ -13,7 +14,28 @@ VirtuMind will provide:
 
 ## Status
 
-This platform is currently under development. Check back for updates.
+This platform is currently under development with a frontend landing page available.
+
+## Getting Started
+
+To run VirtuMind locally:
+
+```bash
+# Navigate to VirtuMind directory
+cd VirtuMind
+
+# Install dependencies
+cd frontend && npm install && cd ..
+
+# Start the frontend
+./start-virtumind.sh
+
+# Access the service
+# - VirtuMind Frontend: http://localhost:3035
+
+# Stop the service
+./stop-virtumind.sh
+```
 
 ## Future Features
 
